@@ -59,5 +59,6 @@
 	],
 	"spotlessGradle.diagnostics.enable": true,
 	"spotlessGradle.format.enable": true,
-	"files.eol": "\r\n"
+	"files.eol": "\r\n",
+	"java.jdt.ls.java.home": "C:\\Users\\Public\\wpilib\\2025\\jdk"
 }
