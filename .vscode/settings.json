@@ -60,10 +60,5 @@
 	"spotlessGradle.diagnostics.enable": true,
 	"spotlessGradle.format.enable": true,
 	"files.eol": "\r\n",
-	"editor.formatOnSave": true,
-	"editor.defaultFormatter": "richardwillis.vscode-spotless-gradle",
-	"git-identity.authors": [
-		"ColinCardello 196128404+ColinCardello@users.noreply.github.com",
-		"Jacob Fisher 72705185+fisherjacobc@users.noreply.github.com"
-	]
+	"java.jdt.ls.java.home": "C:\\Users\\Public\\wpilib\\2025\\jdk"
 }
