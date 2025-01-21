@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Near Side Start to Reef F"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef F to Near Side Source"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Near Side Source to Reef D"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef D to Near Side Source"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Near Side Source to Reef C"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
