@@ -60,5 +60,7 @@
 	"spotlessGradle.diagnostics.enable": true,
 	"spotlessGradle.format.enable": true,
 	"files.eol": "\r\n",
-	"java.jdt.ls.java.home": "C:\\Users\\Public\\wpilib\\2025\\jdk"
+	"java.jdt.ls.java.home": "C:\\Users\\Public\\wpilib\\2025\\jdk",
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "richardwillis.vscode-spotless-gradle"
 }
