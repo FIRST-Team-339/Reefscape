@@ -6,9 +6,9 @@ package us.kilroyrobotics.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Intake extends SubsystemBase {
+public class CoralIntake extends SubsystemBase {
     /** Creates a new Intake. */
-    public Intake() {}
+    public CoralIntake() {}
 
     @Override
     public void periodic() {
