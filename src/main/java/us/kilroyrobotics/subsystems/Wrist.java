@@ -4,11 +4,18 @@
 
 package us.kilroyrobotics.subsystems;
 
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import us.kilroyrobotics.Constants.CoralMechanismConstants;
 
 public class Wrist extends SubsystemBase {
+    private SparkMax wristMotor;
+
     /** Creates a new Wrist. */
-    public Wrist() {}
+    public Wrist() {
+        this.wristMotor = new SparkMax(CoralMechanismConstants.kWristMotorId, MotorType.kBrushless);
+    }
 
     @Override
     public void periodic() {
