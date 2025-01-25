@@ -1,7 +1,11 @@
 package us.kilroyrobotics;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 
 public final class Constants {
@@ -20,6 +24,12 @@ public final class Constants {
 
         /** The motor ID of the Spark Max associated with the right motor for the elevator */
         public static final int kRightMotorId = 42;
+
+        public static final Distance kL1Height = Inches.of(18);
+        public static final Distance kL2Height = Inches.of(24);
+        public static final Distance kL3Height = Inches.of(36);
+        public static final Distance kL4Height = Inches.of(72);
+        public static final Distance kCoralStationHeight = Inches.of(34);
     }
 
     /** Constants used for interfacing with the Coral Intake and Wrist subsystems */
@@ -30,6 +40,20 @@ public final class Constants {
         /** The motor ID of the Spark Max associated with the motor for the coral intake */
         public static final int kWheelMotorId = 44;
 
-        /* Wheel Speeds */
+        /* Wrist Configurations */
+        /** The angle that the wrist will be at the start of the match */
+        public static final Angle kStartingAngle = Degrees.of(0);
+
+        /** The angle that the wrist will be when intaking a coral */
+        public static final Angle kIntakingAngle = Degrees.of(45);
+
+        /** The angle that the wrist will be when scoring at L4 */
+        public static final Angle kScoringHighLevel = Degrees.of(180);
+
+        /** The angle that the wrist will be when scoring at L2-L3 */
+        public static final Angle kScoringMidLevel = Degrees.of(110);
+
+        /** The angle that the wrist will be when scoring at L1 */
+        public static final Angle kScoringLowLevel = Degrees.of(160);
     }
 }
