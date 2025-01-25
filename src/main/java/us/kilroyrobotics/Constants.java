@@ -31,5 +31,8 @@ public final class Constants {
         public static final int kWheelMotorId = 44;
 
         /* Wheel Speeds */
+        public static final double kWheelSpeedIntaking = 0.75;
+        public static final double kWheelSpeedOuttaking = -0.75;
+        public static final double kWheelSpeedHolding = 0.15;
     }
 }
