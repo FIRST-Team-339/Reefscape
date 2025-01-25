@@ -4,17 +4,11 @@
 
 package us.kilroyrobotics.subsystems;
 
-import com.ctre.phoenix6.signals.BrushedMotorWiringValue;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
-import us.kilroyrobotics.Constants.DriveConstants;
-import us.kilroyrobotics.generated.TunerConstants;
-import us.kilroyrobotics.subsystems.CoralIntake.CoralState;
 
 public class CoralIntake extends SubsystemBase {
 /** Creates a new Intake. */
@@ -24,46 +18,35 @@ public class CoralIntake extends SubsystemBase {
         this.wheelMotor = new SparkMax(CoralMechanismConstants.kWheelMotorId, MotorType.kBrushless);
     }
 
-    //stuff I (Colin) worked on Jan 23 2025. Do what you will with the following:
     CoralState coralState = CoralState.OFF;
 
-    enum CoralState { // "4 State Enum"
+    public static enum CoralState { //4 State Enum
         OFF,
         INTAKING,
         OUTTAKING,
         HOLDING,
     }
 
-    public Command setIntaking =  //"Coral Intake Commands"
-            Commands.runOnce(
-                    () ->  {
-                        coralState = CoralState.INTAKING;
-                    });
-
-    public Command setOuttaking = 
-            Commands.runOnce(
-                    () -> {
-                        coralState = CoralState.OUTTAKING;
-                    });
-
-    public Command setHolding = 
-            Commands.runOnce(
-                    () -> {
-                        coralState = CoralState.HOLDING;
-                    });
-
-    public Command setOff = 
-            Commands.runOnce(
-                    () -> {
-                        coralState = CoralState.OFF;
-                    });
-
-    //and so ends my (Colin) work on Jan 23 2025. I apologize in advance.
-
-
+    public void setCoralState(CoralState newState)
+    {
+        this.coralState = newState;
+    }
     
     @Override
     public void periodic() {
-        // This method will be called once per scheduler run
+        switch (coralState) {
+            case INTAKING:
+                this.wheelMotor.set(CoralMechanismConstants.kWheelSpeedIntaking);
+                break;
+            case OUTTAKING:
+                this.wheelMotor.set(CoralMechanismConstants.kWheelSpeedOuttaking);
+                break;
+            case HOLDING:
+                this.wheelMotor.set(CoralMechanismConstants.kWheelSpeedHolding);
+                break;
+            default:
+                this.wheelMotor.set(0);
+                break;
+        }
     }
 }
