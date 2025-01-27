@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -23,7 +22,6 @@ import us.kilroyrobotics.Constants.DriveConstants;
 import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.generated.TunerConstants;
 import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
-import us.kilroyrobotics.subsystems.Elevator;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor.CoralState;
 import us.kilroyrobotics.subsystems.Elevator;
@@ -61,12 +59,10 @@ public class RobotContainer {
     private final CoralIntakeMotor coralIntakeMotor = new CoralIntakeMotor();
 
     @Logged(name = "Elevator")
-    private final Elevator elevator = new Elevator();
+    public final Elevator elevator = new Elevator();
 
     @Logged(name = "Wrist")
     private final Wrist wrist = new Wrist(elevator::getCarriagePose);
-
-    private final Elevator elevatorSubsystem = new Elevator();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -92,26 +88,26 @@ public class RobotContainer {
             Commands.runOnce(
                     () -> coralIntakeMotor.setCoralState(CoralState.OFF), coralIntakeMotor);
 
-        public Command elevatorSetL1 = Commands.runOnce(
-                    () ->
-                        elevatorSubsystem.setPosition(ElevatorConstants.kL1Height)
-                    , elevatorSubsystem);
-        public Command elevatorSetL2 = Commands.runOnce(
-                    () ->
-                        elevatorSubsystem.setPosition(ElevatorConstants.kL2Height)
-                    , elevatorSubsystem);
-        public Command elevatorSetL3 = Commands.runOnce(
-                    () ->
-                        elevatorSubsystem.setPosition(ElevatorConstants.kL3Height)
-                    , elevatorSubsystem);
-        public Command elevatorSetL4 = Commands.runOnce(
-                    () ->
-                        elevatorSubsystem.setPosition(ElevatorConstants.kL4Height)
-                    , elevatorSubsystem);
-        public Command elevatorSetCoralStation = Commands.runOnce(
-                    () ->
-                        elevatorSubsystem.setPosition(ElevatorConstants.kCoralStationHeight)
-                    , elevatorSubsystem);
+    private Command elevatorSetL1 =
+            Commands.runOnce(
+                    () -> elevator.setPosition(ElevatorConstants.kL1Height),
+                    elevator);
+    private Command elevatorSetL2 =
+            Commands.runOnce(
+                    () -> elevator.setPosition(ElevatorConstants.kL2Height),
+                    elevator);
+    private Command elevatorSetL3 =
+            Commands.runOnce(
+                    () -> elevator.setPosition(ElevatorConstants.kL3Height),
+                    elevator);
+    private Command elevatorSetL4 =
+            Commands.runOnce(
+                    () -> elevator.setPosition(ElevatorConstants.kL4Height),
+                    elevator);
+    private Command elevatorSetCoralStation =
+            Commands.runOnce(
+                    () -> elevator.setPosition(ElevatorConstants.kCoralStationHeight),
+                    elevator);
 
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
