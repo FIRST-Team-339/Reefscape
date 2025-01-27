@@ -90,6 +90,10 @@ public class Elevator extends SubsystemBase {
         m_encoder.setPosition(0);
     }
 
+    public void set(double speed) {
+        this.m_leadMotor.set(speed);
+    }
+
     public void stop() {
         this.m_leadMotor.setVoltage(0.0);
     }
