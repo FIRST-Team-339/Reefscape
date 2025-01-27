@@ -94,7 +94,12 @@ public class Elevator extends SubsystemBase {
 
     @Logged(name = "CarriagePose")
     public Pose3d getCarriagePose() {
-        return this.getSecondStagePose().times(2);
+        return new Pose3d(
+                0,
+                0,
+                Inches.of((this.encoder.getPosition() / 34.5 * 26) + this.encoder.getPosition())
+                        .in(Meters),
+                new Rotation3d());
     }
 
     @Override
