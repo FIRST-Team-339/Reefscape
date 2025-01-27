@@ -52,7 +52,7 @@ public class RobotContainer {
 
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    private final CoralIntake coralIntakeSubsystem = new CoralIntake();
+    private final CoralIntake coralIntake = new CoralIntake();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -67,19 +67,19 @@ public class RobotContainer {
     /* Coral Intake Wheel Commands */
     private Command setCoralIntaking =
             Commands.runOnce(
-                    () -> coralIntakeSubsystem.setCoralState(CoralState.INTAKING),
-                    coralIntakeSubsystem);
+                    () -> coralIntake.setCoralState(CoralState.INTAKING),
+                    coralIntake);
     private Command setCoralOuttaking =
             Commands.runOnce(
-                    () -> coralIntakeSubsystem.setCoralState(CoralState.OUTTAKING),
-                    coralIntakeSubsystem);
+                    () -> coralIntake.setCoralState(CoralState.OUTTAKING),
+                    coralIntake);
     private Command setCoralHolding =
             Commands.runOnce(
-                    () -> coralIntakeSubsystem.setCoralState(CoralState.HOLDING),
-                    coralIntakeSubsystem);
+                    () -> coralIntake.setCoralState(CoralState.HOLDING),
+                    coralIntake);
     private Command setCoralOff =
             Commands.runOnce(
-                    () -> coralIntakeSubsystem.setCoralState(CoralState.OFF), coralIntakeSubsystem);
+                    () -> coralIntake.setCoralState(CoralState.OFF), coralIntake);
 
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
