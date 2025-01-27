@@ -89,25 +89,16 @@ public class RobotContainer {
                     () -> coralIntakeMotor.setCoralState(CoralState.OFF), coralIntakeMotor);
 
     private Command elevatorSetL1 =
-            Commands.runOnce(
-                    () -> elevator.setPosition(ElevatorConstants.kL1Height),
-                    elevator);
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL1Height), elevator);
     private Command elevatorSetL2 =
-            Commands.runOnce(
-                    () -> elevator.setPosition(ElevatorConstants.kL2Height),
-                    elevator);
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL2Height), elevator);
     private Command elevatorSetL3 =
-            Commands.runOnce(
-                    () -> elevator.setPosition(ElevatorConstants.kL3Height),
-                    elevator);
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL3Height), elevator);
     private Command elevatorSetL4 =
-            Commands.runOnce(
-                    () -> elevator.setPosition(ElevatorConstants.kL4Height),
-                    elevator);
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL4Height), elevator);
     private Command elevatorSetCoralStation =
             Commands.runOnce(
-                    () -> elevator.setPosition(ElevatorConstants.kCoralStationHeight),
-                    elevator);
+                    () -> elevator.setPosition(ElevatorConstants.kCoralStationHeight), elevator);
 
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
