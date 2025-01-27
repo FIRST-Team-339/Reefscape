@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import us.kilroyrobotics.Constants.DriveConstants;
 import us.kilroyrobotics.generated.TunerConstants;
 import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
+import us.kilroyrobotics.subsystems.Elevator;
+import us.kilroyrobotics.subsystems.Wrist;
 
 public class RobotContainer {
     private double kTeleopMaxSpeed =
@@ -44,13 +47,20 @@ public class RobotContainer {
 
     private final CommandXboxController joystick = new CommandXboxController(0);
 
+    /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
+    @Logged(name = "Elevator")
+    private final Elevator elevatorSubsystem = new Elevator();
+
+    @Logged(name = "Wrist")
+    private final Wrist wristSubsystem = new Wrist(elevatorSubsystem::getCarriagePose);
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser("Tests");
+        autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         configureBindings();
