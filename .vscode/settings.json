@@ -62,5 +62,8 @@
 	"files.eol": "\r\n",
 	"java.jdt.ls.java.home": "C:\\Users\\Public\\wpilib\\2025\\jdk",
 	"editor.formatOnSave": true,
-	"editor.defaultFormatter": "richardwillis.vscode-spotless-gradle"
+	"editor.defaultFormatter": "richardwillis.vscode-spotless-gradle",
+	"git-identity.authors": [
+		"Colin 196128404+colincardello@users.noreply.github.com"
+	]
 }
