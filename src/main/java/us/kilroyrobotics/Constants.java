@@ -48,10 +48,16 @@ public final class Constants {
         /** Height necessary for the coral intake to reach the Coral Station */
         public static final Distance kCoralStationHeight = Meters.of(Inches.of(34.0).in(Meters));
 
-        /** Conversion factor which when multiplied by the raw encoder output results in the current carriage height in meters */
-        public static final double kEncoderPositionConversionFactor = 1.0/9.0;
+        /**
+         * Conversion factor which when multiplied by the raw encoder output results in the current
+         * carriage height in meters
+         */
+        public static final double kEncoderPositionConversionFactor = 1.0 / 9.0;
 
-        /** Conversion factor which when multiplied by the raw encoder output velocity results in the current carriage velocity in meters/second */
+        /**
+         * Conversion factor which when multiplied by the raw encoder output velocity results in the
+         * current carriage velocity in meters/second
+         */
         public static final double kEncoderVelocityConversionFactor = 1.0;
     }
 
@@ -59,7 +65,7 @@ public final class Constants {
     public static final class SimulationConstants {
         /** The gearing of the elevator gearbox */
         public static final double kElevatorGearing = 9.0;
-        
+
         /** The weight in Kg of the carriage in Kilograms */
         public static final Mass kElevatorCarriageMass = Kilograms.of(1.0);
 
@@ -68,7 +74,7 @@ public final class Constants {
 
         /** The minimum height of the elevator in Meters */
         public static final Distance kElevatorMinHeight = Meters.of(Inches.of(0.0).in(Meters));
-        
+
         /** The maximum height of the elevator in Meters */
         public static final Distance kElevatorMaxHeight = Meters.of(Inches.of(74.5).in(Meters));
 
