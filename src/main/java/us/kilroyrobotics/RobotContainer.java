@@ -47,8 +47,8 @@ public class RobotContainer {
 
     /* Controllers */
     private final CommandXboxController driverController = new CommandXboxController(0);
-    private final CommandJoystick leftOperatordriverController = new CommandJoystick(1);
-    private final CommandJoystick rightOperatordriverController = new CommandJoystick(2);
+    private final CommandJoystick leftOperatorJoystick = new CommandJoystick(1);
+    private final CommandJoystick rightOperatorJoystick = new CommandJoystick(2);
 
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -176,10 +176,10 @@ public class RobotContainer {
                 .leftBumper()
                 .onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        leftOperatordriverController.button(8).onTrue(setCoralIntaking);
-        leftOperatordriverController.button(9).onTrue(setCoralOuttaking);
-        leftOperatordriverController.button(10).onTrue(setCoralHolding);
-        leftOperatordriverController.button(11).onTrue(setCoralOff);
+        leftOperatorJoystick.button(8).onTrue(setCoralIntaking);
+        leftOperatorJoystick.button(9).onTrue(setCoralOuttaking);
+        leftOperatorJoystick.button(10).onTrue(setCoralHolding);
+        leftOperatorJoystick.button(11).onTrue(setCoralOff);
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
