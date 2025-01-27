@@ -6,12 +6,11 @@ package us.kilroyrobotics.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
 
 public class CoralIntake extends SubsystemBase {
-/** Creates a new Intake. */
+    /** Creates a new Intake. */
     private SparkMax wheelMotor;
 
     public CoralIntake() {
@@ -20,18 +19,17 @@ public class CoralIntake extends SubsystemBase {
 
     CoralState coralState = CoralState.OFF;
 
-    public static enum CoralState { //4 State Enum
+    public static enum CoralState { // 4 State Enum
         OFF,
         INTAKING,
         OUTTAKING,
         HOLDING,
     }
 
-    public void setCoralState(CoralState newState)
-    {
+    public void setCoralState(CoralState newState) {
         this.coralState = newState;
     }
-    
+
     @Override
     public void periodic() {
         switch (coralState) {
