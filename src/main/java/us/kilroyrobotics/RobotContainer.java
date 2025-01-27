@@ -66,20 +66,13 @@ public class RobotContainer {
 
     /* Coral Intake Wheel Commands */
     private Command setCoralIntaking =
-            Commands.runOnce(
-                    () -> coralIntake.setCoralState(CoralState.INTAKING),
-                    coralIntake);
+            Commands.runOnce(() -> coralIntake.setCoralState(CoralState.INTAKING), coralIntake);
     private Command setCoralOuttaking =
-            Commands.runOnce(
-                    () -> coralIntake.setCoralState(CoralState.OUTTAKING),
-                    coralIntake);
+            Commands.runOnce(() -> coralIntake.setCoralState(CoralState.OUTTAKING), coralIntake);
     private Command setCoralHolding =
-            Commands.runOnce(
-                    () -> coralIntake.setCoralState(CoralState.HOLDING),
-                    coralIntake);
+            Commands.runOnce(() -> coralIntake.setCoralState(CoralState.HOLDING), coralIntake);
     private Command setCoralOff =
-            Commands.runOnce(
-                    () -> coralIntake.setCoralState(CoralState.OFF), coralIntake);
+            Commands.runOnce(() -> coralIntake.setCoralState(CoralState.OFF), coralIntake);
 
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
