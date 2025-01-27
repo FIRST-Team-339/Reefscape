@@ -48,9 +48,13 @@ public class Elevator extends SubsystemBase {
 
         // Configure
         SparkMaxConfig leadMotorConfig = new SparkMaxConfig();
-        leadMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pidf(5.0, 0.0, 0.0, 0.0);
+        leadMotorConfig
+                .closedLoop
+                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                .pidf(5.0, 0.0, 0.0, 0.0);
         leadMotorConfig.smartCurrentLimit(40);
-        leadMotorConfig.encoder.positionConversionFactor(ElevatorConstants.kEncoderPositionConversionFactor);
+        leadMotorConfig.encoder.positionConversionFactor(
+                ElevatorConstants.kEncoderPositionConversionFactor);
 
         SparkMaxConfig followerMotorConfig = new SparkMaxConfig();
         followerMotorConfig.smartCurrentLimit(40);
@@ -92,7 +96,8 @@ public class Elevator extends SubsystemBase {
 
     @Logged(name = "SecondStagePose")
     public Pose3d getSecondStagePose() {
-        return this.getCarriagePose().div(2.0); // Second stage moves half the distance of the first stage
+        return new Pose3d(
+                0, 0, (this.m_encoder.getPosition() / (1.0 + (0.6604 / 0.8763))), new Rotation3d());
     }
 
     @Logged(name = "CarriagePose")
@@ -102,16 +107,21 @@ public class Elevator extends SubsystemBase {
 
     @Override
     public void simulationPeriodic() {
-        this.m_simElevator.setInput(this.m_simLeadMotor.getAppliedOutput() * RoboRioSim.getVInVoltage());
+        this.m_simElevator.setInput(
+                this.m_simLeadMotor.getAppliedOutput() * RoboRioSim.getVInVoltage());
         this.m_simElevator.update(0.02);
 
-        // Conver the elevator's Velocity in M/s to RPM. Divide by conversion ratio to get to Rotations per Second, multiple by 60 to get Rotations per Minute
-        double elevatorVelocityRPM = m_simElevator.getVelocityMetersPerSecond() * 60.0 / ElevatorConstants.kEncoderPositionConversionFactor;
+        // Conver the elevator's Velocity in M/s to RPM. Divide by conversion ratio to get to
+        // Rotations per Second, multiple by 60 to get Rotations per Minute
+        double elevatorVelocityRPM =
+                m_simElevator.getVelocityMetersPerSecond()
+                        * 60.0
+                        / ElevatorConstants.kEncoderPositionConversionFactor;
 
-        this.m_simLeadMotor.iterate(
-            elevatorVelocityRPM, RoboRioSim.getVInVoltage(), 0.02);
+        this.m_simLeadMotor.iterate(elevatorVelocityRPM, RoboRioSim.getVInVoltage(), 0.02);
 
         RoboRioSim.setVInVoltage(
-            BatterySim.calculateDefaultBatteryLoadedVoltage(this.m_simElevator.getCurrentDrawAmps()));
+                BatterySim.calculateDefaultBatteryLoadedVoltage(
+                        this.m_simElevator.getCurrentDrawAmps()));
     }
 }
