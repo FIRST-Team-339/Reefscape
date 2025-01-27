@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,6 +23,8 @@ import us.kilroyrobotics.generated.TunerConstants;
 import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor.CoralState;
+import us.kilroyrobotics.subsystems.Elevator;
+import us.kilroyrobotics.subsystems.Wrist;
 
 public class RobotContainer {
     private double kMaxSpeed =
@@ -54,11 +57,17 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final CoralIntakeMotor coralIntakeMotor = new CoralIntakeMotor();
 
+    @Logged(name = "Elevator")
+    private final Elevator elevator = new Elevator();
+
+    @Logged(name = "Wrist")
+    private final Wrist wrist = new Wrist(elevator::getCarriagePose);
+
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        autoChooser = AutoBuilder.buildAutoChooser("Tests");
+        autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         configureBindings();

@@ -4,11 +4,27 @@
 
 package us.kilroyrobotics.subsystems;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Elevator extends SubsystemBase {
     /** Creates a new Elevator. */
     public Elevator() {}
+
+    @Logged(name = "SecondStagePose")
+    public Pose3d getSecondStagePose() {
+        return new Pose3d(0, 0, Inches.of(0).in(Meters), new Rotation3d());
+    }
+
+    @Logged(name = "CarriagePose")
+    public Pose3d getCarriagePose() {
+        return this.getSecondStagePose().times(2);
+    }
 
     @Override
     public void periodic() {

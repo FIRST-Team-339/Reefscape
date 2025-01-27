@@ -12,6 +12,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -203,7 +204,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             var config = RobotConfig.fromGUISettings();
             AutoBuilder.configure(
                     () -> getState().Pose, // Supplier of current robot pose
-                    this::resetPose, // Consumer for seeding pose against auto
+                    (Pose2d pose) -> {
+                        // TODO: Check if limelight is being used, and if so, set the pose to the
+                        // limelight pose with MegaTag2. This would be done as part of the vision
+                        // PR.
+                        if (pose != null) this.resetPose(pose);
+                    }, // Consumer for seeding pose against auto
                     () -> getState().Speeds, // Supplier of current robot speeds
                     // Consumer of ChassisSpeeds and feedforwards to drive the robot
                     (speeds, feedforwards) ->
