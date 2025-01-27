@@ -7,52 +7,50 @@ package us.kilroyrobotics;
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.epilogue.Epilogue;
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import us.kilroyrobotics.Constants.CoralMechanismConstants;
-import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.Constants.VisionConstants;
 import us.kilroyrobotics.util.LimelightHelpers;
 
 @Logged
+@Logged
 public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
 
-	@Logged(name = "RobotContainer")
-	private final RobotContainer m_robotContainer;
+    @Logged(name = "RobotContainer")
+    private final RobotContainer m_robotContainer;
 
-	public Robot() {
-		m_robotContainer = new RobotContainer();
+    public Robot() {
+        m_robotContainer = new RobotContainer();
 
-		// Reset Elevator Encoder to Starting Position
-		m_robotContainer.elevator.resetEncoder();
-
-		Epilogue.bind(this);
-	}
+        Epilogue.bind(this);
+    }
 
 	@Override
 	public void robotPeriodic() {
 		CommandScheduler.getInstance().run();
 
-		/*
-		 * This example of adding Limelight is very simple and may not be sufficient for
-		 * on-field use.
-		 * Users typically need to provide a standard deviation that scales with the
-		 * distance to target
-		 * and changes with number of tags available.
-		 *
-		 * This example is sufficient to show that vision integration is possible,
-		 * though exact implementation
-		 * of how to use vision should be tuned per-robot and to the team's
-		 * specification.
-		 */
-		if (VisionConstants.kUseLimelight) {
-			var driveState = m_robotContainer.drivetrain.getState();
-			double headingDeg = driveState.Pose.getRotation().getDegrees();
-			double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
+        /*
+         * This example of adding Limelight is very simple and may not be sufficient for
+         * on-field use.
+         * Users typically need to provide a standard deviation that scales with the
+         * distance to target
+         * and changes with number of tags available.
+         *
+         * This example is sufficient to show that vision integration is possible,
+         * though exact implementation
+         * of how to use vision should be tuned per-robot and to the team's
+         * specification.
+         */
+        if (VisionConstants.kUseLimelight) {
+            var driveState = m_robotContainer.drivetrain.getState();
+            double headingDeg = driveState.Pose.getRotation().getDegrees();
+            double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
 
 			LimelightHelpers.SetRobotOrientation("limelight", headingDeg, 0, 0, 0, 0, 0);
 			var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");

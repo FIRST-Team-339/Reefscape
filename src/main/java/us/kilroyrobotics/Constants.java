@@ -13,6 +13,11 @@ public final class Constants {
         public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
     }
 
+    /** Constants used for interfacing with limelight vision */
+    public static final class VisionConstants {
+        public static final boolean kUseLimelight = false;
+    }
+
     /** Constants used for interfacing with the elevator subsystem */
     public static final class ElevatorConstants {
         /** The motor ID of the Spark Max associated with the left motor for the elevator */
