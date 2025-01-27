@@ -17,6 +17,11 @@ public final class Constants {
         public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
     }
 
+    /** Constants used for interfacing with limelight vision */
+    public static final class VisionConstants {
+        public static final boolean kUseLimelight = false;
+    }
+
     /** Constants used for interfacing with the elevator subsystem */
     public static final class ElevatorConstants {
         /** The motor ID of the Spark Max associated with the left motor for the elevator */
@@ -55,5 +60,15 @@ public final class Constants {
 
         /** The angle that the wrist will be when scoring at L1 */
         public static final Angle kScoringLowLevel = Degrees.of(160);
+      
+        /* Wheel Speeds */
+        /** Speed of the motor when intaking a coral piece */
+        public static final double kWheelSpeedIntaking = 0.75;
+
+        /** Speed of the motor when scoring a coral piece */
+        public static final double kWheelSpeedOuttaking = -0.75;
+
+        /** Speed of the motor while the robot is in motion to keep the coral piece in place */
+        public static final double kWheelSpeedHolding = 0.15;
     }
 }

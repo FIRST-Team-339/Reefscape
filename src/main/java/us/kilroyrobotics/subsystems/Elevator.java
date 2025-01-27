@@ -5,6 +5,7 @@
 package us.kilroyrobotics.subsystems;
 
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -16,6 +17,9 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import us.kilroyrobotics.Constants.ElevatorConstants;
 
@@ -54,5 +58,15 @@ public class Elevator extends SubsystemBase {
 
     public void stop() {
         this.leadMotor.setVoltage(0.0);
+    }
+  
+    @Logged(name = "SecondStagePose")
+    public Pose3d getSecondStagePose() {
+        return new Pose3d(0, 0, Inches.of(0).in(Meters), new Rotation3d());
+    }
+
+    @Logged(name = "CarriagePose")
+    public Pose3d getCarriagePose() {
+        return this.getSecondStagePose().times(2);
     }
 }
