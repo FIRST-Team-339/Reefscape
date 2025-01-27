@@ -24,7 +24,7 @@ import us.kilroyrobotics.subsystems.CoralIntake;
 import us.kilroyrobotics.subsystems.CoralIntake.CoralState;
 
 public class RobotContainer {
-    private double kTeleopMaxSpeed =
+    private double kMaxSpeed =
             TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double kMaxAngularRate =
             RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
@@ -33,7 +33,7 @@ public class RobotContainer {
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive =
             new SwerveRequest.FieldCentric()
-                    .withDeadband(kTeleopMaxSpeed * 0.1)
+                    .withDeadband(kMaxSpeed * 0.1)
                     .withRotationalDeadband(kMaxAngularRate * 0.1) // Add a 10% deadband
                     .withDriveRequestType(
                             DriveRequestType
@@ -43,7 +43,7 @@ public class RobotContainer {
     private final SwerveRequest.RobotCentric forwardStraight =
             new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    private final Telemetry logger = new Telemetry(kTeleopMaxSpeed);
+    private final Telemetry logger = new Telemetry(kMaxSpeed);
 
     /* Controllers */
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -63,20 +63,6 @@ public class RobotContainer {
 
         configureBindings();
     }
-
-    /** Toggles the max speed via a one-time command */
-    public Command toggleMaxSpeed =
-            Commands.runOnce(
-                    () -> {
-                        if (this.kTeleopMaxSpeed
-                                == TunerConstants.kSpeedAt12Volts.in(MetersPerSecond)) {
-                            this.kTeleopMaxSpeed =
-                                    DriveConstants.kLowDriveSpeed.in(MetersPerSecond);
-                        } else {
-                            this.kTeleopMaxSpeed =
-                                    TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
-                        }
-                    });
 
     /* Coral Intake Wheel Commands */
     private Command setCoralIntaking =
@@ -104,17 +90,17 @@ public class RobotContainer {
                         () ->
                                 drive.withVelocityX(
                                                 -driverController.getLeftY()
-                                                        * kTeleopMaxSpeed) // Drive forward with
+                                                        * kMaxSpeed) // Drive forward with
                                         // negative Y
                                         // (forward)
                                         .withVelocityY(
                                                 -driverController.getLeftX()
-                                                        * kTeleopMaxSpeed) // Drive left with
+                                                        * kMaxSpeed) // Drive left with
                                         // negative X
                                         // (left)
                                         .withRotationalRate(
                                                 -driverController.getRightX()
-                                                        * kMaxAngularRate) // Drive counterclockwise
+                                                        * kMaxSpeed) // Drive counterclockwise
                         // with
                         // negative X (left)
                         ));
@@ -134,12 +120,34 @@ public class RobotContainer {
                 .pov(0)
                 .whileTrue(
                         drivetrain.applyRequest(
-                                () -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
-        driverController
-                .pov(180)
+                                () ->
+                                        forwardStraight
+                                                .withVelocityX(DriveConstants.kLowDriveSpeed)
+                                                .withVelocityY(0)));
+        joystick.pov(90)
                 .whileTrue(
                         drivetrain.applyRequest(
-                                () -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
+                                () ->
+                                        forwardStraight
+                                                .withVelocityX(0)
+                                                .withVelocityY(
+                                                        DriveConstants.kLowDriveSpeed
+                                                                .unaryMinus())));
+        joystick.pov(180)
+                .whileTrue(
+                        drivetrain.applyRequest(
+                                () ->
+                                        forwardStraight
+                                                .withVelocityX(
+                                                        DriveConstants.kLowDriveSpeed.unaryMinus())
+                                                .withVelocityY(0)));
+        joystick.pov(270)
+                .whileTrue(
+                        drivetrain.applyRequest(
+                                () ->
+                                        forwardStraight
+                                                .withVelocityX(0)
+                                                .withVelocityY(DriveConstants.kLowDriveSpeed)));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -164,9 +172,6 @@ public class RobotContainer {
         driverController
                 .leftBumper()
                 .onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
-
-        // Toggle between high and low speeds
-        driverController.x().onTrue(toggleMaxSpeed);
 
         leftOperatorJoystick.button(8).onTrue(setCoralIntaking);
         leftOperatorJoystick.button(9).onTrue(setCoralOuttaking);
