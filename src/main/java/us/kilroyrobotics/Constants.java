@@ -35,6 +35,9 @@ public final class Constants {
         public static final Distance kL3Height = Inches.of(36);
         public static final Distance kL4Height = Inches.of(72);
         public static final Distance kCoralStationHeight = Inches.of(34);
+
+        public static final double kEncoderPositionConversionFactor = 1.0/9.0;
+        public static final double kEncoderVelocityConversionFactor = 1.0;
     }
 
     /** Constants used for interfacing with the Coral Intake and Wrist subsystems */

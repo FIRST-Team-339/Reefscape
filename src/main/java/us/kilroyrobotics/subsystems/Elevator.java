@@ -4,7 +4,6 @@
 
 package us.kilroyrobotics.subsystems;
 
-import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.revrobotics.RelativeEncoder;
@@ -23,86 +22,96 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import us.kilroyrobotics.Constants.ElevatorConstants;
 
 public class Elevator extends SubsystemBase {
-    private SparkMax leadMotor;
-    private SparkMax followerMotor;
-    private RelativeEncoder encoder;
-    private SparkClosedLoopController pidController;
+    private SparkMax m_leadMotor;
+    private SparkMax m_followerMotor;
+    private RelativeEncoder m_encoder;
+    private SparkClosedLoopController m_pidController;
 
     /* Sim Specific */
-    private DCMotor simElevatorGearbox;
-    private SparkMaxSim simMotors;
-    private ElevatorSim simElevator;
+    private DCMotor m_simElevatorGearbox;
+    private SparkMaxSim m_simLeadMotor;
+    private ElevatorSim m_simElevator;
 
     /** Creates a new Elevator. */
     public Elevator() {
-        this.leadMotor = new SparkMax(ElevatorConstants.kLeftMotorId, MotorType.kBrushless);
-        this.followerMotor = new SparkMax(ElevatorConstants.kRightMotorId, MotorType.kBrushless);
-        this.encoder = this.leadMotor.getEncoder();
-        this.pidController = this.leadMotor.getClosedLoopController();
+        this.m_leadMotor = new SparkMax(ElevatorConstants.kLeftMotorId, MotorType.kBrushless);
+        this.m_followerMotor = new SparkMax(ElevatorConstants.kRightMotorId, MotorType.kBrushless);
+        this.m_pidController = this.m_leadMotor.getClosedLoopController();
+        this.m_encoder = this.m_leadMotor.getEncoder();
 
         // Configure
-        SparkMaxConfig config = new SparkMaxConfig();
-        config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pidf(1.0, 0.0, 0.0, 0.0);
+        SparkMaxConfig leadMotorConfig = new SparkMaxConfig();
+        leadMotorConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pidf(5.0, 0.0, 0.0, 0.0);
+        leadMotorConfig.smartCurrentLimit(40);
+        leadMotorConfig.encoder.positionConversionFactor(ElevatorConstants.kEncoderPositionConversionFactor);
 
-        this.leadMotor.configure(
-                config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        this.followerMotor.configure(
-                new SparkMaxConfig().follow(this.leadMotor, true),
+        SparkMaxConfig followerMotorConfig = new SparkMaxConfig();
+        followerMotorConfig.smartCurrentLimit(40);
+        followerMotorConfig.follow(this.m_leadMotor, false);
+
+        this.m_leadMotor.configure(
+                leadMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        this.m_followerMotor.configure(
+                followerMotorConfig,
                 ResetMode.kResetSafeParameters,
                 PersistMode.kPersistParameters);
 
         // Sim
-        this.simElevatorGearbox = DCMotor.getNEO(2);
-        this.simMotors = new SparkMaxSim(leadMotor, simElevatorGearbox);
-        this.simElevator =
+        this.m_simElevatorGearbox = DCMotor.getNEO(2);
+        this.m_simLeadMotor = new SparkMaxSim(m_leadMotor, m_simElevatorGearbox);
+        this.m_simElevator =
                 new ElevatorSim(
-                        this.simElevatorGearbox,
-                        10.0,
+                        this.m_simElevatorGearbox,
+                        9.0,
+                        1.0,
                         Units.inchesToMeters(2.0),
-                        4.0,
                         0.0,
-                        0.8763,
+                        Units.inchesToMeters(74.5),
                         true,
-                        0,
-                        0.1,
                         0);
     }
 
     public void setPosition(Distance distance) {
-        this.pidController.setReference(distance.in(Inches), ControlType.kPosition);
-        System.out.println(this.encoder.getPosition());
+        this.m_pidController.setReference(distance.in(Meters), ControlType.kPosition);
     }
 
     public void resetPosition() {
-        encoder.setPosition(0);
+        m_encoder.setPosition(0);
     }
 
     public void stop() {
-        this.leadMotor.setVoltage(0.0);
+        this.m_leadMotor.setVoltage(0.0);
     }
 
     @Logged(name = "SecondStagePose")
     public Pose3d getSecondStagePose() {
-        return new Pose3d(0, 0, Inches.of(this.encoder.getPosition()).in(Meters), new Rotation3d());
+        return this.getCarriagePose().div(2.0); // Second stage moves half the distance of the first stage
     }
 
     @Logged(name = "CarriagePose")
     public Pose3d getCarriagePose() {
-        return this.getSecondStagePose().times(2);
+        return new Pose3d(0, 0, this.m_encoder.getPosition(), new Rotation3d());
     }
 
     @Override
     public void simulationPeriodic() {
-        this.simElevator.setInput(this.simMotors.getAppliedOutput() * RoboRioSim.getVInVoltage());
-        this.simElevator.update(0.02);
+        this.m_simElevator.setInput(this.m_simLeadMotor.getAppliedOutput() * RoboRioSim.getVInVoltage());
+        this.m_simElevator.update(0.02);
 
-        this.simMotors.iterate(
-                this.simElevator.getVelocityMetersPerSecond(), RoboRioSim.getVInVoltage(), 0.02);
+        // Conver the elevator's Velocity in M/s to RPM. Divide by conversion ratio to get to Rotations per Second, multiple by 60 to get Rotations per Minute
+        double elevatorVelocityRPM = m_simElevator.getVelocityMetersPerSecond() * 60.0 / ElevatorConstants.kEncoderPositionConversionFactor;
+
+        this.m_simLeadMotor.iterate(
+            elevatorVelocityRPM, RoboRioSim.getVInVoltage(), 0.02);
+
+        RoboRioSim.setVInVoltage(
+            BatterySim.calculateDefaultBatteryLoadedVoltage(this.m_simElevator.getCurrentDrawAmps()));
     }
 }
