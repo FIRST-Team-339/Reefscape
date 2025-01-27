@@ -60,7 +60,7 @@ public final class Constants {
 
         /** The angle that the wrist will be when scoring at L1 */
         public static final Angle kScoringLowLevel = Degrees.of(160);
-      
+
         /* Wheel Speeds */
         /** Speed of the motor when intaking a coral piece */
         public static final double kWheelSpeedIntaking = 0.75;
