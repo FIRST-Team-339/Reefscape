@@ -21,10 +21,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import us.kilroyrobotics.Constants.DriveConstants;
 import us.kilroyrobotics.generated.TunerConstants;
 import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
-import us.kilroyrobotics.subsystems.Elevator;
-import us.kilroyrobotics.subsystems.Wrist;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor.CoralState;
+import us.kilroyrobotics.subsystems.Elevator;
+import us.kilroyrobotics.subsystems.Wrist;
 
 public class RobotContainer {
     private double kMaxSpeed =
