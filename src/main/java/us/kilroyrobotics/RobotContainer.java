@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import us.kilroyrobotics.Constants.DriveConstants;
 import us.kilroyrobotics.generated.TunerConstants;
 import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
-import us.kilroyrobotics.subsystems.CoralIntake;
-import us.kilroyrobotics.subsystems.CoralIntake.CoralState;
+import us.kilroyrobotics.subsystems.CoralIntakeMotor;
+import us.kilroyrobotics.subsystems.CoralIntakeMotor.CoralState;
 
 public class RobotContainer {
     private double kMaxSpeed =
@@ -52,7 +52,7 @@ public class RobotContainer {
 
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
-    private final CoralIntake coralIntake = new CoralIntake();
+    private final CoralIntakeMotor coralIntakeMotor = new CoralIntakeMotor();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -66,13 +66,17 @@ public class RobotContainer {
 
     /* Coral Intake Wheel Commands */
     private Command setCoralIntaking =
-            Commands.runOnce(() -> coralIntake.setCoralState(CoralState.INTAKING), coralIntake);
+            Commands.runOnce(
+                    () -> coralIntakeMotor.setCoralState(CoralState.INTAKING), coralIntakeMotor);
     private Command setCoralOuttaking =
-            Commands.runOnce(() -> coralIntake.setCoralState(CoralState.OUTTAKING), coralIntake);
+            Commands.runOnce(
+                    () -> coralIntakeMotor.setCoralState(CoralState.OUTTAKING), coralIntakeMotor);
     private Command setCoralHolding =
-            Commands.runOnce(() -> coralIntake.setCoralState(CoralState.HOLDING), coralIntake);
+            Commands.runOnce(
+                    () -> coralIntakeMotor.setCoralState(CoralState.HOLDING), coralIntakeMotor);
     private Command setCoralOff =
-            Commands.runOnce(() -> coralIntake.setCoralState(CoralState.OFF), coralIntake);
+            Commands.runOnce(
+                    () -> coralIntakeMotor.setCoralState(CoralState.OFF), coralIntakeMotor);
 
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,

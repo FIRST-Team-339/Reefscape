@@ -9,11 +9,11 @@ import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
 
-public class CoralIntake extends SubsystemBase {
-    /** Creates a new Intake. */
+public class CoralIntakeMotor extends SubsystemBase {
     private SparkMax wheelMotor;
 
-    public CoralIntake() {
+    /** Creates a new CoralIntakeMotor. */
+    public CoralIntakeMotor() {
         this.wheelMotor = new SparkMax(CoralMechanismConstants.kWheelMotorId, MotorType.kBrushless);
     }
 
