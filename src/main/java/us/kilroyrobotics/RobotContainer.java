@@ -51,10 +51,10 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     @Logged(name = "Elevator")
-    private final Elevator elevatorSubsystem = new Elevator();
+    private final Elevator elevator = new Elevator();
 
     @Logged(name = "Wrist")
-    private final Wrist wristSubsystem = new Wrist(elevatorSubsystem::getCarriagePose);
+    private final Wrist wrist = new Wrist(elevator::getCarriagePose);
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
