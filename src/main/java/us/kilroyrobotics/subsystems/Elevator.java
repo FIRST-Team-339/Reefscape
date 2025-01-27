@@ -20,13 +20,13 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import us.kilroyrobotics.Constants.ElevatorConstants;
+import us.kilroyrobotics.Constants.SimulationConstants;
 
 public class Elevator extends SubsystemBase {
     private SparkMax m_leadMotor;
@@ -69,13 +69,13 @@ public class Elevator extends SubsystemBase {
         this.m_simElevator =
                 new ElevatorSim(
                         this.m_simElevatorGearbox,
-                        9.0,
-                        1.0,
-                        Units.inchesToMeters(2.0),
-                        0.0,
-                        Units.inchesToMeters(74.5),
+                        SimulationConstants.kElevatorGearing,
+                        SimulationConstants.kElevatorCarriageMass.magnitude(),
+                        SimulationConstants.kElevatorDrumRadius.magnitude(),
+                        SimulationConstants.kElevatorMinHeight.magnitude(),
+                        SimulationConstants.kElevatorMaxHeight.magnitude(),
                         true,
-                        0);
+                        SimulationConstants.kElevatorStartingHeight.magnitude());
     }
 
     public void setPosition(Distance distance) {

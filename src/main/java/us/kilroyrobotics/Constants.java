@@ -2,11 +2,14 @@ package us.kilroyrobotics;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Kilograms;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.units.measure.Mass;
 
 public final class Constants {
     /**
@@ -30,14 +33,47 @@ public final class Constants {
         /** The motor ID of the Spark Max associated with the right motor for the elevator */
         public static final int kRightMotorId = 42;
 
-        public static final Distance kL1Height = Inches.of(18);
-        public static final Distance kL2Height = Inches.of(24);
-        public static final Distance kL3Height = Inches.of(36);
-        public static final Distance kL4Height = Inches.of(72);
-        public static final Distance kCoralStationHeight = Inches.of(34);
+        /** Height necessary for the coral intake to reach Level 1 of Reef in Meters */
+        public static final Distance kL1Height = Meters.of(Inches.of(18.0).in(Meters));
 
+        /** Height necessary for the coral intake to reach Level 2 of Reef in Meters */
+        public static final Distance kL2Height = Meters.of(Inches.of(24.0).in(Meters));
+
+        /** Height necessary for the coral intake to reach Level 3 of Reef in Meters */
+        public static final Distance kL3Height = Meters.of(Inches.of(36.0).in(Meters));
+
+        /** Height necessary for the coral intake to reach Level 4 of Reef in Meters */
+        public static final Distance kL4Height = Meters.of(Inches.of(72.0).in(Meters));
+
+        /** Height necessary for the coral intake to reach the Coral Station */
+        public static final Distance kCoralStationHeight = Meters.of(Inches.of(34.0).in(Meters));
+
+        /** Conversion factor which when multiplied by the raw encoder output results in the current carriage height in meters */
         public static final double kEncoderPositionConversionFactor = 1.0/9.0;
+
+        /** Conversion factor which when multiplied by the raw encoder output velocity results in the current carriage velocity in meters/second */
         public static final double kEncoderVelocityConversionFactor = 1.0;
+    }
+
+    /** Constants used during Simulation */
+    public static final class SimulationConstants {
+        /** The gearing of the elevator gearbox */
+        public static final double kElevatorGearing = 9.0;
+        
+        /** The weight in Kg of the carriage in Kilograms */
+        public static final Mass kElevatorCarriageMass = Kilograms.of(1.0);
+
+        /** The radius of the elevator rope drum in Meters */
+        public static final Distance kElevatorDrumRadius = Meters.of(Inches.of(2.0).in(Meters));
+
+        /** The minimum height of the elevator in Meters */
+        public static final Distance kElevatorMinHeight = Meters.of(Inches.of(0.0).in(Meters));
+        
+        /** The maximum height of the elevator in Meters */
+        public static final Distance kElevatorMaxHeight = Meters.of(Inches.of(74.5).in(Meters));
+
+        /** The height of the elevator in Meters when the robot is in its starting configuration */
+        public static final Distance kElevatorStartingHeight = Meters.of(Inches.of(0.0).in(Meters));
     }
 
     /** Constants used for interfacing with the Coral Intake and Wrist subsystems */
