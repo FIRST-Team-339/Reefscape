@@ -100,6 +100,12 @@ public class RobotContainer {
             Commands.runOnce(
                     () -> elevator.setPosition(ElevatorConstants.kCoralStationHeight), elevator);
 
+    private Command coralIntakeSetL1 = Commands.parallel(elevatorSetL1);
+    private Command coralIntakeSetL2 = Commands.parallel(elevatorSetL2);
+    private Command coralIntakeSetL3 = Commands.parallel(elevatorSetL3);
+    private Command coralIntakeSetL4 = Commands.parallel(elevatorSetL4);
+    private Command coralIntakeSetCoralStation = Commands.parallel(elevatorSetCoralStation);
+
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
@@ -195,10 +201,22 @@ public class RobotContainer {
                 .leftBumper()
                 .onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        leftOperatorJoystick.button(8).onTrue(setCoralIntaking);
-        leftOperatorJoystick.button(9).onTrue(setCoralOuttaking);
-        leftOperatorJoystick.button(10).onTrue(setCoralHolding);
-        leftOperatorJoystick.button(11).onTrue(setCoralOff);
+        // leftOperatorJoystick.button(8).onTrue(setCoralIntaking);
+        // leftOperatorJoystick.button(9).onTrue(setCoralOuttaking);
+        // leftOperatorJoystick.button(10).onTrue(setCoralHolding);
+        // leftOperatorJoystick.button(11).onTrue(setCoralOff);
+
+        // Elevator Controls
+        leftOperatorJoystick.button(10).onTrue(coralIntakeSetL1);
+        leftOperatorJoystick.button(7).onTrue(coralIntakeSetL2);
+        leftOperatorJoystick.button(11).onTrue(coralIntakeSetL3);
+        leftOperatorJoystick.button(6).onTrue(coralIntakeSetL4);
+        leftOperatorJoystick.button(8).onTrue(coralIntakeSetCoralStation);
+        rightOperatorJoystick
+                .button(1)
+                .whileTrue(
+                        Commands.run(
+                                () -> elevator.set(rightOperatorJoystick.getY() * 0.25), elevator));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
