@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import us.kilroyrobotics.Constants.DriveConstants;
+import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.generated.TunerConstants;
 import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor;
@@ -58,7 +59,7 @@ public class RobotContainer {
     private final CoralIntakeMotor coralIntakeMotor = new CoralIntakeMotor();
 
     @Logged(name = "Elevator")
-    private final Elevator elevator = new Elevator();
+    public final Elevator elevator = new Elevator();
 
     @Logged(name = "Wrist")
     private final Wrist wrist = new Wrist(elevator::getCarriagePose);
@@ -87,6 +88,24 @@ public class RobotContainer {
             Commands.runOnce(
                     () -> coralIntakeMotor.setCoralState(CoralState.OFF), coralIntakeMotor);
 
+    private Command elevatorSetL1 =
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL1Height), elevator);
+    private Command elevatorSetL2 =
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL2Height), elevator);
+    private Command elevatorSetL3 =
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL3Height), elevator);
+    private Command elevatorSetL4 =
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL4Height), elevator);
+    private Command elevatorSetCoralStation =
+            Commands.runOnce(
+                    () -> elevator.setPosition(ElevatorConstants.kCoralStationHeight), elevator);
+
+    private Command coralIntakeSetL1 = Commands.parallel(elevatorSetL1);
+    private Command coralIntakeSetL2 = Commands.parallel(elevatorSetL2);
+    private Command coralIntakeSetL3 = Commands.parallel(elevatorSetL3);
+    private Command coralIntakeSetL4 = Commands.parallel(elevatorSetL4);
+    private Command coralIntakeSetCoralStation = Commands.parallel(elevatorSetCoralStation);
+
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
@@ -106,7 +125,7 @@ public class RobotContainer {
                                         // (left)
                                         .withRotationalRate(
                                                 -driverController.getRightX()
-                                                        * kMaxSpeed) // Drive counterclockwise
+                                                        * kMaxAngularRate) // Drive counterclockwise
                         // with
                         // negative X (left)
                         ));
@@ -182,10 +201,20 @@ public class RobotContainer {
                 .leftBumper()
                 .onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        leftOperatorJoystick.button(8).onTrue(setCoralIntaking);
-        leftOperatorJoystick.button(9).onTrue(setCoralOuttaking);
-        leftOperatorJoystick.button(10).onTrue(setCoralHolding);
-        leftOperatorJoystick.button(11).onTrue(setCoralOff);
+        // Coral Intake Motor Controls
+        leftOperatorJoystick.button(3).onTrue(setCoralIntaking).onFalse(setCoralHolding);
+        leftOperatorJoystick.button(4).onTrue(setCoralOuttaking).onFalse(setCoralOff);
+        // Elevator Controls
+        rightOperatorJoystick.button(10).onTrue(coralIntakeSetL1);
+        rightOperatorJoystick.button(7).onTrue(coralIntakeSetL2);
+        rightOperatorJoystick.button(11).onTrue(coralIntakeSetL3);
+        rightOperatorJoystick.button(6).onTrue(coralIntakeSetL4);
+        rightOperatorJoystick.button(8).onTrue(coralIntakeSetCoralStation);
+        rightOperatorJoystick
+                .button(1)
+                .whileTrue(
+                        Commands.run(
+                                () -> elevator.set(rightOperatorJoystick.getY() * 0.25), elevator));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }
