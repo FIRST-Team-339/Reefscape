@@ -201,17 +201,15 @@ public class RobotContainer {
                 .leftBumper()
                 .onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        // leftOperatorJoystick.button(8).onTrue(setCoralIntaking);
-        // leftOperatorJoystick.button(9).onTrue(setCoralOuttaking);
-        // leftOperatorJoystick.button(10).onTrue(setCoralHolding);
-        // leftOperatorJoystick.button(11).onTrue(setCoralOff);
-
+        // Coral Intake Motor Controls
+        leftOperatorJoystick.button(3).onTrue(setCoralIntaking).onFalse(setCoralHolding);
+        leftOperatorJoystick.button(4).onTrue(setCoralOuttaking).onFalse(setCoralOff);
         // Elevator Controls
-        leftOperatorJoystick.button(10).onTrue(coralIntakeSetL1);
-        leftOperatorJoystick.button(7).onTrue(coralIntakeSetL2);
-        leftOperatorJoystick.button(11).onTrue(coralIntakeSetL3);
-        leftOperatorJoystick.button(6).onTrue(coralIntakeSetL4);
-        leftOperatorJoystick.button(8).onTrue(coralIntakeSetCoralStation);
+        rightOperatorJoystick.button(10).onTrue(coralIntakeSetL1);
+        rightOperatorJoystick.button(7).onTrue(coralIntakeSetL2);
+        rightOperatorJoystick.button(11).onTrue(coralIntakeSetL3);
+        rightOperatorJoystick.button(6).onTrue(coralIntakeSetL4);
+        rightOperatorJoystick.button(8).onTrue(coralIntakeSetCoralStation);
         rightOperatorJoystick
                 .button(1)
                 .whileTrue(
