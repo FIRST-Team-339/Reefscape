@@ -219,6 +219,14 @@ public class RobotContainer {
         // Coral Intake Motor Controls
         leftOperatorJoystick.button(3).onTrue(setCoralIntaking).onFalse(setCoralHolding);
         leftOperatorJoystick.button(4).onTrue(setCoralOuttaking).onFalse(setCoralOff);
+
+        // Wrist Control
+        leftOperatorJoystick
+                .button(1)
+                .whileTrue(
+                        Commands.run(
+                                () -> elevator.set(leftOperatorJoystick.getY() * 0.25), elevator));
+
         // Elevator Controls
         rightOperatorJoystick.button(10).onTrue(coralIntakeSetL1);
         rightOperatorJoystick.button(7).onTrue(coralIntakeSetL2);
