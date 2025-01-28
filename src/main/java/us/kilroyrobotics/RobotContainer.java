@@ -16,8 +16,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.DriveConstants;
 import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.generated.TunerConstants;
@@ -62,7 +64,7 @@ public class RobotContainer {
     public final Elevator elevator = new Elevator();
 
     @Logged(name = "Wrist")
-    private final Wrist wrist = new Wrist(elevator::getCarriagePose);
+    public final Wrist wrist = new Wrist(elevator::getCarriagePose);
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -100,11 +102,24 @@ public class RobotContainer {
             Commands.runOnce(
                     () -> elevator.setPosition(ElevatorConstants.kCoralStationHeight), elevator);
 
-    private Command coralIntakeSetL1 = Commands.parallel(elevatorSetL1);
-    private Command coralIntakeSetL2 = Commands.parallel(elevatorSetL2);
-    private Command coralIntakeSetL3 = Commands.parallel(elevatorSetL3);
-    private Command coralIntakeSetL4 = Commands.parallel(elevatorSetL4);
-    private Command coralIntakeSetCoralStation = Commands.parallel(elevatorSetCoralStation);
+    /* Wrist Commands */
+    private Command wristSetLow =
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringLowLevel), wrist);
+    private Command wristSetMid =
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringMidLevel), wrist);
+    private Command wristSetHigh =
+            Commands.runOnce(
+                    () -> wrist.setAngle(CoralMechanismConstants.kScoringHighLevel), wrist);
+    private Command wristSetCoralStation =
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist);
+
+    /* Preset Commands */
+    private Command coralIntakeSetL1 = Commands.parallel(elevatorSetL1, wristSetLow);
+    private Command coralIntakeSetL2 = Commands.parallel(elevatorSetL2, wristSetMid);
+    private Command coralIntakeSetL3 = Commands.parallel(elevatorSetL3, wristSetMid);
+    private Command coralIntakeSetL4 = Commands.parallel(elevatorSetL4, wristSetHigh);
+    private Command coralIntakeSetCoralStation =
+            Commands.parallel(elevatorSetCoralStation, wristSetCoralStation);
 
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
