@@ -105,9 +105,7 @@ public class Elevator extends SubsystemBase {
                 0,
                 0,
                 (this.m_encoder.getPosition()
-                        // 26 inches is how high the carriage can move, 34.5 inches is how high the
-                        // second stage can move
-                        / (1.0 + (Inches.of(26).in(Meters) / Inches.of(34.5).in(Meters)))),
+                        / ElevatorConstants.kSecondStagePositionConversionFactor),
                 new Rotation3d());
     }
 

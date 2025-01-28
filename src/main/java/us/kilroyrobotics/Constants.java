@@ -50,7 +50,9 @@ public final class Constants {
 
         /**
          * Conversion factor which when multiplied by the raw encoder output results in the current
-         * carriage height in meters gear ratio * sprocket OD * PI = Meters per rotation
+         * carriage height in meters
+         * 
+         *  gear ratio * sprocket OD * PI = Meters per rotation
          */
         public static final double kEncoderPositionConversionFactor =
                 Inches.of(1.0 / 9.0 * 15.0 / 8.0 * Math.PI).in(Meters);
@@ -63,7 +65,9 @@ public final class Constants {
 
         /**
          * Conversion factor which takes the current encoder position to derive the height of the
-         * second stage in meters. 1.0 + ()
+         * second stage in meters. 
+         * 
+         * 1.0 + (inches carriage can move inside of 2nd stage / inches second stage can move inside of 1st stage)
          */
         public static final double kSecondStagePositionConversionFactor =
                 (1.0 + (Inches.of(26.0).in(Meters) / Inches.of(34.5).in(Meters)));
