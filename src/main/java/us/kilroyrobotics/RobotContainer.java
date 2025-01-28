@@ -103,21 +103,22 @@ public class RobotContainer {
                     () -> elevator.setPosition(ElevatorConstants.kCoralStationHeight), elevator);
 
     /* Wrist Commands */
-    private Command wristSetLow =
-            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringLowLevel), wrist);
-    private Command wristSetMid =
-            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringMidLevel), wrist);
-    private Command wristSetHigh =
-            Commands.runOnce(
-                    () -> wrist.setAngle(CoralMechanismConstants.kScoringHighLevel), wrist);
+    private Command wristSetL1 =
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL1), wrist);
+    private Command wristSetL2 =
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL2), wrist);
+    private Command wristSetL3 =
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL3), wrist);
+    private Command wristSetL4 =
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL4), wrist);
     private Command wristSetCoralStation =
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist);
 
     /* Preset Commands */
-    private Command coralIntakeSetL1 = Commands.parallel(elevatorSetL1, wristSetLow);
-    private Command coralIntakeSetL2 = Commands.parallel(elevatorSetL2, wristSetMid);
-    private Command coralIntakeSetL3 = Commands.parallel(elevatorSetL3, wristSetMid);
-    private Command coralIntakeSetL4 = Commands.parallel(elevatorSetL4, wristSetHigh);
+    private Command coralIntakeSetL1 = Commands.parallel(elevatorSetL1, wristSetL1);
+    private Command coralIntakeSetL2 = Commands.parallel(elevatorSetL2, wristSetL2);
+    private Command coralIntakeSetL3 = Commands.parallel(elevatorSetL3, wristSetL3);
+    private Command coralIntakeSetL4 = Commands.parallel(elevatorSetL4, wristSetL4);
     private Command coralIntakeSetCoralStation =
             Commands.parallel(elevatorSetCoralStation, wristSetCoralStation);
 

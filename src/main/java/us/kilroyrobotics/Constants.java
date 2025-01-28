@@ -132,13 +132,16 @@ public final class Constants {
         public static final Angle kIntakingAngle = Degrees.of(45);
 
         /** The angle that the wrist will be when scoring at L4 */
-        public static final Angle kScoringHighLevel = Degrees.of(120);
+        public static final Angle kScoringL4 = Degrees.of(120);
 
-        /** The angle that the wrist will be when scoring at L2-L3 */
-        public static final Angle kScoringMidLevel = Degrees.of(110);
+        /** The angle that the wrist will be when scoring at L3 */
+        public static final Angle kScoringL3 = Degrees.of(110);
+
+        /** The angle that the wrist will be when scoring at L2 */
+        public static final Angle kScoringL2 = Degrees.of(110);
 
         /** The angle that the wrist will be when scoring at L1 */
-        public static final Angle kScoringLowLevel = Degrees.of(100);
+        public static final Angle kScoringL1 = Degrees.of(100);
 
         /* PIDF constants */
         public static final double kP = 5.0;

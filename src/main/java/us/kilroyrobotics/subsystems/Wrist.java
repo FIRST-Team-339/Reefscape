@@ -10,6 +10,8 @@ import static edu.wpi.first.units.Units.Radians;
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -61,6 +63,9 @@ public class Wrist extends SubsystemBase {
         wristMotorConfig.idleMode(IdleMode.kBrake);
         wristMotorConfig.smartCurrentLimit(40);
 
+        this.m_wristMotor.configure(
+                wristMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
         this.getCarriagePose = carriagePoseGetter;
 
         // Sim
@@ -73,9 +78,9 @@ public class Wrist extends SubsystemBase {
                         SimulationConstants.kWristMass.magnitude(),
                         SimulationConstants.kArmLength.magnitude(),
                         SimulationConstants.kMinAngle.in(Radians),
-                        SimulationConstants.kMaxAngle.in(Degrees),
+                        SimulationConstants.kMaxAngle.in(Radians),
                         true,
-                        CoralMechanismConstants.kScoringMidLevel.in(Radians));
+                        CoralMechanismConstants.kStartingAngle.in(Radians));
     }
 
     public void setAngle(Angle angle) {
