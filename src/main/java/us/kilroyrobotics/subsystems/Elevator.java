@@ -58,7 +58,7 @@ public class Elevator extends SubsystemBase {
 
         SparkMaxConfig followerMotorConfig = new SparkMaxConfig();
         followerMotorConfig.smartCurrentLimit(40);
-        followerMotorConfig.follow(this.m_leadMotor, false);
+        followerMotorConfig.follow(this.m_leadMotor, true);
 
         this.m_leadMotor.configure(
                 leadMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
