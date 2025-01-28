@@ -48,6 +48,12 @@ public final class Constants {
         /** Height necessary for the coral intake to reach the Coral Station */
         public static final Distance kCoralStationHeight = Meters.of(Inches.of(18.5).in(Meters));
 
+        /* PIDF constants */
+        public static final double kP = 5.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kF = 0.0;
+
         /**
          * Conversion factor which when multiplied by the raw encoder output results in the current
          * carriage height in meters

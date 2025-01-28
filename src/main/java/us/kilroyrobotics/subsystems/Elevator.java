@@ -51,7 +51,11 @@ public class Elevator extends SubsystemBase {
         leadMotorConfig
                 .closedLoop
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .pidf(5.0, 0.0, 0.0, 0.0);
+                .pidf(
+                        ElevatorConstants.kP,
+                        ElevatorConstants.kI,
+                        ElevatorConstants.kD,
+                        ElevatorConstants.kF);
         leadMotorConfig.smartCurrentLimit(40);
         leadMotorConfig.encoder.positionConversionFactor(
                 ElevatorConstants.kEncoderPositionConversionFactor);
