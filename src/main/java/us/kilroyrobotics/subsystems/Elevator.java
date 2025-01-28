@@ -4,7 +4,6 @@
 
 package us.kilroyrobotics.subsystems;
 
-import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.revrobotics.RelativeEncoder;
