@@ -4,6 +4,7 @@
 
 package us.kilroyrobotics.subsystems;
 
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.revrobotics.RelativeEncoder;
@@ -101,7 +102,13 @@ public class Elevator extends SubsystemBase {
     @Logged(name = "SecondStagePose")
     public Pose3d getSecondStagePose() {
         return new Pose3d(
-                0, 0, (this.m_encoder.getPosition() / (1.0 + (0.6604 / 0.8763))), new Rotation3d());
+                0,
+                0,
+                (this.m_encoder.getPosition()
+                        // 26 inches is how high the carriage can move, 34.5 inches is how high the
+                        // second stage can move
+                        / (1.0 + (Inches.of(26).in(Meters) / Inches.of(34.5).in(Meters)))),
+                new Rotation3d());
     }
 
     @Logged(name = "CarriagePose")
