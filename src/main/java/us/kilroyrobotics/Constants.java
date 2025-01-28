@@ -34,19 +34,19 @@ public final class Constants {
         public static final int kRightMotorId = 42;
 
         /** Height necessary for the coral intake to reach Level 1 of Reef in Meters */
-        public static final Distance kL1Height = Meters.of(Inches.of(18.0).in(Meters));
+        public static final Distance kL1Height = Meters.of(Inches.of(12.5).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 2 of Reef in Meters */
-        public static final Distance kL2Height = Meters.of(Inches.of(24.0).in(Meters));
+        public static final Distance kL2Height = Meters.of(Inches.of(18.5).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 3 of Reef in Meters */
-        public static final Distance kL3Height = Meters.of(Inches.of(36.0).in(Meters));
+        public static final Distance kL3Height = Meters.of(Inches.of(30.5).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 4 of Reef in Meters */
-        public static final Distance kL4Height = Meters.of(Inches.of(72.0).in(Meters));
+        public static final Distance kL4Height = Meters.of(Inches.of(60.5).in(Meters));
 
         /** Height necessary for the coral intake to reach the Coral Station */
-        public static final Distance kCoralStationHeight = Meters.of(Inches.of(34.0).in(Meters));
+        public static final Distance kCoralStationHeight = Meters.of(Inches.of(18.5).in(Meters));
 
         /**
          * Conversion factor which when multiplied by the raw encoder output results in the current
