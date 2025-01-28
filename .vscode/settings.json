@@ -64,6 +64,7 @@
 	"editor.formatOnSave": true,
 	"editor.defaultFormatter": "richardwillis.vscode-spotless-gradle",
 	"git-identity.authors": [
-		"Colin 196128404+colincardello@users.noreply.github.com"
+		"ColinCardello 196128404+ColinCardello@users.noreply.github.com",
+		"Jacob Fisher 72705185+fisherjacobc@users.noreply.github.com"
 	]
 }
