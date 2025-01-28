@@ -99,6 +99,21 @@ public final class Constants {
 
         /** The height of the elevator in Meters when the robot is in its starting configuration */
         public static final Distance kElevatorStartingHeight = Meters.of(Inches.of(0.0).in(Meters));
+
+        /** The gearing of the wrist gearbox */
+        public static final double kWristGearing = 9.0;
+
+        /** The weight in Kg of the wrist in Kilograms */
+        public static final Mass kWristMass = Kilograms.of(0.5);
+
+        /** Arm length in meters */
+        public static final Distance kArmLength = Meters.of(Inches.of(12.0).in(Meters));
+
+        /** Min angle in Degrees */
+        public static final Angle kMinAngle = Degrees.of(0);
+
+        /** Max angle in Degrees */
+        public static final Angle kMaxAngle = Degrees.of(180);
     }
 
     /** Constants used for interfacing with the Coral Intake and Wrist subsystems */
@@ -117,13 +132,19 @@ public final class Constants {
         public static final Angle kIntakingAngle = Degrees.of(45);
 
         /** The angle that the wrist will be when scoring at L4 */
-        public static final Angle kScoringHighLevel = Degrees.of(180);
+        public static final Angle kScoringHighLevel = Degrees.of(120);
 
         /** The angle that the wrist will be when scoring at L2-L3 */
         public static final Angle kScoringMidLevel = Degrees.of(110);
 
         /** The angle that the wrist will be when scoring at L1 */
-        public static final Angle kScoringLowLevel = Degrees.of(160);
+        public static final Angle kScoringLowLevel = Degrees.of(100);
+
+        /* PIDF constants */
+        public static final double kP = 5.0;
+        public static final double kI = 0.0;
+        public static final double kD = 0.0;
+        public static final double kF = 0.0;
 
         /* Wheel Speeds */
         /** Speed of the motor when intaking a coral piece */
