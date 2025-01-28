@@ -5,19 +5,89 @@
 package us.kilroyrobotics.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radians;
 
+import com.revrobotics.sim.SparkMaxSim;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.Supplier;
+import us.kilroyrobotics.Constants.CoralMechanismConstants;
+import us.kilroyrobotics.Constants.SimulationConstants;
 
 public class Wrist extends SubsystemBase {
+    private SparkMax m_wristMotor;
     private Supplier<Pose3d> getCarriagePose;
+    private SparkAbsoluteEncoder m_encoder;
+    private SparkClosedLoopController m_pidController;
+
+    /* Sim Specific */
+    private DCMotor m_simWristGearbox;
+    private SparkMaxSim m_simWristMotor;
+    private SingleJointedArmSim m_simWrist;
 
     /** Creates a new Wrist. */
     public Wrist(Supplier<Pose3d> carriagePoseGetter) {
+        this.m_wristMotor =
+                new SparkMax(CoralMechanismConstants.kWristMotorId, MotorType.kBrushless);
+        this.m_pidController = this.m_wristMotor.getClosedLoopController();
+        this.m_encoder = this.m_wristMotor.getAbsoluteEncoder();
+
+        // Configure
+        SparkMaxConfig wristMotorConfig = new SparkMaxConfig();
+        wristMotorConfig
+                .closedLoop
+                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                .pidf(
+                        CoralMechanismConstants.kP,
+                        CoralMechanismConstants.kI,
+                        CoralMechanismConstants.kD,
+                        CoralMechanismConstants.kF);
+        wristMotorConfig.idleMode(IdleMode.kBrake);
+        wristMotorConfig.smartCurrentLimit(40);
+
         this.getCarriagePose = carriagePoseGetter;
+
+        // Sim
+        this.m_simWristGearbox = DCMotor.getNEO(1);
+        this.m_simWristMotor = new SparkMaxSim(this.m_wristMotor, m_simWristGearbox);
+        this.m_simWrist =
+                new SingleJointedArmSim(
+                        m_simWristGearbox,
+                        SimulationConstants.kWristGearing,
+                        SimulationConstants.kWristMass.magnitude(),
+                        SimulationConstants.kArmLength.magnitude(),
+                        SimulationConstants.kMinAngle.in(Radians),
+                        SimulationConstants.kMaxAngle.in(Degrees),
+                        true,
+                        CoralMechanismConstants.kScoringMidLevel.in(Radians));
+    }
+
+    public void setAngle(Angle angle) {
+        this.m_pidController.setReference(angle.in(Degrees), ControlType.kPosition);
+    }
+
+    public void set(double speed) {
+        this.m_wristMotor.set(speed);
+    }
+
+    public void stop() {
+        this.m_wristMotor.setVoltage(0.0);
     }
 
     @Logged(name = "WristPose")
@@ -27,11 +97,22 @@ public class Wrist extends SubsystemBase {
                 0.0254,
                 this.getCarriagePose.get().getZ() + 0.2899918,
                 new Rotation3d(
-                        Degrees.of(0), Degrees.of(0) /* Wrist angle goes here */, Degrees.of(0)));
+                        Degrees.of(0), Degrees.of(this.m_encoder.getPosition()), Degrees.of(0)));
     }
 
     @Override
-    public void periodic() {
-        // This method will be called once per scheduler run
+    public void simulationPeriodic() {
+        this.m_simWrist.setInput(m_simWristMotor.getAppliedOutput() * RoboRioSim.getVInVoltage());
+        this.m_simWrist.update(0.02);
+
+        this.m_simWristMotor.iterate(
+                Units.radiansPerSecondToRotationsPerMinute( // motor velocity, in RPM
+                        m_simWrist.getVelocityRadPerSec()),
+                RoboRioSim.getVInVoltage(),
+                0.02);
+
+        RoboRioSim.setVInVoltage(
+                BatterySim.calculateDefaultBatteryLoadedVoltage(
+                        this.m_simWrist.getCurrentDrawAmps()));
     }
 }
