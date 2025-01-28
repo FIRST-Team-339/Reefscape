@@ -54,7 +54,7 @@ public class Wrist extends SubsystemBase {
         SparkMaxConfig wristMotorConfig = new SparkMaxConfig();
         wristMotorConfig
                 .closedLoop
-                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
                 .pidf(
                         CoralMechanismConstants.kP,
                         CoralMechanismConstants.kI,
@@ -75,16 +75,18 @@ public class Wrist extends SubsystemBase {
                 new SingleJointedArmSim(
                         m_simWristGearbox,
                         SimulationConstants.kWristGearing,
-                        SimulationConstants.kWristMass.magnitude(),
+                        SingleJointedArmSim.estimateMOI(
+                                SimulationConstants.kArmLength.magnitude(),
+                                SimulationConstants.kWristMass.magnitude()),
                         SimulationConstants.kArmLength.magnitude(),
                         SimulationConstants.kMinAngle.in(Radians),
-                        SimulationConstants.kMaxAngle.in(Radians),
+                        SimulationConstants.kMaxAngle.in(Radians) * (Math.PI * 2),
                         true,
                         CoralMechanismConstants.kStartingAngle.in(Radians));
     }
 
     public void setAngle(Angle angle) {
-        this.m_pidController.setReference(angle.in(Degrees), ControlType.kPosition);
+        this.m_pidController.setReference(angle.in(Radians), ControlType.kPosition);
     }
 
     public void set(double speed) {
@@ -102,7 +104,7 @@ public class Wrist extends SubsystemBase {
                 0.0254,
                 this.getCarriagePose.get().getZ() + 0.2899918,
                 new Rotation3d(
-                        Degrees.of(0), Degrees.of(this.m_encoder.getPosition()), Degrees.of(0)));
+                        Degrees.of(0), Radians.of(this.m_encoder.getPosition()), Degrees.of(0)));
     }
 
     @Override
