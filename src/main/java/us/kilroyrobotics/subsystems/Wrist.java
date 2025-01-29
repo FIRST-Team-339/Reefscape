@@ -7,6 +7,7 @@ package us.kilroyrobotics.subsystems;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Radians;
 
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.sim.SparkMaxSim;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -35,7 +36,9 @@ import us.kilroyrobotics.Constants.SimulationConstants;
 public class Wrist extends SubsystemBase {
     private SparkMax m_wristMotor;
     private Supplier<Pose3d> getCarriagePose;
-    private SparkAbsoluteEncoder m_encoder;
+    private boolean m_useAbsoluteEncoder;
+    private SparkAbsoluteEncoder m_absoluteEncoder;
+    private RelativeEncoder m_relativeEncoder;
     private SparkClosedLoopController m_pidController;
 
     /* Sim Specific */
@@ -44,17 +47,25 @@ public class Wrist extends SubsystemBase {
     private SingleJointedArmSim m_simWrist;
 
     /** Creates a new Wrist. */
-    public Wrist(Supplier<Pose3d> carriagePoseGetter) {
+    public Wrist(Supplier<Pose3d> carriagePoseGetter, boolean useAbsoluteEncoder) {
         this.m_wristMotor =
                 new SparkMax(CoralMechanismConstants.kWristMotorId, MotorType.kBrushless);
         this.m_pidController = this.m_wristMotor.getClosedLoopController();
-        this.m_encoder = this.m_wristMotor.getAbsoluteEncoder();
+        this.m_useAbsoluteEncoder = useAbsoluteEncoder;
+        if (useAbsoluteEncoder) {
+            this.m_absoluteEncoder = this.m_wristMotor.getAbsoluteEncoder();
+        } else {
+            this.m_relativeEncoder = this.m_wristMotor.getEncoder();
+        }
 
         // Configure
         SparkMaxConfig wristMotorConfig = new SparkMaxConfig();
         wristMotorConfig
                 .closedLoop
-                .feedbackSensor(FeedbackSensor.kAbsoluteEncoder)
+                .feedbackSensor(
+                        useAbsoluteEncoder
+                                ? FeedbackSensor.kAbsoluteEncoder
+                                : FeedbackSensor.kPrimaryEncoder)
                 .pidf(
                         CoralMechanismConstants.kP,
                         CoralMechanismConstants.kI,
@@ -86,7 +97,7 @@ public class Wrist extends SubsystemBase {
     }
 
     public void setAngle(Angle angle) {
-        this.m_pidController.setReference(angle.in(Radians), ControlType.kPosition);
+        this.m_pidController.setReference(angle.times(64).in(Radians), ControlType.kPosition);
     }
 
     public void set(double speed) {
@@ -104,7 +115,13 @@ public class Wrist extends SubsystemBase {
                 0.0254,
                 this.getCarriagePose.get().getZ() + 0.2899918,
                 new Rotation3d(
-                        Degrees.of(0), Radians.of(this.m_encoder.getPosition()), Degrees.of(0)));
+                        Degrees.of(0),
+                        Radians.of(
+                                (this.m_useAbsoluteEncoder
+                                                ? this.m_absoluteEncoder.getPosition()
+                                                : this.m_relativeEncoder.getPosition())
+                                        / 64),
+                        Degrees.of(0)));
     }
 
     @Override

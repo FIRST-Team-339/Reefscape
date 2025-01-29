@@ -64,7 +64,7 @@ public class RobotContainer {
     public final Elevator elevator = new Elevator();
 
     @Logged(name = "Wrist")
-    public final Wrist wrist = new Wrist(elevator::getCarriagePose);
+    public final Wrist wrist = new Wrist(elevator::getCarriagePose, false);
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
