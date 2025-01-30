@@ -92,7 +92,8 @@ public class Wrist extends SubsystemBase {
                                 SimulationConstants.kWristMass.magnitude()),
                         SimulationConstants.kArmLength.magnitude(),
                         SimulationConstants.kMinAngle.in(Radians),
-                        SimulationConstants.kMaxAngle.in(Rotations),
+                        // Multiply the max angle by 2pi to convert to radians
+                        SimulationConstants.kMaxAngle.in(Radians) * Math.PI * 2,
                         true,
                         CoralMechanismConstants.kStartingAngle.in(Radians));
     }
