@@ -243,7 +243,7 @@ public class RobotContainer {
         leftOperatorJoystick
                 .button(1)
                 .whileTrue(
-                        Commands.run(() -> wrist.set(leftOperatorJoystick.getY() * 0.25), wrist));
+                        Commands.run(() -> wrist.setSpeed(leftOperatorJoystick.getY() * 0.25), wrist));
 
         // Elevator Controls
         rightOperatorJoystick.button(10).onTrue(elevatorSetL1);
