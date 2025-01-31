@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import java.util.function.Supplier;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.DriveConstants;
 import us.kilroyrobotics.Constants.ElevatorConstants;
@@ -114,11 +115,23 @@ public class RobotContainer {
     private Command wristSetCoralStation =
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist);
 
+    private Command waitToSlowDown(Supplier<Double> velocityGetter, double velocityThreshold) {
+        return Commands.waitUntil(() -> Math.abs(velocityGetter.get()) < velocityThreshold);
+    }
+
     /* Preset Commands */
-    private Command coralIntakeSetL1 = Commands.sequence(elevatorSetL1, wristSetL1);
-    private Command coralIntakeSetL2 = Commands.sequence(elevatorSetL2, wristSetL2);
-    private Command coralIntakeSetL3 = Commands.sequence(elevatorSetL3, wristSetL3);
-    private Command coralIntakeSetL4 = Commands.sequence(elevatorSetL4, wristSetL4);
+    private Command coralIntakeSetL1 =
+            Commands.sequence(
+                    elevatorSetL1, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL1);
+    private Command coralIntakeSetL2 =
+            Commands.sequence(
+                    elevatorSetL2, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL2);
+    private Command coralIntakeSetL3 =
+            Commands.sequence(
+                    elevatorSetL3, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL3);
+    private Command coralIntakeSetL4 =
+            Commands.sequence(
+                    elevatorSetL4, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL4);
     private Command coralIntakeSetCoralStation =
             Commands.sequence(elevatorSetCoralStation, wristSetCoralStation);
 

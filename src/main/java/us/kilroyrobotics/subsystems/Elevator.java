@@ -89,6 +89,10 @@ public class Elevator extends SubsystemBase {
                         SimulationConstants.kElevatorStartingHeight.magnitude());
     }
 
+    public double getVelocity() {
+        return this.m_leadMotor.getAppliedOutput();
+    }
+
     public void setPosition(Distance distance) {
         this.m_pidController.setReference(distance.in(Meters), ControlType.kPosition);
     }

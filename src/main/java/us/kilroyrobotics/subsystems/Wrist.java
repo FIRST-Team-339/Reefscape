@@ -96,6 +96,10 @@ public class Wrist extends SubsystemBase {
                         CoralMechanismConstants.kStartingAngle.in(Radians));
     }
 
+    public double getVelocity() {
+        return this.m_wristMotor.getAppliedOutput();
+    }
+
     public void setAngle(Angle angle) {
         this.m_pidController.setReference(angle.times(64).in(Radians), ControlType.kPosition);
     }
