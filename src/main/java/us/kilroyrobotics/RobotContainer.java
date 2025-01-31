@@ -120,20 +120,20 @@ public class RobotContainer {
     }
 
     /* Preset Commands */
-    private Command coralIntakeSetL1 =
-            Commands.sequence(
-                    elevatorSetL1, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL1);
-    private Command coralIntakeSetL2 =
-            Commands.sequence(
-                    elevatorSetL2, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL2);
-    private Command coralIntakeSetL3 =
-            Commands.sequence(
-                    elevatorSetL3, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL3);
-    private Command coralIntakeSetL4 =
-            Commands.sequence(
-                    elevatorSetL4, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL4);
-    private Command coralIntakeSetCoralStation =
-            Commands.sequence(elevatorSetCoralStation, wristSetCoralStation);
+    //     private Command coralIntakeSetL1 =
+    //             Commands.sequence(
+    //                     elevatorSetL1, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL1);
+    //     private Command coralIntakeSetL2 =
+    //             Commands.sequence(
+    //                     elevatorSetL2, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL2);
+    //     private Command coralIntakeSetL3 =
+    //             Commands.sequence(
+    //                     elevatorSetL3, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL3);
+    //     private Command coralIntakeSetL4 =
+    //             Commands.sequence(
+    //                     elevatorSetL4, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL4);
+    //     private Command coralIntakeSetCoralStation =
+    //             Commands.sequence(elevatorSetCoralStation, wristSetCoralStation);
 
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
@@ -235,17 +235,22 @@ public class RobotContainer {
         leftOperatorJoystick.button(4).onTrue(setCoralOuttaking).onFalse(setCoralOff);
 
         // Wrist Control
+        leftOperatorJoystick.button(10).onTrue(wristSetL1);
+        leftOperatorJoystick.button(7).onTrue(wristSetL2);
+        leftOperatorJoystick.button(11).onTrue(wristSetL3);
+        leftOperatorJoystick.button(6).onTrue(wristSetL4);
+        leftOperatorJoystick.button(8).onTrue(wristSetCoralStation);
         leftOperatorJoystick
                 .button(1)
                 .whileTrue(
                         Commands.run(() -> wrist.set(leftOperatorJoystick.getY() * 0.25), wrist));
 
         // Elevator Controls
-        rightOperatorJoystick.button(10).onTrue(coralIntakeSetL1);
-        rightOperatorJoystick.button(7).onTrue(coralIntakeSetL2);
-        rightOperatorJoystick.button(11).onTrue(coralIntakeSetL3);
-        rightOperatorJoystick.button(6).onTrue(coralIntakeSetL4);
-        rightOperatorJoystick.button(8).onTrue(coralIntakeSetCoralStation);
+        rightOperatorJoystick.button(10).onTrue(elevatorSetL1);
+        rightOperatorJoystick.button(7).onTrue(elevatorSetL2);
+        rightOperatorJoystick.button(11).onTrue(elevatorSetL3);
+        rightOperatorJoystick.button(6).onTrue(elevatorSetL4);
+        rightOperatorJoystick.button(8).onTrue(elevatorSetCoralStation);
         rightOperatorJoystick
                 .button(1)
                 .whileTrue(
