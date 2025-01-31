@@ -225,8 +225,7 @@ public class RobotContainer {
         leftOperatorJoystick
                 .button(1)
                 .whileTrue(
-                        Commands.run(
-                                () -> elevator.set(leftOperatorJoystick.getY() * 0.25), elevator));
+                        Commands.run(() -> wrist.set(leftOperatorJoystick.getY() * 0.25), wrist));
 
         // Elevator Controls
         rightOperatorJoystick.button(10).onTrue(coralIntakeSetL1);
