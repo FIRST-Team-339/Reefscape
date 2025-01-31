@@ -115,12 +115,12 @@ public class RobotContainer {
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist);
 
     /* Preset Commands */
-    private Command coralIntakeSetL1 = Commands.parallel(elevatorSetL1, wristSetL1);
-    private Command coralIntakeSetL2 = Commands.parallel(elevatorSetL2, wristSetL2);
-    private Command coralIntakeSetL3 = Commands.parallel(elevatorSetL3, wristSetL3);
-    private Command coralIntakeSetL4 = Commands.parallel(elevatorSetL4, wristSetL4);
+    private Command coralIntakeSetL1 = Commands.sequence(elevatorSetL1, wristSetL1);
+    private Command coralIntakeSetL2 = Commands.sequence(elevatorSetL2, wristSetL2);
+    private Command coralIntakeSetL3 = Commands.sequence(elevatorSetL3, wristSetL3);
+    private Command coralIntakeSetL4 = Commands.sequence(elevatorSetL4, wristSetL4);
     private Command coralIntakeSetCoralStation =
-            Commands.parallel(elevatorSetCoralStation, wristSetCoralStation);
+            Commands.sequence(elevatorSetCoralStation, wristSetCoralStation);
 
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
