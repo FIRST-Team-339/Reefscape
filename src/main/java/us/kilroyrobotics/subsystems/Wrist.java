@@ -6,6 +6,7 @@ package us.kilroyrobotics.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.Rotations;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.sim.SparkMaxSim;
@@ -91,7 +92,7 @@ public class Wrist extends SubsystemBase {
                                 SimulationConstants.kWristMass.magnitude()),
                         SimulationConstants.kArmLength.magnitude(),
                         SimulationConstants.kMinAngle.in(Radians),
-                        SimulationConstants.kMaxAngle.in(Radians) * (Math.PI * 2),
+                        SimulationConstants.kMaxAngle.in(Rotations),
                         true,
                         CoralMechanismConstants.kStartingAngle.in(Radians));
     }
@@ -101,7 +102,7 @@ public class Wrist extends SubsystemBase {
     }
 
     public void setAngle(Angle angle) {
-        this.m_pidController.setReference(angle.times(64).in(Radians), ControlType.kPosition);
+        this.m_pidController.setReference(angle.times(64).in(Rotations), ControlType.kPosition);
     }
 
     public void set(double speed) {
