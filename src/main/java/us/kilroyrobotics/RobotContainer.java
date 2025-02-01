@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -80,19 +81,30 @@ public class RobotContainer {
         configureBindings();
     }
 
+    private Command waitToSlowDown(Supplier<Double> velocityGetter, double velocityThreshold) {
+        return Commands.waitUntil(() -> Math.abs(velocityGetter.get()) < velocityThreshold);
+    }
+
     /* Coral Intake Wheel Commands */
-    private Command setCoralIntaking =
-            Commands.runOnce(
-                    () -> coralIntakeMotor.setCoralState(CoralState.INTAKING), coralIntakeMotor);
-    private Command setCoralOuttaking =
-            Commands.runOnce(
-                    () -> coralIntakeMotor.setCoralState(CoralState.OUTTAKING), coralIntakeMotor);
-    private Command setCoralHolding =
-            Commands.runOnce(
-                    () -> coralIntakeMotor.setCoralState(CoralState.HOLDING), coralIntakeMotor);
-    private Command setCoralOff =
-            Commands.runOnce(
-                    () -> coralIntakeMotor.setCoralState(CoralState.OFF), coralIntakeMotor);
+    private Command setCoralIntaking() {
+        return new InstantCommand(
+                () -> coralIntakeMotor.setCoralState(CoralState.INTAKING), coralIntakeMotor);
+    }
+
+    private Command setCoralOuttaking() {
+        return new InstantCommand(
+                () -> coralIntakeMotor.setCoralState(CoralState.OUTTAKING), coralIntakeMotor);
+    }
+
+    private Command setCoralHolding() {
+        return new InstantCommand(
+                () -> coralIntakeMotor.setCoralState(CoralState.HOLDING), coralIntakeMotor);
+    }
+
+    private Command setCoralOff() {
+        return new InstantCommand(
+                () -> coralIntakeMotor.setCoralState(CoralState.OFF), coralIntakeMotor);
+    }
 
     private Command elevatorSetL1 =
             Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL1Height), elevator);
@@ -118,9 +130,40 @@ public class RobotContainer {
     private Command wristSetCoralStation =
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist);
 
-    private Command waitToSlowDown(Supplier<Double> velocityGetter, double velocityThreshold) {
-        return Commands.waitUntil(() -> Math.abs(velocityGetter.get()) < velocityThreshold);
+    private Command wristStop() {
+        return new InstantCommand(() -> wrist.stop(), wrist);
     }
+
+    private Command wristSetL1AndStop =
+            Commands.sequence(
+                    wristSetL1,
+                    waitToSlowDown(wrist::getVelocity, 0.1),
+                    wristStop(),
+                    setCoralOuttaking());
+    private Command wristSetL2AndStop =
+            Commands.sequence(
+                    wristSetL2,
+                    waitToSlowDown(wrist::getVelocity, 0.1),
+                    wristStop(),
+                    setCoralOuttaking());
+    private Command wristSetL3AndStop =
+            Commands.sequence(
+                    wristSetL3,
+                    waitToSlowDown(wrist::getVelocity, 0.1),
+                    wristStop(),
+                    setCoralOuttaking());
+    private Command wristSetL4AndStop =
+            Commands.sequence(
+                    wristSetL4,
+                    waitToSlowDown(wrist::getVelocity, 0.1),
+                    wristStop(),
+                    setCoralOuttaking());
+    private Command wristSetCoralStationAndStop =
+            Commands.sequence(
+                    wristSetCoralStation,
+                    waitToSlowDown(wrist::getVelocity, 0.1),
+                    wristStop(),
+                    setCoralIntaking());
 
     /* Preset Commands */
     //     private Command coralIntakeSetL1 =
@@ -242,19 +285,20 @@ public class RobotContainer {
                 .onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         // Coral Intake Motor Controls
-        leftOperatorJoystick.button(3).onTrue(setCoralIntaking).onFalse(setCoralHolding);
-        leftOperatorJoystick.button(4).onTrue(setCoralOuttaking).onFalse(setCoralOff);
+        leftOperatorJoystick.button(3).onTrue(setCoralIntaking()).onFalse(setCoralHolding());
+        leftOperatorJoystick.button(2).onTrue(setCoralOuttaking()).onFalse(setCoralOff());
 
         // Wrist Control
-        leftOperatorJoystick.button(10).onTrue(wristSetL1);
-        leftOperatorJoystick.button(7).onTrue(wristSetL2);
-        leftOperatorJoystick.button(11).onTrue(wristSetL3);
-        leftOperatorJoystick.button(6).onTrue(wristSetL4);
-        leftOperatorJoystick.button(8).onTrue(wristSetCoralStation);
+        leftOperatorJoystick.button(10).onTrue(wristSetL1AndStop);
+        leftOperatorJoystick.button(7).onTrue(wristSetL2AndStop);
+        leftOperatorJoystick.button(11).onTrue(wristSetL3AndStop);
+        leftOperatorJoystick.button(6).onTrue(wristSetL4AndStop);
+        leftOperatorJoystick.button(8).onTrue(wristSetCoralStationAndStop);
         leftOperatorJoystick
                 .button(1)
                 .whileTrue(
-                        Commands.run(() -> wrist.setSpeed(leftOperatorJoystick.getY() * 0.25), wrist));
+                        Commands.run(
+                                () -> wrist.setSpeed(leftOperatorJoystick.getY() * 0.25), wrist));
 
         // Elevator Controls
         rightOperatorJoystick.button(10).onTrue(elevatorSetL1);
@@ -271,8 +315,8 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         // Algae Controls
-        leftOperatorJoystick.button(3).onTrue(setAlgaeIntaking).onFalse(setAlgaeOff);
-        leftOperatorJoystick.button(2).onTrue(setAlgaeOuttaking).onFalse(setAlgaeOff);
+        rightOperatorJoystick.button(3).onTrue(setAlgaeIntaking).onFalse(setAlgaeOff);
+        rightOperatorJoystick.button(2).onTrue(setAlgaeOuttaking).onFalse(setAlgaeOff);
     }
 
     public Command getAutonomousCommand() {
