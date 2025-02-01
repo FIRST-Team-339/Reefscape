@@ -135,4 +135,15 @@ public final class Constants {
         /** Speed of the motor while the robot is in motion to keep the coral piece in place */
         public static final double kWheelSpeedHolding = 0.15;
     }
+
+    public static final class AlgaeConstants {
+
+        /** Algae motor IDs */
+        public static final int kAlgaeMotorLeaderId = 45;
+
+        public static final int kAlgaeMotorFollowerId = 46;
+
+        public static final double kAlgaeSpeedIntaking = 0.75;
+        public static final double kAlgaeSpeedOuttaking = -0.75;
+    }
 }

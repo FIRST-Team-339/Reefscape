@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import us.kilroyrobotics.Constants.DriveConstants;
 import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.generated.TunerConstants;
+import us.kilroyrobotics.subsystems.AlgaeIntake;
+import us.kilroyrobotics.subsystems.AlgaeIntake.AlgaeState;
 import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor.CoralState;
@@ -57,6 +59,7 @@ public class RobotContainer {
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final CoralIntakeMotor coralIntakeMotor = new CoralIntakeMotor();
+    private final AlgaeIntake algaeIntake = new AlgaeIntake();
 
     @Logged(name = "Elevator")
     public final Elevator elevator = new Elevator();
@@ -105,6 +108,14 @@ public class RobotContainer {
     private Command coralIntakeSetL3 = Commands.parallel(elevatorSetL3);
     private Command coralIntakeSetL4 = Commands.parallel(elevatorSetL4);
     private Command coralIntakeSetCoralStation = Commands.parallel(elevatorSetCoralStation);
+
+    /* Algae Intake Commands */
+    private Command setAlgaeIntaking =
+            Commands.runOnce(() -> algaeIntake.setAlgaeState(AlgaeState.INTAKING), algaeIntake);
+    private Command setAlgaeOuttaking =
+            Commands.runOnce(() -> algaeIntake.setAlgaeState(AlgaeState.OUTTAKING), algaeIntake);
+    private Command setAlgaeOff =
+            Commands.runOnce(() -> algaeIntake.setAlgaeState(AlgaeState.OFF), algaeIntake);
 
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
@@ -217,6 +228,10 @@ public class RobotContainer {
                                 () -> elevator.set(rightOperatorJoystick.getY() * 0.25), elevator));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+
+        // Algae Controls
+        leftOperatorJoystick.button(3).onTrue(setAlgaeIntaking).onFalse(setAlgaeOff);
+        leftOperatorJoystick.button(2).onTrue(setAlgaeOuttaking).onFalse(setAlgaeOff);
     }
 
     public Command getAutonomousCommand() {
