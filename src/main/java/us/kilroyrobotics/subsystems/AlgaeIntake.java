@@ -30,7 +30,7 @@ public class AlgaeIntake extends SubsystemBase {
 
         SparkMaxConfig followerConfig = new SparkMaxConfig();
         followerConfig.smartCurrentLimit(40);
-        followerConfig.follow(this.algaeMotorLeader);
+        followerConfig.follow(this.algaeMotorLeader, true);
 
         this.algaeMotorFollower.configure(
                 followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
