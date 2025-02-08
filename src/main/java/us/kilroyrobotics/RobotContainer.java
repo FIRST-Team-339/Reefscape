@@ -27,6 +27,7 @@ import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.generated.TunerConstants;
 import us.kilroyrobotics.subsystems.AlgaeIntake;
 import us.kilroyrobotics.subsystems.AlgaeIntake.AlgaeState;
+import us.kilroyrobotics.subsystems.Camera;
 import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor.CoralState;
@@ -64,6 +65,7 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final CoralIntakeMotor coralIntakeMotor = new CoralIntakeMotor();
     private final AlgaeIntake algaeIntake = new AlgaeIntake();
+    private final Camera camera = new Camera();
 
     @Logged(name = "Elevator")
     public final Elevator elevator = new Elevator();
@@ -96,12 +98,12 @@ public class RobotContainer {
                 () -> coralIntakeMotor.setCoralState(CoralState.OUTTAKING), coralIntakeMotor);
     }
 
-    private Command setCoralHolding() {
+    private Command genCoralHoldingCommand() {
         return new InstantCommand(
                 () -> coralIntakeMotor.setCoralState(CoralState.HOLDING), coralIntakeMotor);
     }
 
-    private Command setCoralOff() {
+    private Command genCoralOffCommand() {
         return new InstantCommand(
                 () -> coralIntakeMotor.setCoralState(CoralState.OFF), coralIntakeMotor);
     }
@@ -166,6 +168,8 @@ public class RobotContainer {
                     setCoralIntaking());
 
     /* Preset Commands */
+    private Command elevatorStop = Commands.run(() -> elevator.stop(), wrist);
+
     //     private Command coralIntakeSetL1 =
     //             Commands.sequence(
     //                     elevatorSetL1, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL1);
@@ -285,8 +289,8 @@ public class RobotContainer {
                 .onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         // Coral Intake Motor Controls
-        leftOperatorJoystick.button(3).onTrue(setCoralIntaking()).onFalse(setCoralHolding());
-        leftOperatorJoystick.button(2).onTrue(setCoralOuttaking()).onFalse(setCoralOff());
+        leftOperatorJoystick.button(3).onTrue(setCoralIntaking()).onFalse(genCoralHoldingCommand());
+        leftOperatorJoystick.button(2).onTrue(setCoralOuttaking()).onFalse(genCoralOffCommand());
 
         // Wrist Control
         leftOperatorJoystick.button(10).onTrue(wristSetL1AndStop);
@@ -310,7 +314,8 @@ public class RobotContainer {
                 .button(1)
                 .whileTrue(
                         Commands.run(
-                                () -> elevator.set(rightOperatorJoystick.getY() * 0.25), elevator));
+                                () -> elevator.set(rightOperatorJoystick.getY() * 0.25), elevator))
+                .onFalse(elevatorStop);
 
         drivetrain.registerTelemetry(logger::telemeterize);
 

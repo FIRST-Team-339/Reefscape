@@ -4,6 +4,7 @@
 
 package us.kilroyrobotics.subsystems;
 
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.revrobotics.RelativeEncoder;
@@ -56,15 +57,18 @@ public class Elevator extends SubsystemBase {
                         ElevatorConstants.kP,
                         ElevatorConstants.kI,
                         ElevatorConstants.kD,
-                        ElevatorConstants.kF);
+                        ElevatorConstants.kF)
+                .outputRange(-1, 1);
         leadMotorConfig.idleMode(IdleMode.kBrake);
-        leadMotorConfig.smartCurrentLimit(40);
+        leadMotorConfig.closedLoop.maxMotion.maxVelocity(ElevatorConstants.kMaxVelocity);
+        leadMotorConfig.closedLoop.maxMotion.maxAcceleration(ElevatorConstants.kMaxAcceleration);
+        leadMotorConfig.smartCurrentLimit(20);
         leadMotorConfig.encoder.positionConversionFactor(
                 ElevatorConstants.kEncoderPositionConversionFactor);
 
         SparkMaxConfig followerMotorConfig = new SparkMaxConfig();
         followerMotorConfig.idleMode(IdleMode.kBrake);
-        followerMotorConfig.smartCurrentLimit(40);
+        followerMotorConfig.smartCurrentLimit(20);
         followerMotorConfig.follow(this.m_leadMotor, true);
 
         this.m_leadMotor.configure(
@@ -94,11 +98,12 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setPosition(Distance distance) {
-        this.m_pidController.setReference(distance.in(Meters), ControlType.kPosition);
+        this.m_pidController.setReference(
+                distance.in(Meters), ControlType.kMAXMotionPositionControl);
     }
 
-    public void resetPosition() {
-        m_encoder.setPosition(0);
+    public void resetEncoder() {
+        m_encoder.setPosition(ElevatorConstants.kZeroed.in(Meters));
     }
 
     public void set(double speed) {
@@ -122,6 +127,10 @@ public class Elevator extends SubsystemBase {
     @Logged(name = "CarriagePose")
     public Pose3d getCarriagePose() {
         return new Pose3d(0, 0, this.m_encoder.getPosition(), new Rotation3d());
+    }
+
+    public double getPosition() {
+        return Meters.of(this.m_encoder.getPosition()).in(Inches);
     }
 
     @Override
