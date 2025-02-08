@@ -33,20 +33,25 @@ public final class Constants {
         /** The motor ID of the Spark Max associated with the right motor for the elevator */
         public static final int kRightMotorId = 42;
 
+        /** The zeroed motor encoder position in inches */
+        public static final Distance kZeroed = Meters.of(Inches.of(13.1875).in(Meters));
+
         /** Height necessary for the coral intake to reach Level 1 of Reef in Meters */
-        public static final Distance kL1Height = Meters.of(Inches.of(12.5).in(Meters));
+        // 36.5
+        public static final Distance kL1Height = Meters.of(Inches.of(25.6875).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 2 of Reef in Meters */
-        public static final Distance kL2Height = Meters.of(Inches.of(18.5).in(Meters));
+        // 47.5
+        public static final Distance kL2Height = Meters.of(Inches.of(31.6875).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 3 of Reef in Meters */
-        public static final Distance kL3Height = Meters.of(Inches.of(30.5).in(Meters));
+        public static final Distance kL3Height = Meters.of(Inches.of(43.6875).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 4 of Reef in Meters */
-        public static final Distance kL4Height = Meters.of(Inches.of(60.5).in(Meters));
+        public static final Distance kL4Height = Meters.of(Inches.of(68).in(Meters));
 
         /** Height necessary for the coral intake to reach the Coral Station */
-        public static final Distance kCoralStationHeight = Meters.of(Inches.of(18.5).in(Meters));
+        public static final Distance kCoralStationHeight = Meters.of(Inches.of(31.6875).in(Meters));
 
         /* PIDF constants */
         public static final double kP = 5.0;
@@ -54,14 +59,17 @@ public final class Constants {
         public static final double kD = 0.0;
         public static final double kF = 0.0;
 
+        public static final double kMaxVelocity = 0.1;
+        public static final double kMaxAcceleration = 0.1;
+
         /**
          * Conversion factor which when multiplied by the raw encoder output results in the current
-         * carriage height in meters
-         *
-         * <p>gear ratio * sprocket OD * PI = Meters per rotation
+         * carriage height in meters 64In is equivalent to an encoder value of 41.547
          */
         public static final double kEncoderPositionConversionFactor =
-                Inches.of(1.0 / 9.0 * 15.0 / 8.0 * Math.PI).in(Meters);
+                Inches.of(50.8125).in(Meters) / 41.547;
+
+        // 1.0;
 
         /**
          * Conversion factor which when multiplied by the raw encoder output velocity results in the
@@ -169,5 +177,16 @@ public final class Constants {
 
         public static final double kAlgaeSpeedIntaking = 0.75;
         public static final double kAlgaeSpeedOuttaking = -0.75;
+    }
+
+    public static final class CameraConstants {
+        /* SOFTWARE PROPERTIES */
+        public static final boolean kCameraEnabled = true;
+
+        /* CAMERA PROPERTIES */
+        public static final int[] kResolution = {640, 480};
+        public static final int kFPS = 20;
+        public static final int kCompression = 60;
+        public static final int kBrightness = 35;
     }
 }
