@@ -31,125 +31,110 @@ import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.Constants.SimulationConstants;
 
 public class Elevator extends SubsystemBase {
-    private SparkMax m_leadMotor;
-    private SparkMax m_followerMotor;
-    private RelativeEncoder m_encoder;
-    private SparkClosedLoopController m_pidController;
+	private SparkMax m_leadMotor;
+	private SparkMax m_followerMotor;
+	private RelativeEncoder m_encoder;
+	private SparkClosedLoopController m_pidController;
 
-    /* Sim Specific */
-    private DCMotor m_simElevatorGearbox;
-    private SparkMaxSim m_simLeadMotor;
-    private ElevatorSim m_simElevator;
+	/* Sim Specific */
+	private DCMotor m_simElevatorGearbox;
+	private SparkMaxSim m_simLeadMotor;
+	private ElevatorSim m_simElevator;
 
-    /** Creates a new Elevator. */
-    public Elevator() {
-        this.m_leadMotor = new SparkMax(ElevatorConstants.kLeftMotorId, MotorType.kBrushless);
-        this.m_followerMotor = new SparkMax(ElevatorConstants.kRightMotorId, MotorType.kBrushless);
-        this.m_pidController = this.m_leadMotor.getClosedLoopController();
-        this.m_encoder = this.m_leadMotor.getEncoder();
+	/** Creates a new Elevator. */
+	public Elevator() {
+		this.m_leadMotor = new SparkMax(ElevatorConstants.kLeftMotorId, MotorType.kBrushless);
+		this.m_followerMotor = new SparkMax(ElevatorConstants.kRightMotorId, MotorType.kBrushless);
+		this.m_pidController = this.m_leadMotor.getClosedLoopController();
+		this.m_encoder = this.m_leadMotor.getEncoder();
 
-        // Configure
-        SparkMaxConfig leadMotorConfig = new SparkMaxConfig();
-        leadMotorConfig
-                .closedLoop
-                .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .pidf(
-                        ElevatorConstants.kP,
-                        ElevatorConstants.kI,
-                        ElevatorConstants.kD,
-                        ElevatorConstants.kF)
-                .outputRange(-1, 1);
-        leadMotorConfig.idleMode(IdleMode.kBrake);
-        leadMotorConfig.closedLoop.maxMotion.maxVelocity(ElevatorConstants.kMaxVelocity);
-        leadMotorConfig.closedLoop.maxMotion.maxAcceleration(ElevatorConstants.kMaxAcceleration);
-        leadMotorConfig.smartCurrentLimit(20);
-        leadMotorConfig.encoder.positionConversionFactor(
-                ElevatorConstants.kEncoderPositionConversionFactor);
+		// Configure
+		SparkMaxConfig leadMotorConfig = new SparkMaxConfig();
+		leadMotorConfig
+				.closedLoop
+				.feedbackSensor(FeedbackSensor.kPrimaryEncoder)
+				.pidf(ElevatorConstants.kP, ElevatorConstants.kI, ElevatorConstants.kD, ElevatorConstants.kF)
+				.outputRange(-1, 1);
+		leadMotorConfig.idleMode(IdleMode.kBrake);
+		leadMotorConfig.closedLoop.maxMotion.maxVelocity(ElevatorConstants.kMaxVelocity);
+		leadMotorConfig.closedLoop.maxMotion.maxAcceleration(ElevatorConstants.kMaxAcceleration);
+		leadMotorConfig.smartCurrentLimit(20);
+		leadMotorConfig.encoder.positionConversionFactor(ElevatorConstants.kEncoderPositionConversionFactor);
 
-        SparkMaxConfig followerMotorConfig = new SparkMaxConfig();
-        followerMotorConfig.idleMode(IdleMode.kBrake);
-        followerMotorConfig.smartCurrentLimit(20);
-        followerMotorConfig.follow(this.m_leadMotor, true);
+		SparkMaxConfig followerMotorConfig = new SparkMaxConfig();
+		followerMotorConfig.idleMode(IdleMode.kBrake);
+		followerMotorConfig.smartCurrentLimit(20);
+		followerMotorConfig.follow(this.m_leadMotor, true);
 
-        this.m_leadMotor.configure(
-                leadMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-        this.m_followerMotor.configure(
-                followerMotorConfig,
-                ResetMode.kResetSafeParameters,
-                PersistMode.kPersistParameters);
+		this.m_leadMotor.configure(leadMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+		this.m_followerMotor.configure(
+				followerMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        // Sim
-        this.m_simElevatorGearbox = DCMotor.getNEO(2);
-        this.m_simLeadMotor = new SparkMaxSim(m_leadMotor, m_simElevatorGearbox);
-        this.m_simElevator =
-                new ElevatorSim(
-                        this.m_simElevatorGearbox,
-                        SimulationConstants.kElevatorGearing,
-                        SimulationConstants.kElevatorCarriageMass.magnitude(),
-                        SimulationConstants.kElevatorDrumRadius.magnitude(),
-                        SimulationConstants.kElevatorMinHeight.magnitude(),
-                        SimulationConstants.kElevatorMaxHeight.magnitude(),
-                        true,
-                        SimulationConstants.kElevatorStartingHeight.magnitude());
-    }
+		// Sim
+		this.m_simElevatorGearbox = DCMotor.getNEO(2);
+		this.m_simLeadMotor = new SparkMaxSim(m_leadMotor, m_simElevatorGearbox);
+		this.m_simElevator = new ElevatorSim(
+				this.m_simElevatorGearbox,
+				SimulationConstants.kElevatorGearing,
+				SimulationConstants.kElevatorCarriageMass.magnitude(),
+				SimulationConstants.kElevatorDrumRadius.magnitude(),
+				SimulationConstants.kElevatorMinHeight.magnitude(),
+				SimulationConstants.kElevatorMaxHeight.magnitude(),
+				true,
+				SimulationConstants.kElevatorStartingHeight.magnitude());
+	}
 
-    public double getVelocity() {
-        return this.m_leadMotor.getAppliedOutput();
-    }
+	public double getVelocity() {
+		return this.m_leadMotor.getAppliedOutput();
+	}
 
-    public void setPosition(Distance distance) {
-        this.m_pidController.setReference(
-                distance.in(Meters), ControlType.kMAXMotionPositionControl);
-    }
+	public void setPosition(Distance distance) {
+		this.m_pidController.setReference(distance.in(Meters), ControlType.kMAXMotionPositionControl);
+	}
 
-    public void resetEncoder() {
-        m_encoder.setPosition(ElevatorConstants.kZeroed.in(Meters));
-    }
+	public void resetEncoder() {
+		m_encoder.setPosition(ElevatorConstants.kZeroed.in(Meters));
+	}
 
-    public void set(double speed) {
-        this.m_leadMotor.set(speed);
-    }
+	public void set(double speed) {
+		this.m_leadMotor.set(speed);
+	}
 
-    public void stop() {
-        this.m_leadMotor.setVoltage(0.0);
-    }
+	public void stop() {
+		this.m_leadMotor.setVoltage(0.0);
+	}
 
-    @Logged(name = "SecondStagePose")
-    public Pose3d getSecondStagePose() {
-        return new Pose3d(
-                0,
-                0,
-                (this.m_encoder.getPosition()
-                        / ElevatorConstants.kSecondStagePositionConversionFactor),
-                new Rotation3d());
-    }
+	@Logged(name = "SecondStagePose")
+	public Pose3d getSecondStagePose() {
+		return new Pose3d(
+				0,
+				0,
+				(this.m_encoder.getPosition() / ElevatorConstants.kSecondStagePositionConversionFactor),
+				new Rotation3d());
+	}
 
-    @Logged(name = "CarriagePose")
-    public Pose3d getCarriagePose() {
-        return new Pose3d(0, 0, this.m_encoder.getPosition(), new Rotation3d());
-    }
+	@Logged(name = "CarriagePose")
+	public Pose3d getCarriagePose() {
+		return new Pose3d(0, 0, this.m_encoder.getPosition(), new Rotation3d());
+	}
 
-    public double getPosition() {
-        return Meters.of(this.m_encoder.getPosition()).in(Inches);
-    }
+	public double getPosition() {
+		return Meters.of(this.m_encoder.getPosition()).in(Inches);
+	}
 
-    @Override
-    public void simulationPeriodic() {
-        this.m_simElevator.setInput(
-                this.m_simLeadMotor.getAppliedOutput() * RoboRioSim.getVInVoltage());
-        this.m_simElevator.update(0.02);
+	@Override
+	public void simulationPeriodic() {
+		this.m_simElevator.setInput(this.m_simLeadMotor.getAppliedOutput() * RoboRioSim.getVInVoltage());
+		this.m_simElevator.update(0.02);
 
-        // Conver the elevator's Velocity in M/s to RPM. Divide by conversion ratio to get to
-        // Rotations per Second, multiple by 60 to get Rotations per Minute
-        double elevatorVelocityRPM =
-                m_simElevator.getVelocityMetersPerSecond()
-                        * 60.0
-                        / ElevatorConstants.kEncoderPositionConversionFactor;
+		// Conver the elevator's Velocity in M/s to RPM. Divide by conversion ratio to get to
+		// Rotations per Second, multiple by 60 to get Rotations per Minute
+		double elevatorVelocityRPM =
+				m_simElevator.getVelocityMetersPerSecond() * 60.0 / ElevatorConstants.kEncoderPositionConversionFactor;
 
-        this.m_simLeadMotor.iterate(elevatorVelocityRPM, RoboRioSim.getVInVoltage(), 0.02);
+		this.m_simLeadMotor.iterate(elevatorVelocityRPM, RoboRioSim.getVInVoltage(), 0.02);
 
-        RoboRioSim.setVInVoltage(
-                BatterySim.calculateDefaultBatteryLoadedVoltage(
-                        this.m_simElevator.getCurrentDrawAmps()));
-    }
+		RoboRioSim.setVInVoltage(
+				BatterySim.calculateDefaultBatteryLoadedVoltage(this.m_simElevator.getCurrentDrawAmps()));
+	}
 }

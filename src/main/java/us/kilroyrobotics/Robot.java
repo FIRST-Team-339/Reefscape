@@ -19,107 +19,106 @@ import us.kilroyrobotics.util.LimelightHelpers;
 
 @Logged
 public class Robot extends TimedRobot {
-    private Command m_autonomousCommand;
+	private Command m_autonomousCommand;
 
-    @Logged(name = "RobotContainer")
-    private final RobotContainer m_robotContainer;
+	@Logged(name = "RobotContainer")
+	private final RobotContainer m_robotContainer;
 
-    public Robot() {
-        m_robotContainer = new RobotContainer();
+	public Robot() {
+		m_robotContainer = new RobotContainer();
 
-        // Reset Elevator Encoder to Starting Position
-        m_robotContainer.elevator.resetEncoder();
+		// Reset Elevator Encoder to Starting Position
+		m_robotContainer.elevator.resetEncoder();
 
-        Epilogue.bind(this);
-    }
+		Epilogue.bind(this);
+	}
 
-    @Override
-    public void robotPeriodic() {
-        CommandScheduler.getInstance().run();
+	@Override
+	public void robotPeriodic() {
+		CommandScheduler.getInstance().run();
 
-        /*
-         * This example of adding Limelight is very simple and may not be sufficient for
-         * on-field use.
-         * Users typically need to provide a standard deviation that scales with the
-         * distance to target
-         * and changes with number of tags available.
-         *
-         * This example is sufficient to show that vision integration is possible,
-         * though exact implementation
-         * of how to use vision should be tuned per-robot and to the team's
-         * specification.
-         */
-        if (VisionConstants.kUseLimelight) {
-            var driveState = m_robotContainer.drivetrain.getState();
-            double headingDeg = driveState.Pose.getRotation().getDegrees();
-            double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
+		/*
+		 * This example of adding Limelight is very simple and may not be sufficient for
+		 * on-field use.
+		 * Users typically need to provide a standard deviation that scales with the
+		 * distance to target
+		 * and changes with number of tags available.
+		 *
+		 * This example is sufficient to show that vision integration is possible,
+		 * though exact implementation
+		 * of how to use vision should be tuned per-robot and to the team's
+		 * specification.
+		 */
+		if (VisionConstants.kUseLimelight) {
+			var driveState = m_robotContainer.drivetrain.getState();
+			double headingDeg = driveState.Pose.getRotation().getDegrees();
+			double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
 
-            LimelightHelpers.SetRobotOrientation("limelight", headingDeg, 0, 0, 0, 0, 0);
-            var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-            if (llMeasurement != null && llMeasurement.tagCount > 0 && omegaRps < 2.0) {
-                m_robotContainer.drivetrain.addVisionMeasurement(
-                        llMeasurement.pose,
-                        Utils.fpgaToCurrentTime(llMeasurement.timestampSeconds));
-            }
-        }
-    }
+			LimelightHelpers.SetRobotOrientation("limelight", headingDeg, 0, 0, 0, 0, 0);
+			var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+			if (llMeasurement != null && llMeasurement.tagCount > 0 && omegaRps < 2.0) {
+				m_robotContainer.drivetrain.addVisionMeasurement(
+						llMeasurement.pose, Utils.fpgaToCurrentTime(llMeasurement.timestampSeconds));
+			}
+		}
+	}
 
-    @Override
-    public void disabledInit() {}
+	@Override
+	public void disabledInit() {}
 
-    @Override
-    public void disabledPeriodic() {}
+	@Override
+	public void disabledPeriodic() {}
 
-    @Override
-    public void disabledExit() {}
+	@Override
+	public void disabledExit() {}
 
-    @Override
-    public void autonomousInit() {
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+	@Override
+	public void autonomousInit() {
+		m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.schedule();
-        }
-    }
+		if (m_autonomousCommand != null) {
+			m_autonomousCommand.schedule();
+		}
+	}
 
-    @Override
-    public void autonomousPeriodic() {}
+	@Override
+	public void autonomousPeriodic() {}
 
-    @Override
-    public void autonomousExit() {}
+	@Override
+	public void autonomousExit() {}
 
-    @Override
-    public void teleopInit() {
-        if (m_autonomousCommand != null) {
-            m_autonomousCommand.cancel();
-        }
-    }
+	@Override
+	public void teleopInit() {
+		if (m_autonomousCommand != null) {
+			m_autonomousCommand.cancel();
+		}
+	}
 
-    @Override
-    public void teleopPeriodic() {
-        SmartDashboard.putNumber("Elevator Encoder", m_robotContainer.elevator.getPosition());
-    }
+	@Override
+	public void teleopPeriodic() {
+		SmartDashboard.putNumber("Elevator Encoder", m_robotContainer.elevator.getPosition());
+	}
 
-    @Override
-    public void teleopExit() {}
+	@Override
+	public void teleopExit() {}
 
-    @Override
-    public void testInit() {
-        CommandScheduler.getInstance().cancelAll();
-    }
+	@Override
+	public void testInit() {
+		CommandScheduler.getInstance().cancelAll();
+	}
 
-    @Override
-    public void testPeriodic() {
-        m_robotContainer.elevator.setPosition(ElevatorConstants.kCoralStationHeight);
-        m_robotContainer.wrist.setAngle(CoralMechanismConstants.kIntakingAngle);
-    }
+	@Override
+	public void testPeriodic() {
+		m_robotContainer.elevator.setPosition(ElevatorConstants.kCoralStationHeight);
+		m_robotContainer.wrist.setAngle(CoralMechanismConstants.kIntakingAngle);
+	}
 
-    @Override
-    public void testExit() {}
+	@Override
+	public void testExit() {}
 
-    @Override
-    public void simulationPeriodic() {
-        m_robotContainer.elevator.simulationPeriodic();
-        m_robotContainer.wrist.simulationPeriodic();
-    }
+	@Override
+	public void simulationPeriodic() {
+		m_robotContainer.elevator.simulationPeriodic();
+		m_robotContainer.wrist.simulationPeriodic();
+	}
 }

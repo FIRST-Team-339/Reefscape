@@ -13,54 +13,51 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import us.kilroyrobotics.Constants.AlgaeConstants;
 
 public class AlgaeIntake extends SubsystemBase {
-    private SparkMax algaeMotorLeader;
-    private SparkMax algaeMotorFollower;
+	private SparkMax algaeMotorLeader;
+	private SparkMax algaeMotorFollower;
 
-    /** Creates a new AlgaeIntake. */
-    public AlgaeIntake() {
-        this.algaeMotorLeader =
-                new SparkMax(AlgaeConstants.kAlgaeMotorLeaderId, MotorType.kBrushed);
-        this.algaeMotorFollower =
-                new SparkMax(AlgaeConstants.kAlgaeMotorFollowerId, MotorType.kBrushed);
+	/** Creates a new AlgaeIntake. */
+	public AlgaeIntake() {
+		this.algaeMotorLeader = new SparkMax(AlgaeConstants.kAlgaeMotorLeaderId, MotorType.kBrushed);
+		this.algaeMotorFollower = new SparkMax(AlgaeConstants.kAlgaeMotorFollowerId, MotorType.kBrushed);
 
-        SparkMaxConfig leaderConfig = new SparkMaxConfig();
-        leaderConfig.smartCurrentLimit(40);
-        this.algaeMotorLeader.configure(
-                leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+		SparkMaxConfig leaderConfig = new SparkMaxConfig();
+		leaderConfig.smartCurrentLimit(40);
+		this.algaeMotorLeader.configure(leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        SparkMaxConfig followerConfig = new SparkMaxConfig();
-        followerConfig.smartCurrentLimit(40);
-        followerConfig.follow(this.algaeMotorLeader, true);
+		SparkMaxConfig followerConfig = new SparkMaxConfig();
+		followerConfig.smartCurrentLimit(40);
+		followerConfig.follow(this.algaeMotorLeader, true);
 
-        this.algaeMotorFollower.configure(
-                followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    }
+		this.algaeMotorFollower.configure(
+				followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+	}
 
-    AlgaeState algaeState = AlgaeState.OFF;
+	AlgaeState algaeState = AlgaeState.OFF;
 
-    public static enum AlgaeState {
-        OFF,
-        INTAKING,
-        OUTTAKING
-    }
+	public static enum AlgaeState {
+		OFF,
+		INTAKING,
+		OUTTAKING
+	}
 
-    public void setAlgaeState(AlgaeState newState) {
-        this.algaeState = newState;
-    }
+	public void setAlgaeState(AlgaeState newState) {
+		this.algaeState = newState;
+	}
 
-    @Override
-    public void periodic() {
-        // This method will be called once per scheduler run
-        switch (algaeState) {
-            case INTAKING:
-                this.algaeMotorLeader.set(AlgaeConstants.kAlgaeSpeedIntaking);
-                break;
-            case OUTTAKING:
-                this.algaeMotorLeader.set(AlgaeConstants.kAlgaeSpeedOuttaking);
-                break;
-            default:
-                this.algaeMotorLeader.set(0);
-                break;
-        }
-    }
+	@Override
+	public void periodic() {
+		// This method will be called once per scheduler run
+		switch (algaeState) {
+			case INTAKING:
+				this.algaeMotorLeader.set(AlgaeConstants.kAlgaeSpeedIntaking);
+				break;
+			case OUTTAKING:
+				this.algaeMotorLeader.set(AlgaeConstants.kAlgaeSpeedOuttaking);
+				break;
+			default:
+				this.algaeMotorLeader.set(0);
+				break;
+		}
+	}
 }
