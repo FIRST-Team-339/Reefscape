@@ -54,20 +54,16 @@ public final class Constants {
         public static final Distance kCoralStationHeight = Meters.of(Inches.of(31.6875).in(Meters));
 
         /* PIDF constants */
-        public static final double kP = 5.0;
+        public static final double kP = 2.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kF = 0.0;
 
-        public static final double kMaxVelocity = 0.1;
-        public static final double kMaxAcceleration = 0.1;
-
         /**
          * Conversion factor which when multiplied by the raw encoder output results in the current
-         * carriage height in meters 64In is equivalent to an encoder value of 41.547
+         * carriage height in meters
          */
-        public static final double kEncoderPositionConversionFactor =
-                Inches.of(50.8125).in(Meters) / 41.547;
+        public static final double kEncoderPositionConversionFactor = Inches.of(11).in(Meters) / 9.0;
 
         // 1.0;
 

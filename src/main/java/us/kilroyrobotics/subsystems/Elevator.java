@@ -60,15 +60,13 @@ public class Elevator extends SubsystemBase {
                         ElevatorConstants.kF)
                 .outputRange(-1, 1);
         leadMotorConfig.idleMode(IdleMode.kBrake);
-        leadMotorConfig.closedLoop.maxMotion.maxVelocity(ElevatorConstants.kMaxVelocity);
-        leadMotorConfig.closedLoop.maxMotion.maxAcceleration(ElevatorConstants.kMaxAcceleration);
-        leadMotorConfig.smartCurrentLimit(20);
+        leadMotorConfig.smartCurrentLimit(40);
         leadMotorConfig.encoder.positionConversionFactor(
                 ElevatorConstants.kEncoderPositionConversionFactor);
 
         SparkMaxConfig followerMotorConfig = new SparkMaxConfig();
         followerMotorConfig.idleMode(IdleMode.kBrake);
-        followerMotorConfig.smartCurrentLimit(20);
+        followerMotorConfig.smartCurrentLimit(40);
         followerMotorConfig.follow(this.m_leadMotor, true);
 
         this.m_leadMotor.configure(
