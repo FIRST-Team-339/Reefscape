@@ -182,44 +182,39 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 		configureAutoBuilder();
 	}
 
-    private void configureAutoBuilder() {
-        try {
-            var config = RobotConfig.fromGUISettings();
-            AutoBuilder.configure(
-                    () -> getState().Pose, // Supplier of current robot pose
-                    (Pose2d pose) -> {
-                        // TODO: Check if limelight is being used, and if so, set the pose to the
-                        // limelight pose with MegaTag2. This would be done as part of the vision
-                        // PR.
-                        if (pose != null) this.resetPose(pose);
-                    }, // Consumer for seeding pose against auto
-                    () -> getState().Speeds, // Supplier of current robot speeds
-                    // Consumer of ChassisSpeeds and feedforwards to drive the robot
-                    (speeds, feedforwards) ->
-                            setControl(
-                                    m_pathApplyRobotSpeeds
-                                            .withSpeeds(speeds)
-                                            .withWheelForceFeedforwardsX(
-                                                    feedforwards.robotRelativeForcesXNewtons())
-                                            .withWheelForceFeedforwardsY(
-                                                    feedforwards.robotRelativeForcesYNewtons())),
-                    new PPHolonomicDriveController(
-                            // PID constants for translation
-                            new PIDConstants(10, 0, 0),
-                            // PID constants for rotation
-                            new PIDConstants(7, 0, 0)),
-                    config,
-                    // Assume the path needs to be flipped for Red vs Blue, this is normally the
-                    // case
-                    () -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
-                    this // Subsystem for requirements
-                    );
-        } catch (Exception ex) {
-            DriverStation.reportError(
-                    "Failed to load PathPlanner config and configure AutoBuilder",
-                    ex.getStackTrace());
-        }
-    }
+	private void configureAutoBuilder() {
+		try {
+			var config = RobotConfig.fromGUISettings();
+			AutoBuilder.configure(
+					() -> getState().Pose, // Supplier of current robot pose
+					(Pose2d pose) -> {
+						// TODO: Check if limelight is being used, and if so, set the pose to the
+						// limelight pose with MegaTag2. This would be done as part of the vision
+						// PR.
+						if (pose != null) this.resetPose(pose);
+					}, // Consumer for seeding pose against auto
+					() -> getState().Speeds, // Supplier of current robot speeds
+					// Consumer of ChassisSpeeds and feedforwards to drive the robot
+					(speeds, feedforwards) -> setControl(m_pathApplyRobotSpeeds
+							.withSpeeds(speeds)
+							.withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+							.withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())),
+					new PPHolonomicDriveController(
+							// PID constants for translation
+							new PIDConstants(10, 0, 0),
+							// PID constants for rotation
+							new PIDConstants(7, 0, 0)),
+					config,
+					// Assume the path needs to be flipped for Red vs Blue, this is normally the
+					// case
+					() -> DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red,
+					this // Subsystem for requirements
+					);
+		} catch (Exception ex) {
+			DriverStation.reportError(
+					"Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
+		}
+	}
 
 	/**
 	 * Returns a command that applies the specified control request to this swerve drivetrain.
