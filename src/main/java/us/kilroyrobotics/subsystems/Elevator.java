@@ -27,8 +27,6 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.Constants.SimulationConstants;
-import us.kilroyrobotics.Constants.ElevatorConstants;
-import us.kilroyrobotics.Constants.SimulationConstants;
 
 public class Elevator extends SubsystemBase {
     private SparkMax m_leadMotor;

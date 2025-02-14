@@ -7,8 +7,6 @@ package us.kilroyrobotics;
 import com.ctre.phoenix6.Utils;
 import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.epilogue.Epilogue;
-import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,7 +16,6 @@ import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.Constants.VisionConstants;
 import us.kilroyrobotics.util.LimelightHelpers;
 
-@Logged
 @Logged
 public class Robot extends TimedRobot {
 	private Command m_autonomousCommand;
