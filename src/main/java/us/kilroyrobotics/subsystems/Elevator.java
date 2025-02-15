@@ -4,7 +4,6 @@
 
 package us.kilroyrobotics.subsystems;
 
-import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.revrobotics.RelativeEncoder;
@@ -96,8 +95,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setPosition(Distance distance) {
-        this.m_pidController.setReference(
-                distance.in(Meters), ControlType.kMAXMotionPositionControl);
+        this.m_pidController.setReference(distance.in(Meters), ControlType.kPosition);
     }
 
     public void resetEncoder() {
@@ -105,7 +103,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void set(double speed) {
-        this.m_leadMotor.set(speed);
+        this.m_pidController.setReference(speed, ControlType.kVelocity);
     }
 
     public void stop() {

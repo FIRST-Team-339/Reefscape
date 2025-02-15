@@ -74,6 +74,7 @@ public class Wrist extends SubsystemBase {
                         CoralMechanismConstants.kF);
         wristMotorConfig.idleMode(IdleMode.kBrake);
         wristMotorConfig.smartCurrentLimit(40);
+        wristMotorConfig.inverted(true);
 
         this.m_wristMotor.configure(
                 wristMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
