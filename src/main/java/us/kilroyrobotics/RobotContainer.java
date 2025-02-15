@@ -168,8 +168,8 @@ public class RobotContainer {
                     setCoralIntaking());
 
     /* Preset Commands */
-    private Command elevatorStop = Commands.run(() ->
-            elevator.setPosition(elevator.getPosition()), elevator);
+    private Command elevatorStop =
+            Commands.run(() -> elevator.setPosition(elevator.getPosition()), elevator);
 
     //     private Command coralIntakeSetL1 =
     //             Commands.sequence(
