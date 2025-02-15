@@ -63,7 +63,8 @@ public final class Constants {
          * Conversion factor which when multiplied by the raw encoder output results in the current
          * carriage height in meters
          */
-        public static final double kEncoderPositionConversionFactor = Inches.of(11).in(Meters) / 9.0;
+        public static final double kEncoderPositionConversionFactor =
+                Inches.of(11).in(Meters) / 9.0;
 
         // 1.0;
 
