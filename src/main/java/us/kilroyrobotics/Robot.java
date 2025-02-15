@@ -96,9 +96,7 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void teleopPeriodic() {
-        SmartDashboard.putNumber("Elevator Encoder", m_robotContainer.elevator.getPosition());
-    }
+    public void teleopPeriodic() {}
 
     @Override
     public void teleopExit() {}
