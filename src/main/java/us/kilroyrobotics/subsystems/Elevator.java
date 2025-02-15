@@ -127,8 +127,8 @@ public class Elevator extends SubsystemBase {
         return new Pose3d(0, 0, this.m_encoder.getPosition(), new Rotation3d());
     }
 
-    public double getPosition() {
-        return Meters.of(this.m_encoder.getPosition()).in(Inches);
+    public Distance getPosition() {
+        return Meters.of(this.m_encoder.getPosition());
     }
 
     @Override
