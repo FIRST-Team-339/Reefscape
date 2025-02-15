@@ -95,8 +95,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void setPosition(Distance distance) {
-        this.m_pidController.setReference(
-                distance.in(Meters), ControlType.kPosition);
+        this.m_pidController.setReference(distance.in(Meters), ControlType.kPosition);
     }
 
     public void resetEncoder() {
