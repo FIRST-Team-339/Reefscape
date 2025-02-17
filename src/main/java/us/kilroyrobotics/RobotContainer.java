@@ -24,8 +24,8 @@ import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.DriveConstants;
 import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.generated.TunerConstants;
-import us.kilroyrobotics.subsystems.AlgaeIntake;
-import us.kilroyrobotics.subsystems.AlgaeIntake.AlgaeState;
+// import us.kilroyrobotics.subsystems.AlgaeIntake;
+// import us.kilroyrobotics.subsystems.AlgaeIntake.AlgaeState;
 import us.kilroyrobotics.subsystems.Camera;
 import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor;
@@ -63,7 +63,9 @@ public class RobotContainer {
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final CoralIntakeMotor coralIntakeMotor = new CoralIntakeMotor();
-    private final AlgaeIntake algaeIntake = new AlgaeIntake();
+
+    //     private final AlgaeIntake algaeIntake = new AlgaeIntake();
+    @SuppressWarnings("unused")
     private final Camera camera = new Camera();
 
     @Logged(name = "Elevator")
@@ -187,12 +189,14 @@ public class RobotContainer {
     //             Commands.sequence(elevatorSetCoralStation, wristSetCoralStation);
 
     /* Algae Intake Commands */
-    private Command setAlgaeIntaking =
-            Commands.runOnce(() -> algaeIntake.setAlgaeState(AlgaeState.INTAKING), algaeIntake);
-    private Command setAlgaeOuttaking =
-            Commands.runOnce(() -> algaeIntake.setAlgaeState(AlgaeState.OUTTAKING), algaeIntake);
-    private Command setAlgaeOff =
-            Commands.runOnce(() -> algaeIntake.setAlgaeState(AlgaeState.OFF), algaeIntake);
+    //     private Command setAlgaeIntaking =
+    //             Commands.runOnce(() -> algaeIntake.setAlgaeState(AlgaeState.INTAKING),
+    // algaeIntake);
+    //     private Command setAlgaeOuttaking =
+    //             Commands.runOnce(() -> algaeIntake.setAlgaeState(AlgaeState.OUTTAKING),
+    // algaeIntake);
+    //     private Command setAlgaeOff =
+    //             Commands.runOnce(() -> algaeIntake.setAlgaeState(AlgaeState.OFF), algaeIntake);
 
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
@@ -321,8 +325,8 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         // Algae Controls
-        rightOperatorJoystick.button(3).onTrue(setAlgaeIntaking).onFalse(setAlgaeOff);
-        rightOperatorJoystick.button(2).onTrue(setAlgaeOuttaking).onFalse(setAlgaeOff);
+        // rightOperatorJoystick.button(3).onTrue(setAlgaeIntaking).onFalse(setAlgaeOff);
+        // rightOperatorJoystick.button(2).onTrue(setAlgaeOuttaking).onFalse(setAlgaeOff);
     }
 
     public Command getAutonomousCommand() {

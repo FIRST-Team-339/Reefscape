@@ -103,7 +103,7 @@ public class Elevator extends SubsystemBase {
     }
 
     public void set(double speed) {
-        this.m_pidController.setReference(speed, ControlType.kVelocity);
+        this.m_leadMotor.set(speed);
     }
 
     public void stop() {
