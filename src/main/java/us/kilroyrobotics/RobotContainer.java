@@ -43,7 +43,7 @@ public class RobotContainer {
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive =
             new SwerveRequest.FieldCentric()
-                    .withDeadband(kMaxSpeed * 0.1)
+                    .withDeadband(DriveConstants.kTeleopMaxSpeed.in(MetersPerSecond) * 0.1)
                     .withRotationalDeadband(kMaxAngularRate * 0.1) // Add a 10% deadband
                     .withDriveRequestType(
                             DriveRequestType
@@ -53,7 +53,8 @@ public class RobotContainer {
     private final SwerveRequest.RobotCentric forwardStraight =
             new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    private final Telemetry logger = new Telemetry(kMaxSpeed);
+    private final Telemetry logger =
+            new Telemetry(DriveConstants.kTeleopMaxSpeed.in(MetersPerSecond));
 
     /* Controllers */
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -207,12 +208,15 @@ public class RobotContainer {
                         () ->
                                 drive.withVelocityX(
                                                 -driverController.getLeftY()
-                                                        * kMaxSpeed) // Drive forward with
+                                                        * DriveConstants.kTeleopMaxSpeed.in(
+                                                                MetersPerSecond)) // Drive forward
+                                        // with
                                         // negative Y
                                         // (forward)
                                         .withVelocityY(
                                                 -driverController.getLeftX()
-                                                        * kMaxSpeed) // Drive left with
+                                                        * DriveConstants.kTeleopMaxSpeed.in(
+                                                                MetersPerSecond)) // Drive left with
                                         // negative X
                                         // (left)
                                         .withRotationalRate(

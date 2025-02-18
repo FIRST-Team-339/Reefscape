@@ -18,11 +18,12 @@ public final class Constants {
      */
     public static final class DriveConstants {
         public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
+        public static final LinearVelocity kTeleopMaxSpeed = MetersPerSecond.of(2.0);
     }
 
     /** Constants used for interfacing with limelight vision */
     public static final class VisionConstants {
-        public static final boolean kUseLimelight = false;
+        public static final boolean kUseLimelight = true;
     }
 
     /** Constants used for interfacing with the elevator subsystem */
