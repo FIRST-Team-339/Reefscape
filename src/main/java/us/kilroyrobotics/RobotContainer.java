@@ -34,8 +34,6 @@ import us.kilroyrobotics.subsystems.Elevator;
 import us.kilroyrobotics.subsystems.Wrist;
 
 public class RobotContainer {
-    private double kMaxSpeed =
-            TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double kMaxAngularRate =
             RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
     // max angular velocity
@@ -136,7 +134,12 @@ public class RobotContainer {
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist);
 
     private Command wristStop() {
-        return new InstantCommand(() -> wrist.stop(), wrist);
+        return new InstantCommand(
+                () -> {
+                    wrist.setAngle(wrist.getPosition());
+                    wrist.stop();
+                },
+                wrist);
     }
 
     private Command wristSetL1AndStop =
@@ -311,7 +314,8 @@ public class RobotContainer {
                 .button(1)
                 .whileTrue(
                         Commands.run(
-                                () -> wrist.setSpeed(leftOperatorJoystick.getY() * 0.25), wrist));
+                                () -> wrist.setSpeed(leftOperatorJoystick.getY() * 0.25), wrist))
+                .onFalse(wristStop());
 
         // Elevator Controls
         rightOperatorJoystick.button(10).onTrue(elevatorSetL1);
@@ -323,7 +327,8 @@ public class RobotContainer {
                 .button(1)
                 .whileTrue(
                         Commands.run(
-                                () -> elevator.set(rightOperatorJoystick.getY() * 0.25), elevator))
+                                () -> elevator.setSpeed(rightOperatorJoystick.getY() * 0.25),
+                                elevator))
                 .onFalse(elevatorStop);
 
         drivetrain.registerTelemetry(logger::telemeterize);
