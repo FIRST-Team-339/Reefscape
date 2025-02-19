@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -134,12 +135,14 @@ public class RobotContainer {
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist);
 
     private Command wristStop() {
-        return new InstantCommand(
-                () -> {
-                    wrist.setAngle(wrist.getPosition());
-                    wrist.stop();
-                },
-                wrist);
+        return new SequentialCommandGroup(
+                new InstantCommand(
+                        () -> {
+                            wrist.setAngle(wrist.getPosition());
+                            wrist.stop();
+                        },
+                        wrist),
+                setCoralOuttaking());
     }
 
     private Command wristSetL1AndStop =
@@ -305,8 +308,8 @@ public class RobotContainer {
                 .onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         // Coral Intake Motor Controls
-        leftOperatorJoystick.button(3).onTrue(setCoralIntaking()).onFalse(genCoralHoldingCommand());
-        leftOperatorJoystick.button(2).onTrue(setCoralOuttaking()).onFalse(genCoralOffCommand());
+        leftOperatorJoystick.button(2).onTrue(setCoralIntaking()).onFalse(genCoralHoldingCommand());
+        leftOperatorJoystick.button(3).onTrue(setCoralOuttaking()).onFalse(genCoralOffCommand());
 
         // Wrist Control
         leftOperatorJoystick.button(10).onTrue(wristSetL1AndStop);
