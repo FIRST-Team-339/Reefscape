@@ -175,7 +175,11 @@ public class RobotContainer {
 
     /* Preset Commands */
     private Command elevatorStop =
-            Commands.run(() -> elevator.setPosition(elevator.getPosition()), elevator);
+            Commands.runOnce(
+                    () -> {
+                        elevator.setPosition(elevator.getPosition());
+                    },
+                    elevator);
 
     //     private Command coralIntakeSetL1 =
     //             Commands.sequence(
@@ -308,7 +312,7 @@ public class RobotContainer {
         leftOperatorJoystick.button(10).onTrue(wristSetL1AndStop);
         leftOperatorJoystick.button(7).onTrue(wristSetL2AndStop);
         leftOperatorJoystick.button(11).onTrue(wristSetL3AndStop);
-        leftOperatorJoystick.button(6).onTrue(wristSetL4AndStop);
+        // leftOperatorJoystick.button(6).onTrue(wristSetL4AndStop);
         leftOperatorJoystick.button(8).onTrue(wristSetCoralStationAndStop);
         leftOperatorJoystick
                 .button(1)
@@ -321,7 +325,7 @@ public class RobotContainer {
         rightOperatorJoystick.button(10).onTrue(elevatorSetL1);
         rightOperatorJoystick.button(7).onTrue(elevatorSetL2);
         rightOperatorJoystick.button(11).onTrue(elevatorSetL3);
-        rightOperatorJoystick.button(6).onTrue(elevatorSetL4);
+        // rightOperatorJoystick.button(6).onTrue(elevatorSetL4);
         rightOperatorJoystick.button(8).onTrue(elevatorSetCoralStation);
         rightOperatorJoystick
                 .button(1)
