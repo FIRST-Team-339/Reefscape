@@ -60,6 +60,9 @@ public class Elevator extends SubsystemBase {
                 .outputRange(-1, 1);
         leadMotorConfig.idleMode(IdleMode.kBrake);
         leadMotorConfig.smartCurrentLimit(40);
+        leadMotorConfig.softLimit.forwardSoftLimitEnabled(true);
+        leadMotorConfig.softLimit.forwardSoftLimit(
+                50 * ElevatorConstants.kEncoderPositionConversionFactor);
         leadMotorConfig.encoder.positionConversionFactor(
                 ElevatorConstants.kEncoderPositionConversionFactor);
 
@@ -94,6 +97,10 @@ public class Elevator extends SubsystemBase {
         return this.m_leadMotor.getAppliedOutput();
     }
 
+    public Distance getPosition() {
+        return Meters.of(this.m_encoder.getPosition());
+    }
+
     public void setPosition(Distance distance) {
         this.m_pidController.setReference(distance.in(Meters), ControlType.kPosition);
     }
@@ -102,7 +109,7 @@ public class Elevator extends SubsystemBase {
         m_encoder.setPosition(ElevatorConstants.kZeroed.in(Meters));
     }
 
-    public void set(double speed) {
+    public void setSpeed(double speed) {
         this.m_leadMotor.set(speed);
     }
 
@@ -123,10 +130,6 @@ public class Elevator extends SubsystemBase {
     @Logged(name = "CarriagePose")
     public Pose3d getCarriagePose() {
         return new Pose3d(0, 0, this.m_encoder.getPosition(), new Rotation3d());
-    }
-
-    public Distance getPosition() {
-        return Meters.of(this.m_encoder.getPosition());
     }
 
     @Override

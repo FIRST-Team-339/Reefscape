@@ -18,11 +18,12 @@ public final class Constants {
      */
     public static final class DriveConstants {
         public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
+        public static final LinearVelocity kTeleopMaxSpeed = MetersPerSecond.of(2.0);
     }
 
     /** Constants used for interfacing with limelight vision */
     public static final class VisionConstants {
-        public static final boolean kUseLimelight = false;
+        public static final boolean kUseLimelight = true;
     }
 
     /** Constants used for interfacing with the elevator subsystem */
@@ -54,7 +55,7 @@ public final class Constants {
         public static final Distance kCoralStationHeight = Meters.of(Inches.of(31.6875).in(Meters));
 
         /* PIDF constants */
-        public static final double kP = 2.0;
+        public static final double kP = 1.5;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kF = 0.0;
@@ -149,20 +150,20 @@ public final class Constants {
         public static final Angle kScoringL1 = Degrees.of(100);
 
         /* PIDF constants */
-        public static final double kP = 5.0;
+        public static final double kP = 0.5;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kF = 0.0;
 
         /* Wheel Speeds */
         /** Speed of the motor when intaking a coral piece */
-        public static final double kWheelSpeedIntaking = 0.75;
+        public static final double kWheelSpeedIntaking = -0.1;
 
         /** Speed of the motor when scoring a coral piece */
-        public static final double kWheelSpeedOuttaking = -0.75;
+        public static final double kWheelSpeedOuttaking = 0.1;
 
         /** Speed of the motor while the robot is in motion to keep the coral piece in place */
-        public static final double kWheelSpeedHolding = 0.15;
+        public static final double kWheelSpeedHolding = -0.05;
     }
 
     public static final class AlgaeConstants {

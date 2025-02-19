@@ -74,6 +74,7 @@ public class Wrist extends SubsystemBase {
                         CoralMechanismConstants.kF);
         wristMotorConfig.idleMode(IdleMode.kBrake);
         wristMotorConfig.smartCurrentLimit(40);
+        wristMotorConfig.inverted(true);
 
         this.m_wristMotor.configure(
                 wristMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -101,8 +102,18 @@ public class Wrist extends SubsystemBase {
         return this.m_wristMotor.getAppliedOutput();
     }
 
+    public Angle getPosition() {
+        return Rotations.of(
+                this.m_useAbsoluteEncoder
+                        ? this.m_absoluteEncoder.getPosition()
+                        : this.m_relativeEncoder.getPosition());
+    }
+
     public void setAngle(Angle angle) {
-        this.m_pidController.setReference(angle.times(64).in(Rotations), ControlType.kPosition);
+        // If using throughbore absolute encoder, don't multiply by 64 (gearbox ratio)
+        this.m_pidController.setReference(
+                angle.times(this.m_useAbsoluteEncoder ? 1 : 64).in(Rotations),
+                ControlType.kPosition);
     }
 
     public void setSpeed(double speed) {
