@@ -4,6 +4,7 @@
 
 package us.kilroyrobotics.subsystems;
 
+import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
 import com.revrobotics.RelativeEncoder;
@@ -62,7 +63,7 @@ public class Elevator extends SubsystemBase {
         leadMotorConfig.smartCurrentLimit(40);
         leadMotorConfig.softLimit.forwardSoftLimitEnabled(true);
         leadMotorConfig.softLimit.forwardSoftLimit(
-                50 * ElevatorConstants.kEncoderPositionConversionFactor);
+                ElevatorConstants.kHeightLimit.in(Inches) * ElevatorConstants.kEncoderPositionConversionFactor);
         leadMotorConfig.encoder.positionConversionFactor(
                 ElevatorConstants.kEncoderPositionConversionFactor);
 

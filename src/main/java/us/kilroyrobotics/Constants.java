@@ -86,6 +86,8 @@ public final class Constants {
                 (1.0 + (Inches.of(26.0).in(Meters) / Inches.of(34.5).in(Meters)));
 
         public static final double kOverrideSpeedMultiplier = 0.25;
+
+        public static final Distance kHeightLimit = Inches.of(50);
     }
 
     /** Constants used during Simulation */
