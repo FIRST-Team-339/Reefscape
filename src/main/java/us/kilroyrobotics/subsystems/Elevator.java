@@ -63,7 +63,8 @@ public class Elevator extends SubsystemBase {
         leadMotorConfig.smartCurrentLimit(40);
         leadMotorConfig.softLimit.forwardSoftLimitEnabled(true);
         leadMotorConfig.softLimit.forwardSoftLimit(
-                ElevatorConstants.kHeightLimit.in(Inches) * ElevatorConstants.kEncoderPositionConversionFactor);
+                ElevatorConstants.kHeightLimit.in(Inches)
+                        * ElevatorConstants.kEncoderPositionConversionFactor);
         leadMotorConfig.encoder.positionConversionFactor(
                 ElevatorConstants.kEncoderPositionConversionFactor);
 
