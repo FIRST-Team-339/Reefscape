@@ -75,12 +75,12 @@ public class Wrist extends SubsystemBase {
         wristMotorConfig.idleMode(IdleMode.kBrake);
         wristMotorConfig.smartCurrentLimit(40);
         wristMotorConfig.inverted(true);
-        wristMotorConfig.encoder.positionConversionFactor(64);
+        wristMotorConfig.encoder.positionConversionFactor(1.0 / 64.0);
         wristMotorConfig.absoluteEncoder.positionConversionFactor(1);
         wristMotorConfig.absoluteEncoder.inverted(true);
-        wristMotorConfig.softLimit.reverseSoftLimitEnabled(true);
-        wristMotorConfig.softLimit.reverseSoftLimit(0);
-        wristMotorConfig.softLimit.forwardSoftLimitEnabled(true);
+        wristMotorConfig.softLimit.reverseSoftLimitEnabled(false);
+        wristMotorConfig.softLimit.reverseSoftLimit(0.9);
+        wristMotorConfig.softLimit.forwardSoftLimitEnabled(false);
         wristMotorConfig.softLimit.forwardSoftLimit(0.5);
 
         this.m_wristMotor.configure(
