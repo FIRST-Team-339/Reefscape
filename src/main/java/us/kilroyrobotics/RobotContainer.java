@@ -318,7 +318,7 @@ public class RobotContainer {
                 .button(1)
                 .whileTrue(
                         Commands.run(
-                                () -> wrist.setSpeed(leftOperatorJoystick.getY() * 0.25), wrist))
+                                () -> wrist.setSpeed(leftOperatorJoystick.getY() * CoralMechanismConstants.kOverrideSpeedMultiplier), wrist))
                 .onFalse(wristStop());
 
         // Elevator Controls
@@ -331,7 +331,7 @@ public class RobotContainer {
                 .button(1)
                 .whileTrue(
                         Commands.run(
-                                () -> elevator.setSpeed(rightOperatorJoystick.getY() * 0.25),
+                                () -> elevator.setSpeed(rightOperatorJoystick.getY() * ElevatorConstants.kOverrideSpeedMultiplier),
                                 elevator))
                 .onFalse(elevatorStop);
 

@@ -84,6 +84,8 @@ public final class Constants {
          */
         public static final double kSecondStagePositionConversionFactor =
                 (1.0 + (Inches.of(26.0).in(Meters) / Inches.of(34.5).in(Meters)));
+
+        public static final double kOverrideSpeedMultiplier = 0.25;
     }
 
     /** Constants used during Simulation */
@@ -164,6 +166,8 @@ public final class Constants {
 
         /** Speed of the motor while the robot is in motion to keep the coral piece in place */
         public static final double kWheelSpeedHolding = -0.05;
+
+        public static final double kOverrideSpeedMultiplier = 0.25;
     }
 
     public static final class AlgaeConstants {
