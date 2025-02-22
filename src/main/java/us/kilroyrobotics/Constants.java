@@ -139,7 +139,7 @@ public final class Constants {
         public static final Angle kStartingAngle = Degrees.of(0);
 
         /** The angle that the wrist will be when intaking a coral */
-        public static final Angle kIntakingAngle = Degrees.of(45);
+        public static final Angle kIntakingAngle = Degrees.of(37.5);
 
         /** The angle that the wrist will be when scoring at L4 */
         public static final Angle kScoringL4 = Degrees.of(120);
