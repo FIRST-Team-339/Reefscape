@@ -17,8 +17,8 @@ public final class Constants {
      * from {@link us.kilroyrobotics.generated.TunerConstants TunerConstants}
      */
     public static final class DriveConstants {
-        public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
-        public static final LinearVelocity kTeleopMaxSpeed = MetersPerSecond.of(2.0);
+        public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.25);
+        public static final LinearVelocity kTeleopMaxSpeed = MetersPerSecond.of(0.5);
     }
 
     /** Constants used for interfacing with limelight vision */
@@ -43,10 +43,10 @@ public final class Constants {
 
         /** Height necessary for the coral intake to reach Level 2 of Reef in Meters */
         // 47.5
-        public static final Distance kL2Height = Meters.of(Inches.of(31.6875).in(Meters));
+        public static final Distance kL2Height = Meters.of(Inches.of(40.5).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 3 of Reef in Meters */
-        public static final Distance kL3Height = Meters.of(Inches.of(43.6875).in(Meters));
+        public static final Distance kL3Height = Meters.of(Inches.of(55.5).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 4 of Reef in Meters */
         public static final Distance kL4Height = Meters.of(Inches.of(68).in(Meters));
@@ -150,9 +150,9 @@ public final class Constants {
         public static final Angle kScoringL1 = Degrees.of(100);
 
         /* PIDF constants */
-        public static final double kP = 0.5;
+        public static final double kP = 1.5;
         public static final double kI = 0.0;
-        public static final double kD = 0.0;
+        public static final double kD = 0.05;
         public static final double kF = 0.0;
 
         /* Wheel Speeds */

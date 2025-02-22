@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -36,7 +35,7 @@ import us.kilroyrobotics.subsystems.Wrist;
 
 public class RobotContainer {
     private double kMaxAngularRate =
-            RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
+            RotationsPerSecond.of(0.25).in(RadiansPerSecond); // 1/4 of a rotation per second
     // max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -72,7 +71,7 @@ public class RobotContainer {
     public final Elevator elevator = new Elevator();
 
     @Logged(name = "Wrist")
-    public final Wrist wrist = new Wrist(elevator::getCarriagePose, false);
+    public final Wrist wrist = new Wrist(elevator::getCarriagePose, true);
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -135,45 +134,43 @@ public class RobotContainer {
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist);
 
     private Command wristStop() {
-        return new SequentialCommandGroup(
-                new InstantCommand(
-                        () -> {
-                            wrist.setAngle(wrist.getPosition());
-                            wrist.stop();
-                        },
-                        wrist),
-                setCoralOuttaking());
+        return new InstantCommand(
+                () -> {
+                    wrist.setAngle(wrist.getAngle());
+                    wrist.stop();
+                },
+                wrist);
     }
 
     private Command wristSetL1AndStop =
             Commands.sequence(
                     wristSetL1,
                     waitToSlowDown(wrist::getVelocity, 0.1),
-                    wristStop(),
+                    //     wristStop(),
                     setCoralOuttaking());
     private Command wristSetL2AndStop =
             Commands.sequence(
                     wristSetL2,
                     waitToSlowDown(wrist::getVelocity, 0.1),
-                    wristStop(),
+                    //     wristStop(),
                     setCoralOuttaking());
     private Command wristSetL3AndStop =
             Commands.sequence(
                     wristSetL3,
                     waitToSlowDown(wrist::getVelocity, 0.1),
-                    wristStop(),
+                    //     wristStop(),
                     setCoralOuttaking());
     private Command wristSetL4AndStop =
             Commands.sequence(
                     wristSetL4,
                     waitToSlowDown(wrist::getVelocity, 0.1),
-                    wristStop(),
+                    //     wristStop(),
                     setCoralOuttaking());
     private Command wristSetCoralStationAndStop =
             Commands.sequence(
                     wristSetCoralStation,
                     waitToSlowDown(wrist::getVelocity, 0.1),
-                    wristStop(),
+                    //     wristStop(),
                     setCoralIntaking());
 
     /* Preset Commands */

@@ -75,6 +75,13 @@ public class Wrist extends SubsystemBase {
         wristMotorConfig.idleMode(IdleMode.kBrake);
         wristMotorConfig.smartCurrentLimit(40);
         wristMotorConfig.inverted(true);
+        wristMotorConfig.encoder.positionConversionFactor(64);
+        wristMotorConfig.absoluteEncoder.positionConversionFactor(1);
+        wristMotorConfig.absoluteEncoder.inverted(true);
+        wristMotorConfig.softLimit.reverseSoftLimitEnabled(true);
+        wristMotorConfig.softLimit.reverseSoftLimit(0);
+        wristMotorConfig.softLimit.forwardSoftLimitEnabled(true);
+        wristMotorConfig.softLimit.forwardSoftLimit(0.5);
 
         this.m_wristMotor.configure(
                 wristMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -102,7 +109,7 @@ public class Wrist extends SubsystemBase {
         return this.m_wristMotor.getAppliedOutput();
     }
 
-    public Angle getPosition() {
+    public Angle getAngle() {
         return Rotations.of(
                 this.m_useAbsoluteEncoder
                         ? this.m_absoluteEncoder.getPosition()
@@ -111,9 +118,7 @@ public class Wrist extends SubsystemBase {
 
     public void setAngle(Angle angle) {
         // If using throughbore absolute encoder, don't multiply by 64 (gearbox ratio)
-        this.m_pidController.setReference(
-                angle.times(this.m_useAbsoluteEncoder ? 1 : 64).in(Rotations),
-                ControlType.kPosition);
+        this.m_pidController.setReference(angle.in(Rotations), ControlType.kPosition);
     }
 
     public void setSpeed(double speed) {
@@ -134,9 +139,8 @@ public class Wrist extends SubsystemBase {
                         Degrees.of(0),
                         Radians.of(
                                 (this.m_useAbsoluteEncoder
-                                                ? this.m_absoluteEncoder.getPosition()
-                                                : this.m_relativeEncoder.getPosition())
-                                        / 64),
+                                        ? this.m_absoluteEncoder.getPosition()
+                                        : this.m_relativeEncoder.getPosition())),
                         Degrees.of(0)));
     }
 
