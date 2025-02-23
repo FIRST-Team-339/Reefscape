@@ -258,12 +258,33 @@ public class RobotContainer {
                                                 .withVelocityX(DriveConstants.kLowDriveSpeed)
                                                 .withVelocityY(0)));
         driverController
+                .pov(45)
+                .whileTrue(
+                        drivetrain.applyRequest(
+                                () ->
+                                        forwardStraight
+                                                .withVelocityX(DriveConstants.kLowDriveSpeed)
+                                                .withVelocityY(
+                                                        DriveConstants.kLowDriveSpeed
+                                                                .unaryMinus())));
+        driverController
                 .pov(90)
                 .whileTrue(
                         drivetrain.applyRequest(
                                 () ->
                                         forwardStraight
                                                 .withVelocityX(0)
+                                                .withVelocityY(
+                                                        DriveConstants.kLowDriveSpeed
+                                                                .unaryMinus())));
+        driverController
+                .pov(135)
+                .whileTrue(
+                        drivetrain.applyRequest(
+                                () ->
+                                        forwardStraight
+                                                .withVelocityX(
+                                                        DriveConstants.kLowDriveSpeed.unaryMinus())
                                                 .withVelocityY(
                                                         DriveConstants.kLowDriveSpeed
                                                                 .unaryMinus())));
@@ -277,12 +298,29 @@ public class RobotContainer {
                                                         DriveConstants.kLowDriveSpeed.unaryMinus())
                                                 .withVelocityY(0)));
         driverController
+                .pov(225)
+                .whileTrue(
+                        drivetrain.applyRequest(
+                                () ->
+                                        forwardStraight
+                                                .withVelocityX(
+                                                        DriveConstants.kLowDriveSpeed.unaryMinus())
+                                                .withVelocityY(DriveConstants.kLowDriveSpeed)));
+        driverController
                 .pov(270)
                 .whileTrue(
                         drivetrain.applyRequest(
                                 () ->
                                         forwardStraight
                                                 .withVelocityX(0)
+                                                .withVelocityY(DriveConstants.kLowDriveSpeed)));
+        driverController
+                .pov(315)
+                .whileTrue(
+                        drivetrain.applyRequest(
+                                () ->
+                                        forwardStraight
+                                                .withVelocityX(DriveConstants.kLowDriveSpeed)
                                                 .withVelocityY(DriveConstants.kLowDriveSpeed)));
 
         // Run SysId routines when holding back/start and X/Y.
