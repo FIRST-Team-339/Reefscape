@@ -10,10 +10,9 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.epilogue.Logged;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,6 +25,7 @@ import java.util.function.Supplier;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.DriveConstants;
 import us.kilroyrobotics.Constants.ElevatorConstants;
+import us.kilroyrobotics.Constants.VisionConstants;
 import us.kilroyrobotics.generated.TunerConstants;
 // import us.kilroyrobotics.subsystems.AlgaeIntake;
 // import us.kilroyrobotics.subsystems.AlgaeIntake.AlgaeState;
@@ -35,6 +35,8 @@ import us.kilroyrobotics.subsystems.CoralIntakeMotor;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor.CoralState;
 import us.kilroyrobotics.subsystems.Elevator;
 import us.kilroyrobotics.subsystems.Wrist;
+import us.kilroyrobotics.util.LimelightHelpers;
+import us.kilroyrobotics.util.LimelightHelpers.RawFiducial;
 
 public class RobotContainer {
     private double kMaxAngularRate =
@@ -209,6 +211,45 @@ public class RobotContainer {
     // algaeIntake);
     //     private Command setAlgaeOff =
     //             Commands.runOnce(() -> algaeIntake.setAlgaeState(AlgaeState.OFF), algaeIntake);
+
+    private Command alignReef(boolean leftSide) {
+        return drivetrain.applyRequest(
+                () -> {
+                    VisionConstants.rotationalPID.enableContinuousInput(-Math.PI, Math.PI);
+                    Pose2d targetPose;
+
+                    RawFiducial aprilTag = LimelightHelpers.getRawFiducials("limelight")[0];
+
+                    if (aprilTag != null) {
+                        targetPose =
+                                VisionConstants.getAlignmentPose(
+                                        aprilTag.id,
+                                        leftSide,
+                                        DriverStation.getAlliance().orElse(Alliance.Blue));
+                        if (targetPose == null) return null;
+                    } else {
+                        return null;
+                    }
+
+                    if (this.drivetrain.isAtPose(targetPose)) return null;
+                    System.out.println("run");
+
+                    Pose2d currentPose = drivetrain.getState().Pose;
+
+                    double xVelocity =
+                            VisionConstants.xPID.calculate(currentPose.getX(), targetPose.getX());
+                    double yVelocity =
+                            VisionConstants.yPID.calculate(currentPose.getY(), targetPose.getY());
+                    double rotationalVelocity =
+                            VisionConstants.rotationalPID.calculate(
+                                    currentPose.getRotation().getRadians(),
+                                    targetPose.getRotation().getRadians());
+
+                    return drive.withVelocityX(xVelocity)
+                            .withVelocityY(yVelocity)
+                            .withRotationalRate(rotationalVelocity);
+                });
+    }
 
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
@@ -386,8 +427,8 @@ public class RobotContainer {
                 .onFalse(elevatorStop);
 
         // Reef Alignment
-        driverController.leftBumper().whileTrue(testCommand);
-        // .onFalse(Commands.run(() -> testCommand.cancel()));
+        driverController.leftBumper().whileTrue(alignReef(true));
+        driverController.rightBumper().whileTrue(alignReef(false));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -395,38 +436,6 @@ public class RobotContainer {
         // rightOperatorJoystick.button(3).onTrue(setAlgaeIntaking).onFalse(setAlgaeOff);
         // rightOperatorJoystick.button(2).onTrue(setAlgaeOuttaking).onFalse(setAlgaeOff);
     }
-
-    PIDController xPID = new PIDController(0.5, 0.02, 0);
-    PIDController yPID = new PIDController(0.5, 0.02, 0);
-    PIDController rotationPID = new PIDController(1, 0.25, 0);
-    Command testCommand =
-            drivetrain.applyRequest(
-                    () ->
-                            drive.withVelocityX(
-                                            xPID.calculate(
-                                                    drivetrain.getState().Pose.getX(),
-                                                    new Pose2d(3.53, 2.73, new Rotation2d())
-                                                            .getX()))
-                                    .withVelocityY(
-                                            yPID.calculate(
-                                                    drivetrain.getState().Pose.getY(),
-                                                    new Pose2d(3.53, 2.73, new Rotation2d())
-                                                            .getY()))
-                                    .withRotationalRate(
-                                            rotationPID.calculate(
-                                                    drivetrain
-                                                            .getState()
-                                                            .Pose
-                                                            .getRotation()
-                                                            .getRadians(),
-                                                    new Pose2d(
-                                                                    3.53,
-                                                                    2.73,
-                                                                    new Rotation2d(
-                                                                            Units.degreesToRadians(
-                                                                                    60)))
-                                                            .getRotation()
-                                                            .getRadians())));
 
     public Command getAutonomousCommand() {
         /* Run the path selected from the auto chooser */
