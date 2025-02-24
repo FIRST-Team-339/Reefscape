@@ -6,10 +6,13 @@ import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import com.pathplanner.lib.util.FlippingUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public final class Constants {
     /**
@@ -24,6 +27,109 @@ public final class Constants {
     /** Constants used for interfacing with limelight vision */
     public static final class VisionConstants {
         public static final boolean kUseLimelight = true;
+
+        public static final Pose2d kReefAPose = new Pose2d();
+        public static final Pose2d kReefBPose = new Pose2d();
+        public static final Pose2d kReefCPose = new Pose2d();
+        public static final Pose2d kReefDPose = new Pose2d();
+        public static final Pose2d kReefEPose = new Pose2d();
+        public static final Pose2d kReefFPose = new Pose2d();
+        public static final Pose2d kReefGPose = new Pose2d();
+        public static final Pose2d kReefHPose = new Pose2d();
+        public static final Pose2d kReefIPose = new Pose2d();
+        public static final Pose2d kReefJPose = new Pose2d();
+        public static final Pose2d kReefKPose = new Pose2d();
+        public static final Pose2d kReefLPose = new Pose2d();
+
+        /**
+         * Get the alignment pose for the given april tag and left/right side of said april tag
+         *
+         * <p>The poses are flipped if the robot is on the red alliance, and the reef section names
+         * will not match (e.g. Reef A -> Reef B, Reef C -> Reef L, etc...)
+         *
+         * <p>Additionally, it will make sure the april tag is for the correct alliance to prevent
+         * any errors
+         *
+         * @param aprilTag the april tag of the target you want to align to
+         * @param leftSide true if you want to get the left alignment pose for the given april tag
+         * @param alliance the current alliance of the robot
+         * @return the alignment pose for the given april tag (possibly null if no april tag or
+         *     invalid april tag detected)
+         */
+        public static Pose2d getAlignmentPose(int aprilTag, boolean leftSide, Alliance alliance) {
+            Pose2d pose = null;
+
+            switch (aprilTag) {
+                // Red Side
+                case 7:
+                    if (alliance == Alliance.Red)
+                        pose =
+                                leftSide
+                                        ? FlippingUtil.flipFieldPose(kReefAPose)
+                                        : FlippingUtil.flipFieldPose(kReefBPose);
+                    break;
+                case 8:
+                    if (alliance == Alliance.Red)
+                        pose =
+                                leftSide
+                                        ? FlippingUtil.flipFieldPose(kReefCPose)
+                                        : FlippingUtil.flipFieldPose(kReefDPose);
+                    break;
+                case 9:
+                    if (alliance == Alliance.Red)
+                        pose =
+                                leftSide
+                                        ? FlippingUtil.flipFieldPose(kReefEPose)
+                                        : FlippingUtil.flipFieldPose(kReefFPose);
+                    break;
+                case 10:
+                    if (alliance == Alliance.Red)
+                        pose =
+                                leftSide
+                                        ? FlippingUtil.flipFieldPose(kReefGPose)
+                                        : FlippingUtil.flipFieldPose(kReefHPose);
+                    break;
+                case 11:
+                    if (alliance == Alliance.Red)
+                        pose =
+                                leftSide
+                                        ? FlippingUtil.flipFieldPose(kReefIPose)
+                                        : FlippingUtil.flipFieldPose(kReefJPose);
+                    break;
+                case 6:
+                    if (alliance == Alliance.Red)
+                        pose =
+                                leftSide
+                                        ? FlippingUtil.flipFieldPose(kReefKPose)
+                                        : FlippingUtil.flipFieldPose(kReefLPose);
+                    break;
+
+                // Blue Side
+                case 18:
+                    if (alliance == Alliance.Blue) pose = leftSide ? kReefAPose : kReefBPose;
+                    break;
+                case 17:
+                    if (alliance == Alliance.Blue) pose = leftSide ? kReefCPose : kReefDPose;
+                    break;
+                case 22:
+                    if (alliance == Alliance.Blue) pose = leftSide ? kReefEPose : kReefFPose;
+                    break;
+                case 21:
+                    if (alliance == Alliance.Blue) pose = leftSide ? kReefGPose : kReefHPose;
+                    break;
+                case 20:
+                    if (alliance == Alliance.Blue) pose = leftSide ? kReefIPose : kReefJPose;
+                    break;
+                case 19:
+                    if (alliance == Alliance.Blue) pose = leftSide ? kReefKPose : kReefLPose;
+                    break;
+                default:
+                    pose = null;
+                    break;
+            }
+
+            return pose;
+        }
     }
 
     /** Constants used for interfacing with the elevator subsystem */
