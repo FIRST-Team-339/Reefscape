@@ -29,9 +29,9 @@ public final class Constants {
     public static final class VisionConstants {
         public static final boolean kUseLimelight = true;
 
-        public static final PIDController xPID = new PIDController(1.0, 0.05, 0.2);
-        public static final PIDController yPID = new PIDController(1.0, 0.05, 0.2);
-        public static final PIDController rotationalPID = new PIDController(2.0, 0.225, 0.05);
+        public static final PIDController xPID = new PIDController(2.0, 0.25, 0);
+        public static final PIDController yPID = new PIDController(2.0, 0.25, 0);
+        public static final PIDController rotationalPID = new PIDController(100.0, 0.75, 0);
 
         public static final Pose2d kReefAPose = new Pose2d();
         public static final Pose2d kReefBPose = new Pose2d();
