@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import com.pathplanner.lib.util.FlippingUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
@@ -27,6 +28,10 @@ public final class Constants {
     /** Constants used for interfacing with limelight vision */
     public static final class VisionConstants {
         public static final boolean kUseLimelight = true;
+
+        public static final PIDController xPID = new PIDController(1.0, 0.05, 0.2);
+        public static final PIDController yPID = new PIDController(1.0, 0.05, 0.2);
+        public static final PIDController rotationalPID = new PIDController(2.0, 0.225, 0.05);
 
         public static final Pose2d kReefAPose = new Pose2d();
         public static final Pose2d kReefBPose = new Pose2d();
