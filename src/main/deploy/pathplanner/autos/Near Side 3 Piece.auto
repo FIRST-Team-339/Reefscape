@@ -11,7 +11,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ElevatorL3"
+                  "name": "ElevatorL2"
                 }
               },
               {
@@ -23,7 +23,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "WristL3"
+                  "name": "WristL2"
                 }
               }
             ]
@@ -42,19 +42,37 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "CoralOuttake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralOff"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "ElevatorCS"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "WristCS"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
                 }
               }
             ]
@@ -73,7 +91,25 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ElevatorL3"
+                  "name": "CoralIntake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralHolding"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorL2"
                 }
               },
               {
@@ -85,7 +121,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "WristL3"
+                  "name": "WristL2"
                 }
               }
             ]
@@ -104,19 +140,37 @@
               {
                 "type": "named",
                 "data": {
+                  "name": "CoralOuttake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralOff"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
                   "name": "ElevatorCS"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "WristCS"
-                }
-              },
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 0.5
                 }
               }
             ]
@@ -135,7 +189,25 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "ElevatorL3"
+                  "name": "CoralIntake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.5
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralHolding"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorL2"
                 }
               },
               {
@@ -147,7 +219,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "WristL3"
+                  "name": "WristL2"
                 }
               }
             ]
@@ -157,6 +229,49 @@
           "type": "path",
           "data": {
             "pathName": "Near Side Source to Reef B"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralOuttake"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralOff"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ElevatorCS"
+                }
+              },
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 0.25
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "WristCS"
+                }
+              }
+            ]
           }
         }
       ]
