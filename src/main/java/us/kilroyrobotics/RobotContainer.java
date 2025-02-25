@@ -218,7 +218,11 @@ public class RobotContainer {
                     VisionConstants.rotationalPID.enableContinuousInput(-Math.PI, Math.PI);
                     Pose2d targetPose;
 
-                    RawFiducial aprilTag = LimelightHelpers.getRawFiducials("limelight")[0];
+                    RawFiducial[] aprilTags = LimelightHelpers.getRawFiducials("limelight");
+
+                    if (aprilTags.length < 1) return null;
+
+                    RawFiducial aprilTag = aprilTags[0];
 
                     if (aprilTag != null) {
                         targetPose =
@@ -402,7 +406,7 @@ public class RobotContainer {
                         Commands.run(
                                 () ->
                                         wrist.setSpeed(
-                                                leftOperatorJoystick.getY()
+                                                -leftOperatorJoystick.getY()
                                                         * CoralMechanismConstants
                                                                 .kOverrideSpeedMultiplier),
                                 wrist))
