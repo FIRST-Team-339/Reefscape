@@ -22,8 +22,8 @@ public final class Constants {
      * from {@link us.kilroyrobotics.generated.TunerConstants TunerConstants}
      */
     public static final class DriveConstants {
-        public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.25);
-        public static final LinearVelocity kTeleopMaxSpeed = MetersPerSecond.of(0.5);
+        public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
+        public static final LinearVelocity kTeleopMaxSpeed = MetersPerSecond.of(1.0);
     }
 
     /** Constants used for interfacing with limelight vision */
@@ -288,7 +288,7 @@ public final class Constants {
         public static final double kWheelSpeedIntaking = -0.1;
 
         /** Speed of the motor when scoring a coral piece */
-        public static final double kWheelSpeedOuttaking = 0.1;
+        public static final double kWheelSpeedOuttaking = 0.2;
 
         /** Speed of the motor while the robot is in motion to keep the coral piece in place */
         public static final double kWheelSpeedHolding = -0.05;
