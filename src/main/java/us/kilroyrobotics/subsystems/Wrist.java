@@ -78,8 +78,6 @@ public class Wrist extends SubsystemBase {
         wristMotorConfig.encoder.positionConversionFactor(1.0 / 64.0);
         wristMotorConfig.absoluteEncoder.positionConversionFactor(1);
         wristMotorConfig.absoluteEncoder.inverted(true);
-        wristMotorConfig.closedLoop.positionWrappingEnabled(true);
-        wristMotorConfig.closedLoop.positionWrappingInputRange(0, 0.5);
 
         this.m_wristMotor.configure(
                 wristMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
