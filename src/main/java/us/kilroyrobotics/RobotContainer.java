@@ -36,6 +36,8 @@ import us.kilroyrobotics.subsystems.CoralIntakeMotor;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor.CoralState;
 import us.kilroyrobotics.subsystems.Elevator;
 import us.kilroyrobotics.subsystems.Wrist;
+import us.kilroyrobotics.util.LimelightHelpers;
+import us.kilroyrobotics.util.LimelightHelpers.RawFiducial;
 
 public class RobotContainer {
     private double kMaxAngularRate =
@@ -236,15 +238,15 @@ public class RobotContainer {
                     VisionConstants.rotationalPID.setIZone(5);
                     Pose2d targetPose;
 
-                    //     RawFiducial[] aprilTags = LimelightHelpers.getRawFiducials("limelight");
+                    RawFiducial[] aprilTags = LimelightHelpers.getRawFiducials("limelight");
 
-                    //     if (aprilTags.length < 1) return null;
+                    if (aprilTags.length < 1) return null;
 
-                    //     RawFiducial aprilTag = aprilTags[0];
+                    RawFiducial aprilTag = aprilTags[0];
 
                     targetPose =
                             VisionConstants.getAlignmentPose(
-                                    20,
+                                    aprilTag.id,
                                     leftSide,
                                     DriverStation.getAlliance().orElse(Alliance.Blue));
                     if (targetPose == null) return null;
