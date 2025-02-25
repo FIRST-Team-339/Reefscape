@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -35,8 +36,6 @@ import us.kilroyrobotics.subsystems.CoralIntakeMotor;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor.CoralState;
 import us.kilroyrobotics.subsystems.Elevator;
 import us.kilroyrobotics.subsystems.Wrist;
-import us.kilroyrobotics.util.LimelightHelpers;
-import us.kilroyrobotics.util.LimelightHelpers.RawFiducial;
 
 public class RobotContainer {
     private double kMaxAngularRate =
@@ -69,20 +68,36 @@ public class RobotContainer {
     private final CoralIntakeMotor coralIntakeMotor = new CoralIntakeMotor();
 
     //     private final AlgaeIntake algaeIntake = new AlgaeIntake();
-    {
-        if (Robot.isReal()) new Camera();
-    }
 
     @Logged(name = "Elevator")
     public final Elevator elevator = new Elevator();
 
     @Logged(name = "Wrist")
-    public final Wrist wrist = new Wrist(elevator::getCarriagePose, true);
+    public final Wrist wrist = new Wrist(elevator::getCarriagePose, Robot.isReal());
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
+        if (Robot.isReal()) new Camera();
+
+        NamedCommands.registerCommand("CoralIntake", setCoralIntaking());
+        NamedCommands.registerCommand("CoralOuttake", setCoralOuttaking());
+        NamedCommands.registerCommand("CoralHolding", genCoralHoldingCommand());
+        NamedCommands.registerCommand("CoralOff", genCoralOffCommand());
+
+        NamedCommands.registerCommand("ElevatorL1", elevatorSetL1);
+        NamedCommands.registerCommand("ElevatorL2", elevatorSetL2);
+        NamedCommands.registerCommand("ElevatorL3", elevatorSetL3);
+        NamedCommands.registerCommand("ElevatorL4", elevatorSetL4);
+        NamedCommands.registerCommand("ElevatorCS", elevatorSetCoralStation);
+
+        NamedCommands.registerCommand("WristL1", wristSetL1);
+        NamedCommands.registerCommand("WristL2", wristSetL2);
+        NamedCommands.registerCommand("WristL3", wristSetL3);
+        NamedCommands.registerCommand("WristL4", wristSetL4);
+        NamedCommands.registerCommand("WristCS", wristSetCoralStation);
+
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Mode", autoChooser);
 
@@ -216,24 +231,23 @@ public class RobotContainer {
         return drivetrain.applyRequest(
                 () -> {
                     VisionConstants.rotationalPID.enableContinuousInput(-Math.PI, Math.PI);
+                    VisionConstants.xPID.setIZone(0.1);
+                    VisionConstants.yPID.setIZone(0.1);
+                    VisionConstants.rotationalPID.setIZone(5);
                     Pose2d targetPose;
 
-                    RawFiducial[] aprilTags = LimelightHelpers.getRawFiducials("limelight");
+                    //     RawFiducial[] aprilTags = LimelightHelpers.getRawFiducials("limelight");
 
-                    if (aprilTags.length < 1) return null;
+                    //     if (aprilTags.length < 1) return null;
 
-                    RawFiducial aprilTag = aprilTags[0];
+                    //     RawFiducial aprilTag = aprilTags[0];
 
-                    if (aprilTag != null) {
-                        targetPose =
-                                VisionConstants.getAlignmentPose(
-                                        aprilTag.id,
-                                        leftSide,
-                                        DriverStation.getAlliance().orElse(Alliance.Blue));
-                        if (targetPose == null) return null;
-                    } else {
-                        return null;
-                    }
+                    targetPose =
+                            VisionConstants.getAlignmentPose(
+                                    20,
+                                    leftSide,
+                                    DriverStation.getAlliance().orElse(Alliance.Blue));
+                    if (targetPose == null) return null;
 
                     if (this.drivetrain.isAtPose(targetPose)) return null;
                     System.out.println("run");
