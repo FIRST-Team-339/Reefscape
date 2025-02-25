@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -29,22 +30,34 @@ public final class Constants {
     public static final class VisionConstants {
         public static final boolean kUseLimelight = true;
 
-        public static final PIDController xPID = new PIDController(2.0, 0.25, 0);
-        public static final PIDController yPID = new PIDController(2.0, 0.25, 0);
-        public static final PIDController rotationalPID = new PIDController(100.0, 0.75, 0);
+        public static final PIDController xPID = new PIDController(1.0, 0.25, 0.2);
+        public static final PIDController yPID = new PIDController(1.0, 0.25, 0.2);
+        public static final PIDController rotationalPID = new PIDController(2.0, 0.5, 0.02);
 
-        public static final Pose2d kReefAPose = new Pose2d();
-        public static final Pose2d kReefBPose = new Pose2d();
-        public static final Pose2d kReefCPose = new Pose2d();
-        public static final Pose2d kReefDPose = new Pose2d();
-        public static final Pose2d kReefEPose = new Pose2d();
-        public static final Pose2d kReefFPose = new Pose2d();
-        public static final Pose2d kReefGPose = new Pose2d();
-        public static final Pose2d kReefHPose = new Pose2d();
-        public static final Pose2d kReefIPose = new Pose2d();
-        public static final Pose2d kReefJPose = new Pose2d();
-        public static final Pose2d kReefKPose = new Pose2d();
-        public static final Pose2d kReefLPose = new Pose2d();
+        public static final Pose2d kReefAPose =
+                new Pose2d(Meters.of(2.96), Meters.of(4.24), new Rotation2d(Degrees.of(0)));
+        public static final Pose2d kReefBPose =
+                new Pose2d(Meters.of(2.96), Meters.of(3.92), new Rotation2d(Degrees.of(0)));
+        public static final Pose2d kReefCPose =
+                new Pose2d(Meters.of(3.50), Meters.of(2.85), new Rotation2d(Degrees.of(60)));
+        public static final Pose2d kReefDPose =
+                new Pose2d(Meters.of(3.82), Meters.of(2.64), new Rotation2d(Degrees.of(60)));
+        public static final Pose2d kReefEPose =
+                new Pose2d(Meters.of(5.07), Meters.of(2.61), new Rotation2d(Degrees.of(120)));
+        public static final Pose2d kReefFPose =
+                new Pose2d(Meters.of(5.35), Meters.of(2.75), new Rotation2d(Degrees.of(120)));
+        public static final Pose2d kReefGPose =
+                new Pose2d(Meters.of(6.00), Meters.of(3.81), new Rotation2d(Degrees.of(180)));
+        public static final Pose2d kReefHPose =
+                new Pose2d(Meters.of(6.00), Meters.of(4.14), new Rotation2d(Degrees.of(180)));
+        public static final Pose2d kReefIPose =
+                new Pose2d(Meters.of(5.46), Meters.of(5.25), new Rotation2d(Degrees.of(240)));
+        public static final Pose2d kReefJPose =
+                new Pose2d(Meters.of(5.13), Meters.of(5.42), new Rotation2d(Degrees.of(240)));
+        public static final Pose2d kReefKPose =
+                new Pose2d(Meters.of(3.94), Meters.of(5.47), new Rotation2d(Degrees.of(300)));
+        public static final Pose2d kReefLPose =
+                new Pose2d(Meters.of(3.50), Meters.of(5.20), new Rotation2d(Degrees.of(300)));
 
         /**
          * Get the alignment pose for the given april tag and left/right side of said april tag
@@ -157,7 +170,7 @@ public final class Constants {
         public static final Distance kL2Height = Meters.of(Inches.of(40.5).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 3 of Reef in Meters */
-        public static final Distance kL3Height = Meters.of(Inches.of(55.5).in(Meters));
+        public static final Distance kL3Height = Meters.of(Inches.of(57).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 4 of Reef in Meters */
         public static final Distance kL4Height = Meters.of(Inches.of(68).in(Meters));
@@ -166,7 +179,7 @@ public final class Constants {
         public static final Distance kCoralStationHeight = Meters.of(Inches.of(31.6875).in(Meters));
 
         /* PIDF constants */
-        public static final double kP = 1.5;
+        public static final double kP = 1.0;
         public static final double kI = 0.0;
         public static final double kD = 0.0;
         public static final double kF = 0.0;
@@ -262,7 +275,7 @@ public final class Constants {
         public static final Angle kScoringL2 = Degrees.of(110);
 
         /** The angle that the wrist will be when scoring at L1 */
-        public static final Angle kScoringL1 = Degrees.of(100);
+        public static final Angle kScoringL1 = Degrees.of(120);
 
         /* PIDF constants */
         public static final double kP = 1.5;
