@@ -30,8 +30,8 @@ public final class Constants {
     public static final class VisionConstants {
         public static final boolean kUseLimelight = true;
 
-        public static final PIDController xPID = new PIDController(1.0, 0.25, 0.2);
-        public static final PIDController yPID = new PIDController(1.0, 0.25, 0.2);
+        public static final PIDController xPID = new PIDController(2.0, 5.0, 0.02);
+        public static final PIDController yPID = new PIDController(2.0, 5.0, 0.02);
         public static final PIDController rotationalPID = new PIDController(2.0, 0.5, 0.02);
 
         public static final Pose2d kReefAPose =
@@ -235,7 +235,7 @@ public final class Constants {
         public static final Distance kElevatorStartingHeight = Meters.of(Inches.of(0.0).in(Meters));
 
         /** The gearing of the wrist gearbox */
-        public static final double kWristGearing = 9.0;
+        public static final double kWristGearing = 64.0;
 
         /** The weight in Kg of the wrist in Kilograms */
         public static final Mass kWristMass = Kilograms.of(0.5);
