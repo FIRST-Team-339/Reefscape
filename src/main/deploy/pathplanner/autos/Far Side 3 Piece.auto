@@ -19,19 +19,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Far Side Source to Reef K"
+            "pathName": "Far Side Source to Reef J"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Reef K to Far Side Source"
+            "pathName": "Reef J to Far Side Source"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Far Side Source to Reef L"
+            "pathName": "Far Side Source to Reef A"
           }
         }
       ]
