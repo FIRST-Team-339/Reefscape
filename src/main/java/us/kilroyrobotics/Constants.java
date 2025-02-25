@@ -235,7 +235,7 @@ public final class Constants {
         public static final Distance kElevatorStartingHeight = Meters.of(Inches.of(0.0).in(Meters));
 
         /** The gearing of the wrist gearbox */
-        public static final double kWristGearing = 9.0;
+        public static final double kWristGearing = 64.0;
 
         /** The weight in Kg of the wrist in Kilograms */
         public static final Mass kWristMass = Kilograms.of(0.5);
