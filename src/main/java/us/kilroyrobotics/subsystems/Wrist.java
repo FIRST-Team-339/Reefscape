@@ -96,7 +96,7 @@ public class Wrist extends SubsystemBase {
                                 SimulationConstants.kWristMass.magnitude()),
                         SimulationConstants.kArmLength.magnitude(),
                         SimulationConstants.kMinAngle.in(Radians),
-                        SimulationConstants.kMaxAngle.in(Rotations),
+                        SimulationConstants.kMaxAngle.in(Radians),
                         true,
                         CoralMechanismConstants.kStartingAngle.in(Radians));
     }
@@ -106,7 +106,7 @@ public class Wrist extends SubsystemBase {
     }
 
     public Angle getAngle() {
-        return Rotations.of(
+        return Radians.of(
                 this.m_useAbsoluteEncoder
                         ? this.m_absoluteEncoder.getPosition()
                         : this.m_relativeEncoder.getPosition());
@@ -147,7 +147,9 @@ public class Wrist extends SubsystemBase {
 
         this.m_simWristMotor.iterate(
                 Units.radiansPerSecondToRotationsPerMinute( // motor velocity, in RPM
-                        m_simWrist.getVelocityRadPerSec()),
+                        (this.m_useAbsoluteEncoder
+                                ? m_simWrist.getVelocityRadPerSec()
+                                : m_simWrist.getVelocityRadPerSec() * 64.0)),
                 RoboRioSim.getVInVoltage(),
                 0.02);
 
