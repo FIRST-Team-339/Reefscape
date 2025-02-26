@@ -14,6 +14,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,7 +31,6 @@ import us.kilroyrobotics.Constants.VisionConstants;
 import us.kilroyrobotics.generated.TunerConstants;
 // import us.kilroyrobotics.subsystems.AlgaeIntake;
 // import us.kilroyrobotics.subsystems.AlgaeIntake.AlgaeState;
-import us.kilroyrobotics.subsystems.Camera;
 import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor.CoralState;
@@ -69,8 +69,6 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final CoralIntakeMotor coralIntakeMotor = new CoralIntakeMotor();
 
-    //     private final AlgaeIntake algaeIntake = new AlgaeIntake();
-
     @Logged(name = "Elevator")
     public final Elevator elevator = new Elevator();
 
@@ -81,7 +79,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        if (Robot.isReal()) new Camera();
+        // if (Robot.isReal()) new Camera();
 
         NamedCommands.registerCommand("CoralIntake", setCoralIntaking());
         NamedCommands.registerCommand("CoralOuttake", setCoralOuttaking());
@@ -99,6 +97,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("WristL3", wristSetL3);
         NamedCommands.registerCommand("WristL4", wristSetL4);
         NamedCommands.registerCommand("WristCS", wristSetCoralStation);
+
+        NamedCommands.registerCommand("Leave", autoLeave);
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Mode", autoChooser);
@@ -165,37 +165,6 @@ public class RobotContainer {
                 wrist);
     }
 
-    //     private Command wristSetL1AndStop =
-    //             Commands.sequence(
-    //                     wristSetL1,
-    //                     waitToSlowDown(wrist::getVelocity, 0.01),
-    //                     //     wristStop(),
-    //                     setCoralOuttaking());
-    //     private Command wristSetL2AndStop =
-    //             Commands.sequence(
-    //                     wristSetL2,
-    //                     waitToSlowDown(wrist::getVelocity, 0.01),
-    //                     //     wristStop(),
-    //                     setCoralOuttaking());
-    //     private Command wristSetL3AndStop =
-    //             Commands.sequence(
-    //                     wristSetL3,
-    //                     waitToSlowDown(wrist::getVelocity, 0.01),
-    //                     //     wristStop(),
-    //                     setCoralOuttaking());
-    //     private Command wristSetL4AndStop =
-    //             Commands.sequence(
-    //                     wristSetL4,
-    //                     waitToSlowDown(wrist::getVelocity, 0.01),
-    //                     //     wristStop(),
-    //                     setCoralOuttaking());
-    //     private Command wristSetCoralStationAndStop =
-    //             Commands.sequence(
-    //                     wristSetCoralStation,
-    //                     waitToSlowDown(wrist::getVelocity, 0.01),
-    //                     //     wristStop(),
-    //                     setCoralIntaking());
-
     /* Preset Commands */
     private Command elevatorStop =
             Commands.runOnce(
@@ -204,30 +173,7 @@ public class RobotContainer {
                     },
                     elevator);
 
-    //     private Command coralIntakeSetL1 =
-    //             Commands.sequence(
-    //                     elevatorSetL1, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL1);
-    //     private Command coralIntakeSetL2 =
-    //             Commands.sequence(
-    //                     elevatorSetL2, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL2);
-    //     private Command coralIntakeSetL3 =
-    //             Commands.sequence(
-    //                     elevatorSetL3, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL3);
-    //     private Command coralIntakeSetL4 =
-    //             Commands.sequence(
-    //                     elevatorSetL4, waitToSlowDown(elevator::getVelocity, 0.1), wristSetL4);
-    //     private Command coralIntakeSetCoralStation =
-    //             Commands.sequence(elevatorSetCoralStation, wristSetCoralStation);
-
-    /* Algae Intake Commands */
-    //     private Command setAlgaeIntaking =
-    //             Commands.runOnce(() -> algaeIntake.setAlgaeState(AlgaeState.INTAKING),
-    // algaeIntake);
-    //     private Command setAlgaeOuttaking =
-    //             Commands.runOnce(() -> algaeIntake.setAlgaeState(AlgaeState.OUTTAKING),
-    // algaeIntake);
-    //     private Command setAlgaeOff =
-    //             Commands.runOnce(() -> algaeIntake.setAlgaeState(AlgaeState.OFF), algaeIntake);
+    private int currentAprilTag = 0;
 
     private Command alignReef(boolean leftSide) {
         return drivetrain.applyRequest(
@@ -240,18 +186,31 @@ public class RobotContainer {
 
                     RawFiducial[] aprilTags = LimelightHelpers.getRawFiducials("limelight");
 
-                    if (aprilTags.length < 1) return null;
+                    if (aprilTags.length < 1) {
+                        if (currentAprilTag == 0) return null;
 
-                    RawFiducial aprilTag = aprilTags[0];
+                        targetPose =
+                                VisionConstants.getAlignmentPose(
+                                        currentAprilTag,
+                                        leftSide,
+                                        DriverStation.getAlliance().orElse(Alliance.Blue));
+                    } else {
+                        RawFiducial aprilTag = aprilTags[0];
+                        currentAprilTag = aprilTag.id;
 
-                    targetPose =
-                            VisionConstants.getAlignmentPose(
-                                    aprilTag.id,
-                                    leftSide,
-                                    DriverStation.getAlliance().orElse(Alliance.Blue));
+                        targetPose =
+                                VisionConstants.getAlignmentPose(
+                                        aprilTag.id,
+                                        leftSide,
+                                        DriverStation.getAlliance().orElse(Alliance.Blue));
+                    }
+
                     if (targetPose == null) return null;
 
-                    if (this.drivetrain.isAtPose(targetPose)) return null;
+                    if (this.drivetrain.isAtPose(targetPose)) {
+                        currentAprilTag = 0;
+                        return null;
+                    }
                     System.out.println("run");
 
                     Pose2d currentPose = drivetrain.getState().Pose;
@@ -270,6 +229,14 @@ public class RobotContainer {
                             .withRotationalRate(rotationalVelocity);
                 });
     }
+
+    private Timer autoLeaveTimer = new Timer();
+    private Command autoLeave =
+            Commands.sequence(
+                            Commands.runOnce(() -> this.autoLeaveTimer.restart()),
+                            drivetrain.applyRequest(
+                                    () -> forwardStraight.withVelocityX(MetersPerSecond.of(-0.5))))
+                    .onlyWhile(() -> !autoLeaveTimer.hasElapsed(2));
 
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
@@ -300,15 +267,6 @@ public class RobotContainer {
 
         // Brake
         driverController.b().whileTrue(drivetrain.applyRequest(() -> brake));
-        // driverController
-        //         .b()
-        //         .whileTrue(
-        //                 drivetrain.applyRequest(
-        //                         () ->
-        //                                 point.withModuleDirection(
-        //                                         new Rotation2d(
-        //                                                 -driverController.getLeftY(),
-        //                                                 -driverController.getLeftX()))));
 
         driverController
                 .pov(0)
@@ -451,10 +409,6 @@ public class RobotContainer {
         driverController.rightBumper().whileTrue(alignReef(false));
 
         drivetrain.registerTelemetry(logger::telemeterize);
-
-        // Algae Controls
-        // rightOperatorJoystick.button(3).onTrue(setAlgaeIntaking).onFalse(setAlgaeOff);
-        // rightOperatorJoystick.button(2).onTrue(setAlgaeOuttaking).onFalse(setAlgaeOff);
     }
 
     public Command getAutonomousCommand() {
