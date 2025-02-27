@@ -167,21 +167,21 @@ public final class Constants {
 
         /** Height necessary for the coral intake to reach Level 2 of Reef in Meters */
         // 47.5
-        public static final Distance kL2Height = Meters.of(Inches.of(40.5).in(Meters));
+        public static final Distance kL2Height = Meters.of(Inches.of(39).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 3 of Reef in Meters */
-        public static final Distance kL3Height = Meters.of(Inches.of(57).in(Meters));
+        public static final Distance kL3Height = Meters.of(Inches.of(55).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 4 of Reef in Meters */
         public static final Distance kL4Height = Meters.of(Inches.of(68).in(Meters));
 
         /** Height necessary for the coral intake to reach the Coral Station */
-        public static final Distance kCoralStationHeight = Meters.of(Inches.of(31.6875).in(Meters));
+        public static final Distance kCoralStationHeight = Meters.of(Inches.of(31).in(Meters));
 
         /* PIDF constants */
         public static final double kP = 1.0;
         public static final double kI = 0.0;
-        public static final double kD = 0.0;
+        public static final double kD = 0.2;
         public static final double kF = 0.0;
 
         /**
@@ -285,7 +285,7 @@ public final class Constants {
 
         /* Wheel Speeds */
         /** Speed of the motor when intaking a coral piece */
-        public static final double kWheelSpeedIntaking = -0.1;
+        public static final double kWheelSpeedIntaking = -0.35;
 
         /** Speed of the motor when scoring a coral piece */
         public static final double kWheelSpeedOuttaking = 0.2;
@@ -313,7 +313,7 @@ public final class Constants {
 
         /* CAMERA PROPERTIES */
         public static final int[] kResolution = {640, 480};
-        public static final int kFPS = 20;
+        public static final int kFPS = 10;
         public static final int kCompression = 60;
         public static final int kBrightness = 35;
     }
