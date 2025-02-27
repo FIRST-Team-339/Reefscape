@@ -24,11 +24,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import java.util.function.Supplier;
+import us.kilroyrobotics.Constants.CameraConstants;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.DriveConstants;
 import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.Constants.VisionConstants;
 import us.kilroyrobotics.generated.TunerConstants;
+import us.kilroyrobotics.subsystems.Camera;
 // import us.kilroyrobotics.subsystems.AlgaeIntake;
 // import us.kilroyrobotics.subsystems.AlgaeIntake.AlgaeState;
 import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
@@ -79,7 +81,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     public RobotContainer() {
-        // if (Robot.isReal()) new Camera();
+        if (Robot.isReal() && CameraConstants.kCameraEnabled) new Camera();
 
         NamedCommands.registerCommand("CoralIntake", setCoralIntaking());
         NamedCommands.registerCommand("CoralOuttake", setCoralOuttaking());
@@ -133,13 +135,17 @@ public class RobotContainer {
 
     /* Elevator Commands */
     private Command elevatorSetL1 =
-            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL1Height), elevator);
+            Commands.runOnce(
+                    () -> elevator.setPosition(ElevatorConstants.kL1Height), elevator, wrist);
     private Command elevatorSetL2 =
-            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL2Height), elevator);
+            Commands.runOnce(
+                    () -> elevator.setPosition(ElevatorConstants.kL2Height), elevator, wrist);
     private Command elevatorSetL3 =
-            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL3Height), elevator);
+            Commands.runOnce(
+                    () -> elevator.setPosition(ElevatorConstants.kL3Height), elevator, wrist);
     private Command elevatorSetL4 =
-            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL4Height), elevator);
+            Commands.runOnce(
+                    () -> elevator.setPosition(ElevatorConstants.kL4Height), elevator, wrist);
     private Command elevatorSetCoralStation =
             Commands.runOnce(
                     () -> elevator.setPosition(ElevatorConstants.kCoralStationHeight), elevator);
@@ -153,7 +159,7 @@ public class RobotContainer {
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL3), wrist);
     private Command wristSetL4 =
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL4), wrist);
-    private Command wristSetCoralStation =
+    public Command wristSetCoralStation =
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist);
 
     private Command wristStop() {
@@ -401,7 +407,8 @@ public class RobotContainer {
                                                 rightOperatorJoystick.getY()
                                                         * ElevatorConstants
                                                                 .kOverrideSpeedMultiplier),
-                                elevator))
+                                elevator,
+                                wrist))
                 .onFalse(elevatorStop);
 
         // Reef Alignment
