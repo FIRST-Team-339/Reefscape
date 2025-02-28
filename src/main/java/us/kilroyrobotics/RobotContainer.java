@@ -190,7 +190,9 @@ public class RobotContainer {
                     VisionConstants.rotationalPID.setIZone(5);
                     Pose2d targetPose;
 
-                    RawFiducial[] aprilTags = LimelightHelpers.getRawFiducials("limelight");
+                    RawFiducial[] aprilTags = LimelightHelpers.getRawFiducials("limelight-right");
+                    if (aprilTags.length < 1)
+                        aprilTags = LimelightHelpers.getRawFiducials("limelight-left");
 
                     if (aprilTags.length < 1) {
                         if (currentAprilTag == 0) return null;
@@ -215,9 +217,9 @@ public class RobotContainer {
 
                     if (this.drivetrain.isAtPose(targetPose)) {
                         currentAprilTag = 0;
+                        System.out.println("AT POSE!");
                         return null;
                     }
-                    System.out.println("run");
 
                     Pose2d currentPose = drivetrain.getState().Pose;
 

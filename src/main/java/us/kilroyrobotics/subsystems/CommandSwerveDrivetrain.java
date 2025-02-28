@@ -208,9 +208,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             AutoBuilder.configure(
                     () -> getState().Pose, // Supplier of current robot pose
                     (Pose2d pose) -> {
-                        // TODO: Check if limelight is being used, and if so, set the pose to the
-                        // limelight pose with MegaTag2. This would be done as part of the vision
-                        // PR.
                         if (pose != null) this.resetPose(pose);
                     }, // Consumer for seeding pose against auto
                     () -> getState().Speeds, // Supplier of current robot speeds
