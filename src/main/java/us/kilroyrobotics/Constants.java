@@ -6,10 +6,15 @@ import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
+import com.pathplanner.lib.util.FlippingUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Mass;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public final class Constants {
     /**
@@ -17,13 +22,132 @@ public final class Constants {
      * from {@link us.kilroyrobotics.generated.TunerConstants TunerConstants}
      */
     public static final class DriveConstants {
-        public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.25);
-        public static final LinearVelocity kTeleopMaxSpeed = MetersPerSecond.of(0.5);
+        public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
+        public static final LinearVelocity kTeleopMaxSpeed = MetersPerSecond.of(1.0);
     }
 
     /** Constants used for interfacing with limelight vision */
     public static final class VisionConstants {
         public static final boolean kUseLimelight = true;
+
+        public static final PIDController xPID = new PIDController(2.0, 5.0, 0.02);
+        public static final PIDController yPID = new PIDController(2.0, 5.0, 0.02);
+        public static final PIDController rotationalPID = new PIDController(2.0, 0.5, 0.02);
+
+        public static final Pose2d kReefAPose =
+                new Pose2d(Meters.of(2.96), Meters.of(4.24), new Rotation2d(Degrees.of(0)));
+        public static final Pose2d kReefBPose =
+                new Pose2d(Meters.of(2.96), Meters.of(3.92), new Rotation2d(Degrees.of(0)));
+        public static final Pose2d kReefCPose =
+                new Pose2d(Meters.of(3.52), Meters.of(2.76), new Rotation2d(Degrees.of(60)));
+        public static final Pose2d kReefDPose =
+                new Pose2d(Meters.of(3.82), Meters.of(2.64), new Rotation2d(Degrees.of(60)));
+        public static final Pose2d kReefEPose =
+                new Pose2d(Meters.of(5.07), Meters.of(2.61), new Rotation2d(Degrees.of(120)));
+        public static final Pose2d kReefFPose =
+                new Pose2d(Meters.of(5.35), Meters.of(2.75), new Rotation2d(Degrees.of(120)));
+        public static final Pose2d kReefGPose =
+                new Pose2d(Meters.of(6.00), Meters.of(3.81), new Rotation2d(Degrees.of(180)));
+        public static final Pose2d kReefHPose =
+                new Pose2d(Meters.of(6.00), Meters.of(4.14), new Rotation2d(Degrees.of(180)));
+        public static final Pose2d kReefIPose =
+                new Pose2d(Meters.of(5.46), Meters.of(5.25), new Rotation2d(Degrees.of(240)));
+        public static final Pose2d kReefJPose =
+                new Pose2d(Meters.of(5.13), Meters.of(5.42), new Rotation2d(Degrees.of(240)));
+        public static final Pose2d kReefKPose =
+                new Pose2d(Meters.of(3.94), Meters.of(5.47), new Rotation2d(Degrees.of(300)));
+        public static final Pose2d kReefLPose =
+                new Pose2d(Meters.of(3.50), Meters.of(5.20), new Rotation2d(Degrees.of(300)));
+
+        /**
+         * Get the alignment pose for the given april tag and left/right side of said april tag
+         *
+         * <p>The poses are flipped if the robot is on the red alliance, and the reef section names
+         * will not match (e.g. Reef A -> Reef B, Reef C -> Reef L, etc...)
+         *
+         * <p>Additionally, it will make sure the april tag is for the correct alliance to prevent
+         * any errors
+         *
+         * @param aprilTag the april tag of the target you want to align to
+         * @param leftSide true if you want to get the left alignment pose for the given april tag
+         * @param alliance the current alliance of the robot
+         * @return the alignment pose for the given april tag (possibly null if no april tag or
+         *     invalid april tag detected)
+         */
+        public static Pose2d getAlignmentPose(int aprilTag, boolean leftSide, Alliance alliance) {
+            Pose2d pose = null;
+
+            switch (aprilTag) {
+                // Red Side
+                case 7:
+                    if (alliance == Alliance.Red)
+                        pose =
+                                leftSide
+                                        ? FlippingUtil.flipFieldPose(kReefAPose)
+                                        : FlippingUtil.flipFieldPose(kReefBPose);
+                    break;
+                case 8:
+                    if (alliance == Alliance.Red)
+                        pose =
+                                leftSide
+                                        ? FlippingUtil.flipFieldPose(kReefCPose)
+                                        : FlippingUtil.flipFieldPose(kReefDPose);
+                    break;
+                case 9:
+                    if (alliance == Alliance.Red)
+                        pose =
+                                leftSide
+                                        ? FlippingUtil.flipFieldPose(kReefEPose)
+                                        : FlippingUtil.flipFieldPose(kReefFPose);
+                    break;
+                case 10:
+                    if (alliance == Alliance.Red)
+                        pose =
+                                leftSide
+                                        ? FlippingUtil.flipFieldPose(kReefGPose)
+                                        : FlippingUtil.flipFieldPose(kReefHPose);
+                    break;
+                case 11:
+                    if (alliance == Alliance.Red)
+                        pose =
+                                leftSide
+                                        ? FlippingUtil.flipFieldPose(kReefIPose)
+                                        : FlippingUtil.flipFieldPose(kReefJPose);
+                    break;
+                case 6:
+                    if (alliance == Alliance.Red)
+                        pose =
+                                leftSide
+                                        ? FlippingUtil.flipFieldPose(kReefKPose)
+                                        : FlippingUtil.flipFieldPose(kReefLPose);
+                    break;
+
+                // Blue Side
+                case 18:
+                    if (alliance == Alliance.Blue) pose = leftSide ? kReefAPose : kReefBPose;
+                    break;
+                case 17:
+                    if (alliance == Alliance.Blue) pose = leftSide ? kReefCPose : kReefDPose;
+                    break;
+                case 22:
+                    if (alliance == Alliance.Blue) pose = leftSide ? kReefEPose : kReefFPose;
+                    break;
+                case 21:
+                    if (alliance == Alliance.Blue) pose = leftSide ? kReefGPose : kReefHPose;
+                    break;
+                case 20:
+                    if (alliance == Alliance.Blue) pose = leftSide ? kReefIPose : kReefJPose;
+                    break;
+                case 19:
+                    if (alliance == Alliance.Blue) pose = leftSide ? kReefKPose : kReefLPose;
+                    break;
+                default:
+                    pose = null;
+                    break;
+            }
+
+            return pose;
+        }
     }
 
     /** Constants used for interfacing with the elevator subsystem */
@@ -43,21 +167,21 @@ public final class Constants {
 
         /** Height necessary for the coral intake to reach Level 2 of Reef in Meters */
         // 47.5
-        public static final Distance kL2Height = Meters.of(Inches.of(40.5).in(Meters));
+        public static final Distance kL2Height = Meters.of(Inches.of(39).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 3 of Reef in Meters */
-        public static final Distance kL3Height = Meters.of(Inches.of(55.5).in(Meters));
+        public static final Distance kL3Height = Meters.of(Inches.of(55).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 4 of Reef in Meters */
         public static final Distance kL4Height = Meters.of(Inches.of(68).in(Meters));
 
         /** Height necessary for the coral intake to reach the Coral Station */
-        public static final Distance kCoralStationHeight = Meters.of(Inches.of(31.6875).in(Meters));
+        public static final Distance kCoralStationHeight = Meters.of(Inches.of(31).in(Meters));
 
         /* PIDF constants */
-        public static final double kP = 1.5;
+        public static final double kP = 1.0;
         public static final double kI = 0.0;
-        public static final double kD = 0.0;
+        public static final double kD = 0.2;
         public static final double kF = 0.0;
 
         /**
@@ -111,7 +235,7 @@ public final class Constants {
         public static final Distance kElevatorStartingHeight = Meters.of(Inches.of(0.0).in(Meters));
 
         /** The gearing of the wrist gearbox */
-        public static final double kWristGearing = 9.0;
+        public static final double kWristGearing = 64.0;
 
         /** The weight in Kg of the wrist in Kilograms */
         public static final Mass kWristMass = Kilograms.of(0.5);
@@ -139,7 +263,7 @@ public final class Constants {
         public static final Angle kStartingAngle = Degrees.of(0);
 
         /** The angle that the wrist will be when intaking a coral */
-        public static final Angle kIntakingAngle = Degrees.of(45);
+        public static final Angle kIntakingAngle = Degrees.of(37.5);
 
         /** The angle that the wrist will be when scoring at L4 */
         public static final Angle kScoringL4 = Degrees.of(120);
@@ -151,7 +275,7 @@ public final class Constants {
         public static final Angle kScoringL2 = Degrees.of(110);
 
         /** The angle that the wrist will be when scoring at L1 */
-        public static final Angle kScoringL1 = Degrees.of(100);
+        public static final Angle kScoringL1 = Degrees.of(120);
 
         /* PIDF constants */
         public static final double kP = 1.5;
@@ -161,10 +285,10 @@ public final class Constants {
 
         /* Wheel Speeds */
         /** Speed of the motor when intaking a coral piece */
-        public static final double kWheelSpeedIntaking = -0.1;
+        public static final double kWheelSpeedIntaking = -0.35;
 
         /** Speed of the motor when scoring a coral piece */
-        public static final double kWheelSpeedOuttaking = 0.1;
+        public static final double kWheelSpeedOuttaking = 0.2;
 
         /** Speed of the motor while the robot is in motion to keep the coral piece in place */
         public static final double kWheelSpeedHolding = -0.05;
@@ -189,7 +313,7 @@ public final class Constants {
 
         /* CAMERA PROPERTIES */
         public static final int[] kResolution = {640, 480};
-        public static final int kFPS = 20;
+        public static final int kFPS = 10;
         public static final int kCompression = 60;
         public static final int kBrightness = 35;
     }

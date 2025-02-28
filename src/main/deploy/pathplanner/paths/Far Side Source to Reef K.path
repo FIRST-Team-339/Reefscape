@@ -16,15 +16,15 @@
     },
     {
       "anchor": {
-        "x": 3.801130279896375,
-        "y": 5.54129892020136
+        "x": 3.94,
+        "y": 5.47
       },
       "prevControl": {
-        "x": 3.7660311882339736,
-        "y": 5.788822765041558
+        "x": 3.9049009083375985,
+        "y": 5.717523844840198
       },
       "nextControl": null,
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": "Reef K"
     }
   ],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 1.0,
+    "maxAcceleration": 0.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
