@@ -10,6 +10,10 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.LinearVelocity;
@@ -25,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import java.util.List;
 import java.util.function.Supplier;
 import us.kilroyrobotics.Constants.CameraConstants;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
@@ -194,12 +199,8 @@ public class RobotContainer {
     private int currentAprilTag = 0;
 
     private Command alignReef(boolean leftSide) {
-        return drivetrain.applyRequest(
+        return Commands.runOnce(
                 () -> {
-                    VisionConstants.rotationalPID.enableContinuousInput(-Math.PI, Math.PI);
-                    VisionConstants.xPID.setIZone(0.1);
-                    VisionConstants.yPID.setIZone(0.1);
-                    VisionConstants.rotationalPID.setIZone(5);
                     Pose2d targetPose;
 
                     RawFiducial[] aprilTags = LimelightHelpers.getRawFiducials("limelight-right");
@@ -207,7 +208,7 @@ public class RobotContainer {
                         aprilTags = LimelightHelpers.getRawFiducials("limelight-left");
 
                     if (aprilTags.length < 1) {
-                        if (currentAprilTag == 0) return null;
+                        if (currentAprilTag == 0) return;
 
                         targetPose =
                                 VisionConstants.getAlignmentPose(
@@ -230,7 +231,7 @@ public class RobotContainer {
                                         DriverStation.getAlliance().orElse(Alliance.Blue));
                     }
 
-                    if (targetPose == null) return null;
+                    if (targetPose == null) return;
 
                     System.out.println(
                             "[TELEOP-ASSIST] "
@@ -238,45 +239,52 @@ public class RobotContainer {
                                     + " Going to pose "
                                     + targetPose);
 
-                    if (this.drivetrain.isAtPose(targetPose)) {
-                        System.out.println(
-                                "[TELEOP-ASSIST] "
-                                        + (leftSide ? "[LEFT]" : "[RIGHT]")
-                                        + " Arrived at Pose for tag "
-                                        + this.currentAprilTag);
-                        this.currentAprilTag = 0;
+                    List<Waypoint> waypoints =
+                            PathPlannerPath.waypointsFromPoses(
+                                    this.drivetrain.getState().Pose, targetPose);
 
-                        Timer flashTimer = new Timer();
-                        flashTimer.start();
-                        SmartDashboard.putBoolean("TeleopAlignIndicator", true);
+                    PathConstraints constraints = new PathConstraints(1.0, 0.75, 0.75, 0.5);
 
-                        CommandScheduler.getInstance()
-                                .schedule(
-                                        Commands.sequence(
-                                                new WaitCommand(0.25),
-                                                Commands.runOnce(
-                                                        () ->
-                                                                SmartDashboard.putBoolean(
-                                                                        "TeleopAlignIndicator",
-                                                                        true))));
+                    PathPlannerPath path =
+                            new PathPlannerPath(
+                                    waypoints,
+                                    constraints,
+                                    null,
+                                    new GoalEndState(0.0, targetPose.getRotation()));
+                    path.preventFlipping = true;
 
-                        return null;
-                    }
+                    CommandScheduler.getInstance()
+                            .schedule(
+                                    Commands.sequence(
+                                            AutoBuilder.followPath(path),
+                                            Commands.runOnce(
+                                                    () -> {
+                                                        System.out.println(
+                                                                "[TELEOP-ASSIST] "
+                                                                        + (leftSide
+                                                                                ? "[LEFT]"
+                                                                                : "[RIGHT]")
+                                                                        + " Arrived at Pose for tag "
+                                                                        + this.currentAprilTag);
+                                                        this.currentAprilTag = 0;
 
-                    Pose2d currentPose = drivetrain.getState().Pose;
+                                                        Timer flashTimer = new Timer();
+                                                        flashTimer.start();
+                                                        SmartDashboard.putBoolean(
+                                                                "TeleopAlignIndicator", true);
 
-                    double xVelocity =
-                            VisionConstants.xPID.calculate(currentPose.getX(), targetPose.getX());
-                    double yVelocity =
-                            VisionConstants.yPID.calculate(currentPose.getY(), targetPose.getY());
-                    double rotationalVelocity =
-                            VisionConstants.rotationalPID.calculate(
-                                    currentPose.getRotation().getRadians(),
-                                    targetPose.getRotation().getRadians());
-
-                    return drive.withVelocityX(xVelocity)
-                            .withVelocityY(yVelocity)
-                            .withRotationalRate(rotationalVelocity);
+                                                        CommandScheduler.getInstance()
+                                                                .schedule(
+                                                                        Commands.sequence(
+                                                                                new WaitCommand(
+                                                                                        0.25),
+                                                                                Commands.runOnce(
+                                                                                        () ->
+                                                                                                SmartDashboard
+                                                                                                        .putBoolean(
+                                                                                                                "TeleopAlignIndicator",
+                                                                                                                true))));
+                                                    })));
                 });
     }
 
@@ -471,8 +479,8 @@ public class RobotContainer {
                 .onFalse(elevatorStop);
 
         // Reef Alignment
-        driverController.leftBumper().whileTrue(alignReef(true));
-        driverController.rightBumper().whileTrue(alignReef(false));
+        driverController.leftBumper().onTrue(alignReef(true));
+        driverController.rightBumper().onTrue(alignReef(false));
 
         drivetrain.registerTelemetry(logger::telemeterize);
     }

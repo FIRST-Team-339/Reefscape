@@ -310,7 +310,7 @@ public final class Constants {
 
     public static final class CameraConstants {
         /* SOFTWARE PROPERTIES */
-        public static final boolean kCameraEnabled = true;
+        public static final boolean kCameraEnabled = false;
 
         /* CAMERA PROPERTIES */
         public static final int[] kResolution = {640, 480};
