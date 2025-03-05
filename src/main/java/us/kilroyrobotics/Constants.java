@@ -40,19 +40,19 @@ public final class Constants {
         public static final Pose2d kReefBPose =
                 new Pose2d(Meters.of(2.96), Meters.of(3.92), new Rotation2d(Degrees.of(0)));
         public static final Pose2d kReefCPose =
-                new Pose2d(Meters.of(3.52), Meters.of(2.76), new Rotation2d(Degrees.of(60)));
+                new Pose2d(Meters.of(3.52), Meters.of(2.85), new Rotation2d(Degrees.of(60)));
         public static final Pose2d kReefDPose =
                 new Pose2d(Meters.of(3.82), Meters.of(2.64), new Rotation2d(Degrees.of(60)));
         public static final Pose2d kReefEPose =
                 new Pose2d(Meters.of(5.07), Meters.of(2.61), new Rotation2d(Degrees.of(120)));
         public static final Pose2d kReefFPose =
-                new Pose2d(Meters.of(5.35), Meters.of(2.75), new Rotation2d(Degrees.of(120)));
+                new Pose2d(Meters.of(5.32), Meters.of(2.81), new Rotation2d(Degrees.of(120)));
         public static final Pose2d kReefGPose =
                 new Pose2d(Meters.of(6.00), Meters.of(3.81), new Rotation2d(Degrees.of(180)));
         public static final Pose2d kReefHPose =
                 new Pose2d(Meters.of(6.00), Meters.of(4.14), new Rotation2d(Degrees.of(180)));
         public static final Pose2d kReefIPose =
-                new Pose2d(Meters.of(5.46), Meters.of(5.25), new Rotation2d(Degrees.of(240)));
+                new Pose2d(Meters.of(5.39), Meters.of(5.24), new Rotation2d(Degrees.of(240)));
         public static final Pose2d kReefJPose =
                 new Pose2d(Meters.of(5.13), Meters.of(5.42), new Rotation2d(Degrees.of(240)));
         public static final Pose2d kReefKPose =
