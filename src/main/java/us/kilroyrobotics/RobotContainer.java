@@ -219,7 +219,6 @@ public class RobotContainer {
                         currentAprilTag = aprilTag.id;
                         System.out.println(
                                 "[TELEOP-ASSIST] "
-                                        + (leftSide ? "[LEFT]" : "[RIGHT]")
                                         + " Selected tag "
                                         + this.currentAprilTag
                                         + " for alignment");

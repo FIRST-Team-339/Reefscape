@@ -287,10 +287,6 @@ public final class Constants {
         /* Wheel Speeds */
         /** Speed of the motor when intaking a coral piece */
         public static final double kWheelSpeedIntaking = -0.45;
-
-        /** Speed of the motor when scoring a coral piece */
-        public static final double kWheelSpeedOuttaking = 0.2;
-
         /** Speed of the motor while the robot is in motion to keep the coral piece in place */
         public static final double kWheelSpeedHolding = -0.20;
 
