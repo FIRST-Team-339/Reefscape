@@ -34,6 +34,10 @@ public class Robot extends TimedRobot {
         m_robotContainer.elevator.resetEncoder();
 
         Epilogue.bind(this);
+
+        SmartDashboard.putNumber("AutoDelay", 0.0);
+        SmartDashboard.putBoolean("DefenseModeOn", false);
+        SmartDashboard.putBoolean("TeleopAlignIndicator", false);
     }
 
     @Override

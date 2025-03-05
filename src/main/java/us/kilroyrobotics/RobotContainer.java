@@ -12,17 +12,19 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import java.util.function.Supplier;
 import us.kilroyrobotics.Constants.CameraConstants;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
@@ -42,14 +44,15 @@ import us.kilroyrobotics.util.LimelightHelpers;
 import us.kilroyrobotics.util.LimelightHelpers.RawFiducial;
 
 public class RobotContainer {
+    private LinearVelocity currentDriveSpeed = DriveConstants.kMediumDriveSpeed;
     private double kMaxAngularRate =
-            RotationsPerSecond.of(0.25).in(RadiansPerSecond); // 1/4 of a rotation per second
+            RotationsPerSecond.of(0.3).in(RadiansPerSecond); // 1/3 of a rotation per second
     // max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive =
             new SwerveRequest.FieldCentric()
-                    .withDeadband(DriveConstants.kTeleopMaxSpeed.in(MetersPerSecond) * 0.1)
+                    .withDeadband(this.currentDriveSpeed.in(MetersPerSecond) * 0.1)
                     .withRotationalDeadband(kMaxAngularRate * 0.1) // Add a 10% deadband
                     .withDriveRequestType(
                             DriveRequestType
@@ -59,8 +62,7 @@ public class RobotContainer {
     private final SwerveRequest.RobotCentric forwardStraight =
             new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    private final Telemetry logger =
-            new Telemetry(DriveConstants.kTeleopMaxSpeed.in(MetersPerSecond));
+    private final Telemetry logger = new Telemetry(this.currentDriveSpeed.in(MetersPerSecond));
 
     /* Controllers */
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -88,6 +90,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("CoralHolding", genCoralHoldingCommand());
         NamedCommands.registerCommand("CoralOff", genCoralOffCommand());
 
+        NamedCommands.registerCommand("ElevatorBottom", elevatorSetBottom);
         NamedCommands.registerCommand("ElevatorL1", elevatorSetL1);
         NamedCommands.registerCommand("ElevatorL2", elevatorSetL2);
         NamedCommands.registerCommand("ElevatorL3", elevatorSetL3);
@@ -104,6 +107,12 @@ public class RobotContainer {
 
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Mode", autoChooser);
+
+        autoChooser.onChange(
+                (Command command) -> {
+                    if (command != null)
+                        System.out.println("[AUTO] Selected Route " + command.getName());
+                });
 
         configureBindings();
     }
@@ -134,6 +143,9 @@ public class RobotContainer {
     }
 
     /* Elevator Commands */
+    private Command elevatorSetBottom =
+            Commands.runOnce(
+                    () -> elevator.setPosition(ElevatorConstants.kZeroed), elevator, wrist);
     private Command elevatorSetL1 =
             Commands.runOnce(
                     () -> elevator.setPosition(ElevatorConstants.kL1Height), elevator, wrist);
@@ -205,6 +217,12 @@ public class RobotContainer {
                     } else {
                         RawFiducial aprilTag = aprilTags[0];
                         currentAprilTag = aprilTag.id;
+                        System.out.println(
+                                "[TELEOP-ASSIST] "
+                                        + (leftSide ? "[LEFT]" : "[RIGHT]")
+                                        + " Selected tag "
+                                        + this.currentAprilTag
+                                        + " for alignment");
 
                         targetPose =
                                 VisionConstants.getAlignmentPose(
@@ -215,9 +233,34 @@ public class RobotContainer {
 
                     if (targetPose == null) return null;
 
+                    System.out.println(
+                            "[TELEOP-ASSIST] "
+                                    + (leftSide ? "[LEFT]" : "[RIGHT]")
+                                    + " Going to pose "
+                                    + targetPose);
+
                     if (this.drivetrain.isAtPose(targetPose)) {
-                        currentAprilTag = 0;
-                        System.out.println("AT POSE!");
+                        System.out.println(
+                                "[TELEOP-ASSIST] "
+                                        + (leftSide ? "[LEFT]" : "[RIGHT]")
+                                        + " Arrived at Pose for tag "
+                                        + this.currentAprilTag);
+                        this.currentAprilTag = 0;
+
+                        Timer flashTimer = new Timer();
+                        flashTimer.start();
+                        SmartDashboard.putBoolean("TeleopAlignIndicator", true);
+
+                        CommandScheduler.getInstance()
+                                .schedule(
+                                        Commands.sequence(
+                                                new WaitCommand(0.25),
+                                                Commands.runOnce(
+                                                        () ->
+                                                                SmartDashboard.putBoolean(
+                                                                        "TeleopAlignIndicator",
+                                                                        true))));
+
                         return null;
                     }
 
@@ -243,7 +286,7 @@ public class RobotContainer {
             Commands.sequence(
                             Commands.runOnce(() -> this.autoLeaveTimer.restart()),
                             drivetrain.applyRequest(
-                                    () -> forwardStraight.withVelocityX(MetersPerSecond.of(-0.5))))
+                                    () -> forwardStraight.withVelocityX(MetersPerSecond.of(0.5))))
                     .onlyWhile(() -> !autoLeaveTimer.hasElapsed(2));
 
     private void configureBindings() {
@@ -255,14 +298,14 @@ public class RobotContainer {
                         () ->
                                 drive.withVelocityX(
                                                 -driverController.getLeftY()
-                                                        * DriveConstants.kTeleopMaxSpeed.in(
+                                                        * this.currentDriveSpeed.in(
                                                                 MetersPerSecond)) // Drive forward
                                         // with
                                         // negative Y
                                         // (forward)
                                         .withVelocityY(
                                                 -driverController.getLeftX()
-                                                        * DriveConstants.kTeleopMaxSpeed.in(
+                                                        * this.currentDriveSpeed.in(
                                                                 MetersPerSecond)) // Drive left with
                                         // negative X
                                         // (left)
@@ -352,25 +395,40 @@ public class RobotContainer {
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        driverController
-                .back()
-                .and(driverController.y())
-                .whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        driverController
-                .back()
-                .and(driverController.x())
-                .whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        driverController
-                .start()
-                .and(driverController.y())
-                .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        driverController
-                .start()
-                .and(driverController.x())
-                .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // driverController
+        //         .back()
+        //         .and(driverController.y())
+        //         .whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // driverController
+        //         .back()
+        //         .and(driverController.x())
+        //         .whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // driverController
+        //         .start()
+        //         .and(driverController.y())
+        //         .whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // driverController
+        //         .start()
+        //         .and(driverController.x())
+        //         .whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // Reset the field-centric heading on left bumper press
         driverController.a().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+
+        // Switch to higher speeds (defense mode)
+        driverController
+                .start()
+                .onTrue(
+                        Commands.runOnce(
+                                () -> {
+                                    boolean defenseModeOn =
+                                            SmartDashboard.getBoolean("DefenseModeOn", true);
+                                    this.currentDriveSpeed =
+                                            defenseModeOn
+                                                    ? DriveConstants.kMediumDriveSpeed
+                                                    : DriveConstants.kHighDriveSpeed;
+                                    SmartDashboard.putBoolean("DefenseModeOn", !defenseModeOn);
+                                }));
 
         // Coral Intake Motor Controls
         leftOperatorJoystick.button(2).onTrue(setCoralIntaking()).onFalse(genCoralHoldingCommand());

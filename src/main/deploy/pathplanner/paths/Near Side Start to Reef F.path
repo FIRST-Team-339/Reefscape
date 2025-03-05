@@ -11,20 +11,20 @@
         "x": 7.5555505848265385,
         "y": 2.4018809602724454
       },
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "Near Side Start"
     },
     {
       "anchor": {
-        "x": 5.35,
-        "y": 2.75
+        "x": 5.32,
+        "y": 2.81
       },
       "prevControl": {
-        "x": 5.106886043992409,
-        "y": 2.823586142521507
+        "x": 5.07688604399241,
+        "y": 2.8835861425215072
       },
       "nextControl": null,
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "Reef F"
     }
   ],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 0.5,
+    "maxVelocity": 0.6,
+    "maxAcceleration": 0.4,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

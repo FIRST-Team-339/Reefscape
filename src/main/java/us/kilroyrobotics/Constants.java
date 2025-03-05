@@ -23,7 +23,8 @@ public final class Constants {
      */
     public static final class DriveConstants {
         public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
-        public static final LinearVelocity kTeleopMaxSpeed = MetersPerSecond.of(1.0);
+        public static final LinearVelocity kMediumDriveSpeed = MetersPerSecond.of(2.0);
+        public static final LinearVelocity kHighDriveSpeed = MetersPerSecond.of(3.0);
     }
 
     /** Constants used for interfacing with limelight vision */
@@ -57,7 +58,7 @@ public final class Constants {
         public static final Pose2d kReefKPose =
                 new Pose2d(Meters.of(3.94), Meters.of(5.47), new Rotation2d(Degrees.of(300)));
         public static final Pose2d kReefLPose =
-                new Pose2d(Meters.of(3.50), Meters.of(5.20), new Rotation2d(Degrees.of(300)));
+                new Pose2d(Meters.of(3.62), Meters.of(5.28), new Rotation2d(Degrees.of(300)));
 
         /**
          * Get the alignment pose for the given april tag and left/right side of said april tag
@@ -176,7 +177,7 @@ public final class Constants {
         public static final Distance kL4Height = Meters.of(Inches.of(68).in(Meters));
 
         /** Height necessary for the coral intake to reach the Coral Station */
-        public static final Distance kCoralStationHeight = Meters.of(Inches.of(31).in(Meters));
+        public static final Distance kCoralStationHeight = Meters.of(Inches.of(30).in(Meters));
 
         /* PIDF constants */
         public static final double kP = 1.0;
@@ -285,13 +286,13 @@ public final class Constants {
 
         /* Wheel Speeds */
         /** Speed of the motor when intaking a coral piece */
-        public static final double kWheelSpeedIntaking = -0.35;
+        public static final double kWheelSpeedIntaking = -0.45;
 
         /** Speed of the motor when scoring a coral piece */
         public static final double kWheelSpeedOuttaking = 0.2;
 
         /** Speed of the motor while the robot is in motion to keep the coral piece in place */
-        public static final double kWheelSpeedHolding = -0.05;
+        public static final double kWheelSpeedHolding = -0.20;
 
         public static final double kOverrideSpeedMultiplier = 0.25;
     }
