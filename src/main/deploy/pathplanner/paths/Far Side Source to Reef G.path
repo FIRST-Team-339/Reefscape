@@ -16,15 +16,15 @@
     },
     {
       "anchor": {
-        "x": 6.0,
-        "y": 3.81
+        "x": 5.97,
+        "y": 3.83
       },
       "prevControl": {
-        "x": 6.88122697368421,
-        "y": 6.974111842105261
+        "x": 6.85122697368421,
+        "y": 6.99411184210526
       },
       "nextControl": null,
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": "Reef G"
     }
   ],

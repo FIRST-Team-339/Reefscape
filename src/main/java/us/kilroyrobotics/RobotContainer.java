@@ -44,6 +44,8 @@ import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor.CoralState;
 import us.kilroyrobotics.subsystems.Elevator;
+import us.kilroyrobotics.subsystems.LEDs;
+import us.kilroyrobotics.subsystems.LEDs.LEDMode;
 import us.kilroyrobotics.subsystems.Wrist;
 import us.kilroyrobotics.util.LimelightHelpers;
 import us.kilroyrobotics.util.LimelightHelpers.RawFiducial;
@@ -83,6 +85,8 @@ public class RobotContainer {
 
     @Logged(name = "Wrist")
     public final Wrist wrist = new Wrist(elevator::getCarriagePose, Robot.isReal());
+
+    private final LEDs leds = new LEDs();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -256,6 +260,12 @@ public class RobotContainer {
                     CommandScheduler.getInstance()
                             .schedule(
                                     Commands.sequence(
+                                            Commands.runOnce(
+                                                    () -> {
+                                                        this.leds.setMode(LEDMode.Default);
+                                                        SmartDashboard.putBoolean(
+                                                                "TeleopAlignIndicator", false);
+                                                    }),
                                             AutoBuilder.followPath(path),
                                             Commands.runOnce(
                                                     () -> {
@@ -268,10 +278,9 @@ public class RobotContainer {
                                                                         + this.currentAprilTag);
                                                         this.currentAprilTag = 0;
 
-                                                        Timer flashTimer = new Timer();
-                                                        flashTimer.start();
                                                         SmartDashboard.putBoolean(
                                                                 "TeleopAlignIndicator", true);
+                                                        this.leds.setMode(LEDMode.TeleopAligned);
 
                                                         CommandScheduler.getInstance()
                                                                 .schedule(

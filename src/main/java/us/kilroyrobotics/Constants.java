@@ -40,7 +40,7 @@ public final class Constants {
         public static final Pose2d kReefBPose =
                 new Pose2d(Meters.of(2.96), Meters.of(3.92), new Rotation2d(Degrees.of(0)));
         public static final Pose2d kReefCPose =
-                new Pose2d(Meters.of(3.52), Meters.of(2.85), new Rotation2d(Degrees.of(60)));
+                new Pose2d(Meters.of(3.56), Meters.of(2.84), new Rotation2d(Degrees.of(60)));
         public static final Pose2d kReefDPose =
                 new Pose2d(Meters.of(3.82), Meters.of(2.64), new Rotation2d(Degrees.of(60)));
         public static final Pose2d kReefEPose =
@@ -48,9 +48,9 @@ public final class Constants {
         public static final Pose2d kReefFPose =
                 new Pose2d(Meters.of(5.32), Meters.of(2.81), new Rotation2d(Degrees.of(120)));
         public static final Pose2d kReefGPose =
-                new Pose2d(Meters.of(6.00), Meters.of(3.81), new Rotation2d(Degrees.of(180)));
+                new Pose2d(Meters.of(5.97), Meters.of(3.83), new Rotation2d(Degrees.of(180)));
         public static final Pose2d kReefHPose =
-                new Pose2d(Meters.of(6.00), Meters.of(4.14), new Rotation2d(Degrees.of(180)));
+                new Pose2d(Meters.of(6.00), Meters.of(4.17), new Rotation2d(Degrees.of(180)));
         public static final Pose2d kReefIPose =
                 new Pose2d(Meters.of(5.39), Meters.of(5.24), new Rotation2d(Degrees.of(240)));
         public static final Pose2d kReefJPose =
@@ -177,7 +177,7 @@ public final class Constants {
         public static final Distance kL4Height = Meters.of(Inches.of(68).in(Meters));
 
         /** Height necessary for the coral intake to reach the Coral Station */
-        public static final Distance kCoralStationHeight = Meters.of(Inches.of(30).in(Meters));
+        public static final Distance kCoralStationHeight = Meters.of(Inches.of(32).in(Meters));
 
         /* PIDF constants */
         public static final double kP = 1.0;

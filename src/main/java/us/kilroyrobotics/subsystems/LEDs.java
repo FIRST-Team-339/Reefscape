@@ -4,7 +4,7 @@
 
 package us.kilroyrobotics.subsystems;
 
-import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import edu.wpi.first.units.measure.Distance;
@@ -16,9 +16,9 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LEDs extends SubsystemBase {
-    private AddressableLED led = new AddressableLED(0);
+    private AddressableLED led = new AddressableLED(1);
     private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(100);
-    private Distance ledSpacing = Inches.of(0.6);
+    private Distance ledSpacing = Meters.of(5.0 / 300);
 
     private LEDPattern rainbow =
             LEDPattern.rainbow(255, 128).scrollAtAbsoluteSpeed(MetersPerSecond.of(0.5), ledSpacing);
@@ -43,21 +43,26 @@ public class LEDs extends SubsystemBase {
         this.led.setData(this.ledBuffer);
         this.led.start();
 
-        this.rainbow.applyTo(this.ledBuffer);
+        // this.rainbow.applyTo(this.ledBuffer);
     }
 
-    // @Override
-    // public void periodic() {
-    //     switch (mode) {
-    //         case Default:
-    //             this.rainbow.applyTo(ledBuffer);
-    //             break;
-    //         case TeleopAligned:
-    //             this.teleopAligned.applyTo(ledBuffer);
-    //             break;
-    //         case CoralGrabbed:
-    //             this.coralGrabbed.applyTo(ledBuffer);
-    //             break;
-    //     }
-    // }
+    public void setMode(LEDMode newMode) {
+        this.mode = newMode;
+    }
+
+    @Override
+    public void periodic() {
+        System.out.println("Running");
+        switch (mode) {
+            case Default:
+                this.rainbow.applyTo(ledBuffer);
+                break;
+            case TeleopAligned:
+                this.teleopAligned.applyTo(ledBuffer);
+                break;
+            case CoralGrabbed:
+                this.coralGrabbed.applyTo(ledBuffer);
+                break;
+        }
+    }
 }
