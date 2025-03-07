@@ -64,5 +64,6 @@ public class LEDs extends SubsystemBase {
                 this.coralGrabbed.applyTo(ledBuffer);
                 break;
         }
+        this.led.setData(ledBuffer);
     }
 }
