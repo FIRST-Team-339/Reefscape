@@ -52,7 +52,6 @@ public class LEDs extends SubsystemBase {
 
     @Override
     public void periodic() {
-        System.out.println("Running");
         switch (mode) {
             case Default:
                 this.rainbow.applyTo(ledBuffer);

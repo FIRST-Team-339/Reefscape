@@ -29,8 +29,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import java.util.List;
-import java.util.function.Supplier;
 import us.kilroyrobotics.Constants.CameraConstants;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.DriveConstants;
@@ -98,6 +99,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("CoralOuttake", setCoralOuttaking());
         NamedCommands.registerCommand("CoralHolding", genCoralHoldingCommand());
         NamedCommands.registerCommand("CoralOff", genCoralOffCommand());
+        NamedCommands.registerCommand("WaitForCoral", waitForCoral);
 
         NamedCommands.registerCommand("ElevatorBottom", elevatorSetBottom);
         NamedCommands.registerCommand("ElevatorL1", elevatorSetL1);
@@ -126,10 +128,6 @@ public class RobotContainer {
         configureBindings();
     }
 
-    private Command waitToSlowDown(Supplier<Double> velocityGetter, double velocityThreshold) {
-        return Commands.waitUntil(() -> Math.abs(velocityGetter.get()) < velocityThreshold);
-    }
-
     /* Coral Intake Wheel Commands */
     private Command setCoralIntaking() {
         return new InstantCommand(
@@ -150,6 +148,9 @@ public class RobotContainer {
         return new InstantCommand(
                 () -> coralIntakeMotor.setCoralState(CoralState.OFF), coralIntakeMotor);
     }
+
+    private Command waitForCoral =
+            Commands.waitUntil(() -> coralIntakeMotor.getCoralSensor().get());
 
     /* Elevator Commands */
     private Command elevatorSetBottom =
@@ -492,6 +493,12 @@ public class RobotContainer {
         driverController.rightBumper().onTrue(alignReef(false));
 
         drivetrain.registerTelemetry(logger::telemeterize);
+
+        new Trigger(this.coralIntakeMotor.getCoralSensor()::get).onTrue(Commands.runOnce(() -> {
+                this.leds.setMode(LEDMode.CoralGrabbed);
+        }, leds)).onFalse(Commands.runOnce(() -> {
+                this.leds.setMode(LEDMode.Default);
+        }, leds));
     }
 
     public Command getAutonomousCommand() {
