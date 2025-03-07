@@ -30,7 +30,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import java.util.List;
 import us.kilroyrobotics.Constants.CameraConstants;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
@@ -92,6 +91,7 @@ public class RobotContainer {
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
 
+    @SuppressWarnings("unused")
     public RobotContainer() {
         if (Robot.isReal() && CameraConstants.kCameraEnabled) new Camera();
 
@@ -248,7 +248,7 @@ public class RobotContainer {
                             PathPlannerPath.waypointsFromPoses(
                                     this.drivetrain.getState().Pose, targetPose);
 
-                    PathConstraints constraints = new PathConstraints(1.0, 0.75, 0.75, 0.5);
+                    PathConstraints constraints = new PathConstraints(1.5, 1.0, 0.75, 0.5);
 
                     PathPlannerPath path =
                             new PathPlannerPath(
@@ -494,11 +494,19 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        new Trigger(this.coralIntakeMotor.getCoralSensor()::get).onTrue(Commands.runOnce(() -> {
-                this.leds.setMode(LEDMode.CoralGrabbed);
-        }, leds)).onFalse(Commands.runOnce(() -> {
-                this.leds.setMode(LEDMode.Default);
-        }, leds));
+        new Trigger(this.coralIntakeMotor.getCoralSensor()::get)
+                .onTrue(
+                        Commands.runOnce(
+                                () -> {
+                                    this.leds.setMode(LEDMode.CoralGrabbed);
+                                },
+                                leds))
+                .onFalse(
+                        Commands.runOnce(
+                                () -> {
+                                    this.leds.setMode(LEDMode.Default);
+                                },
+                                leds));
     }
 
     public Command getAutonomousCommand() {
