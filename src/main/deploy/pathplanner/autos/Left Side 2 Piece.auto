@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Near Side Start to Reef F"
+            "pathName": "Far Side Start to Reef I"
           }
         },
         {
@@ -53,7 +53,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Reef F to Near Side Source"
+                  "pathName": "Reef I to Far Side Source"
                 }
               },
               {
@@ -114,7 +114,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Near Side Source to Reef B"
+                  "pathName": "Far Side Source to Reef A"
                 }
               },
               {
