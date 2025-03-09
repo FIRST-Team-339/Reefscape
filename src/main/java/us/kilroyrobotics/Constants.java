@@ -36,29 +36,29 @@ public final class Constants {
         public static final PIDController rotationalPID = new PIDController(2.0, 0.5, 0.02);
 
         public static final Pose2d kReefAPose =
-                new Pose2d(Meters.of(2.96), Meters.of(4.24), new Rotation2d(Degrees.of(0)));
+                new Pose2d(Meters.of(2.99), Meters.of(4.20), new Rotation2d(Degrees.of(0)));
         public static final Pose2d kReefBPose =
-                new Pose2d(Meters.of(2.96), Meters.of(3.92), new Rotation2d(Degrees.of(0)));
+                new Pose2d(Meters.of(2.99), Meters.of(3.87), new Rotation2d(Degrees.of(0)));
         public static final Pose2d kReefCPose =
-                new Pose2d(Meters.of(3.56), Meters.of(2.84), new Rotation2d(Degrees.of(60)));
+                new Pose2d(Meters.of(3.58), Meters.of(2.82), new Rotation2d(Degrees.of(60)));
         public static final Pose2d kReefDPose =
-                new Pose2d(Meters.of(3.82), Meters.of(2.64), new Rotation2d(Degrees.of(60)));
+                new Pose2d(Meters.of(3.84), Meters.of(2.63), new Rotation2d(Degrees.of(60)));
         public static final Pose2d kReefEPose =
-                new Pose2d(Meters.of(5.07), Meters.of(2.61), new Rotation2d(Degrees.of(120)));
+                new Pose2d(Meters.of(5.08), Meters.of(2.64), new Rotation2d(Degrees.of(120)));
         public static final Pose2d kReefFPose =
-                new Pose2d(Meters.of(5.32), Meters.of(2.81), new Rotation2d(Degrees.of(120)));
+                new Pose2d(Meters.of(5.34), Meters.of(2.78), new Rotation2d(Degrees.of(120)));
         public static final Pose2d kReefGPose =
-                new Pose2d(Meters.of(5.97), Meters.of(3.83), new Rotation2d(Degrees.of(180)));
+                new Pose2d(Meters.of(5.96), Meters.of(3.83), new Rotation2d(Degrees.of(180)));
         public static final Pose2d kReefHPose =
-                new Pose2d(Meters.of(6.00), Meters.of(4.17), new Rotation2d(Degrees.of(180)));
+                new Pose2d(Meters.of(5.98), Meters.of(4.17), new Rotation2d(Degrees.of(180)));
         public static final Pose2d kReefIPose =
-                new Pose2d(Meters.of(5.39), Meters.of(5.24), new Rotation2d(Degrees.of(240)));
+                new Pose2d(Meters.of(5.41), Meters.of(5.17), new Rotation2d(Degrees.of(240)));
         public static final Pose2d kReefJPose =
-                new Pose2d(Meters.of(5.13), Meters.of(5.42), new Rotation2d(Degrees.of(240)));
+                new Pose2d(Meters.of(5.14), Meters.of(5.39), new Rotation2d(Degrees.of(240)));
         public static final Pose2d kReefKPose =
-                new Pose2d(Meters.of(3.94), Meters.of(5.47), new Rotation2d(Degrees.of(300)));
+                new Pose2d(Meters.of(3.92), Meters.of(5.42), new Rotation2d(Degrees.of(300)));
         public static final Pose2d kReefLPose =
-                new Pose2d(Meters.of(3.62), Meters.of(5.28), new Rotation2d(Degrees.of(300)));
+                new Pose2d(Meters.of(3.61), Meters.of(5.29), new Rotation2d(Degrees.of(300)));
 
         /**
          * Get the alignment pose for the given april tag and left/right side of said april tag

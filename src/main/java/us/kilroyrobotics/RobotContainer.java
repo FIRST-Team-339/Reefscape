@@ -99,7 +99,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("CoralOuttake", setCoralOuttaking());
         NamedCommands.registerCommand("CoralHolding", genCoralHoldingCommand());
         NamedCommands.registerCommand("CoralOff", genCoralOffCommand());
-        NamedCommands.registerCommand("WaitForCoral", waitForCoral);
+        NamedCommands.registerCommand("WaitForCoral", new WaitCommand(3.0));
 
         NamedCommands.registerCommand("ElevatorBottom", elevatorSetBottom);
         NamedCommands.registerCommand("ElevatorL1", elevatorSetL1);

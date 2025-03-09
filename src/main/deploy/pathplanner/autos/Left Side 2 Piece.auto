@@ -43,7 +43,13 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.25
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WristCS"
           }
         },
         {
@@ -75,12 +81,6 @@
           "type": "named",
           "data": {
             "name": "ElevatorCS"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "WristCS"
           }
         },
         {

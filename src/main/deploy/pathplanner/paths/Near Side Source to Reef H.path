@@ -3,24 +3,24 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.613,
-        "y": 0.6877215210698148
+        "x": 1.16025,
+        "y": 0.9927499999999998
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6129999999999995,
-        "y": 0.6877215210698147
+        "x": 2.1602499999999996,
+        "y": 0.9927499999999998
       },
       "isLocked": true,
       "linkedName": "Near Side Source"
     },
     {
       "anchor": {
-        "x": 6.0,
+        "x": 5.98,
         "y": 4.16
       },
       "prevControl": {
-        "x": 6.754520292207792,
+        "x": 6.734520292207792,
         "y": 1.0035227272727272
       },
       "nextControl": null,
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.25,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 1.25,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
