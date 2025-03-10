@@ -99,7 +99,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("CoralOuttake", setCoralOuttaking());
         NamedCommands.registerCommand("CoralHolding", genCoralHoldingCommand());
         NamedCommands.registerCommand("CoralOff", genCoralOffCommand());
-        NamedCommands.registerCommand("WaitForCoral", new WaitCommand(3.0));
+        NamedCommands.registerCommand("WaitForCoral", waitForCoral);
 
         NamedCommands.registerCommand("ElevatorBottom", elevatorSetBottom);
         NamedCommands.registerCommand("ElevatorL1", elevatorSetL1);
@@ -150,7 +150,7 @@ public class RobotContainer {
     }
 
     private Command waitForCoral =
-            Commands.waitUntil(() -> coralIntakeMotor.getCoralSensor().get());
+            Commands.waitUntil(() -> coralIntakeMotor.getCoralSensor().get()).withTimeout(Seconds.of(2.5));
 
     /* Elevator Commands */
     private Command elevatorSetBottom =
