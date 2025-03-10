@@ -78,6 +78,7 @@ public class RobotContainer {
 
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    @Logged(name = "CoralIntakeMotor")
     private final CoralIntakeMotor coralIntakeMotor = new CoralIntakeMotor();
 
     @Logged(name = "Elevator")

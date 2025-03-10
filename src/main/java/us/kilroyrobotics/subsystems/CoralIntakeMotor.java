@@ -6,6 +6,8 @@ package us.kilroyrobotics.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
+
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
@@ -33,7 +35,12 @@ public class CoralIntakeMotor extends SubsystemBase {
     }
 
     public DigitalInput getCoralSensor() {
-        return coralSensor;
+        return this.coralSensor;
+    }
+
+    @Logged(name = "CoralDetected")
+    public boolean isCoralDetected() {
+        return this.coralSensor.get();
     }
 
     @Override
