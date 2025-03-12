@@ -78,6 +78,7 @@ public class RobotContainer {
 
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+
     @Logged(name = "CoralIntakeMotor")
     private final CoralIntakeMotor coralIntakeMotor = new CoralIntakeMotor();
 
@@ -151,7 +152,8 @@ public class RobotContainer {
     }
 
     private Command waitForCoral =
-            Commands.waitUntil(() -> coralIntakeMotor.getCoralSensor().get()).withTimeout(Seconds.of(2.5));
+            Commands.waitUntil(() -> coralIntakeMotor.getCoralSensor().get())
+                    .withTimeout(Seconds.of(2.5));
 
     /* Elevator Commands */
     private Command elevatorSetBottom =

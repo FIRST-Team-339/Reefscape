@@ -6,7 +6,6 @@ package us.kilroyrobotics.subsystems;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
-
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
