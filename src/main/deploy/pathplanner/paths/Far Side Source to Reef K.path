@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.613,
+        "y": 7.33
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.7622582743843527,
+        "y": 7.530554151110879
+      },
+      "isLocked": true,
+      "linkedName": "Far Side Source"
+    },
+    {
+      "anchor": {
+        "x": 3.92,
+        "y": 5.43
+      },
+      "prevControl": {
+        "x": 3.8849009083375985,
+        "y": 5.677523844840198
+      },
+      "nextControl": null,
+      "isLocked": true,
+      "linkedName": "Reef K"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -59.99999999999999
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 126.0
+  },
+  "useDefaultConstraints": true
+}
