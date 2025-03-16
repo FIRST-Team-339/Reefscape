@@ -99,7 +99,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("CoralOuttake", setCoralOuttaking);
         NamedCommands.registerCommand("CoralHolding", genCoralHoldingCommand);
         NamedCommands.registerCommand("CoralOff", genCoralOffCommand);
-        NamedCommands.registerCommand("WaitForCoral", waitForCoral);
+        NamedCommands.registerCommand("WaitForCoral", Commands.waitTime(Seconds.of(3.5)));
 
         NamedCommands.registerCommand("ElevatorBottom", elevatorSetBottom);
         NamedCommands.registerCommand("ElevatorL1", elevatorSetL1);
@@ -189,7 +189,6 @@ public class RobotContainer {
     public Command wristSetCoralStation =
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist)
                     .andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
-    ;
 
     private Command wristStop =
             Commands.runOnce(
