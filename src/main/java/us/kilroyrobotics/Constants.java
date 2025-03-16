@@ -24,7 +24,7 @@ public final class Constants {
     public static final class DriveConstants {
         public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
         public static final LinearVelocity kMediumDriveSpeed = MetersPerSecond.of(2.0);
-        public static final LinearVelocity kHighDriveSpeed = MetersPerSecond.of(3.0);
+        public static final LinearVelocity kHighDriveSpeed = MetersPerSecond.of(3.5);
     }
 
     /** Constants used for interfacing with limelight vision */

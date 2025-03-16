@@ -49,13 +49,13 @@
         {
           "type": "named",
           "data": {
-            "name": "WristCS"
+            "name": "CoralOff"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "CoralOff"
+            "name": "WristCS"
           }
         },
         {

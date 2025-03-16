@@ -32,13 +32,17 @@ public class LEDs extends SubsystemBase {
     private LEDPattern coralGrabbed =
             LEDPattern.gradient(GradientType.kContinuous, Color.kLightSkyBlue, Color.kIndigo)
                     .scrollAtAbsoluteSpeed(MetersPerSecond.of(0.5), ledSpacing);
+    private LEDPattern defense =
+            LEDPattern.gradient(GradientType.kContinuous, Color.kOrangeRed, Color.kDarkRed)
+                    .scrollAtAbsoluteSpeed(MetersPerSecond.of(1.0), ledSpacing);
 
     public static enum LEDMode {
         Off,
         Rainbow,
         TeleopAligned,
         WaitingForCoral,
-        CoralDetected
+        CoralDetected,
+        Defense
     }
 
     private LEDMode mode = LEDMode.Off;
@@ -69,6 +73,9 @@ public class LEDs extends SubsystemBase {
                 break;
             case CoralDetected:
                 this.coralGrabbed.applyTo(ledBuffer);
+                break;
+            case Defense:
+                this.defense.applyTo(ledBuffer);
                 break;
             default:
                 LEDPattern.kOff.applyTo(ledBuffer);

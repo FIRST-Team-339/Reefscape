@@ -52,7 +52,7 @@ public class CoralIntakeMotor extends SubsystemBase {
             case HOLDING:
                 this.wheelMotor.set(CoralMechanismConstants.kWheelSpeedHolding);
                 break;
-            default:
+            case OFF:
                 this.wheelMotor.set(0);
                 break;
         }
