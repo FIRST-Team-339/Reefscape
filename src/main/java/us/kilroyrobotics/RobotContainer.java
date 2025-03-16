@@ -133,8 +133,10 @@ public class RobotContainer {
             Commands.runOnce(
                     () -> {
                         coralIntakeMotor.setCoralState(CoralState.INTAKING);
+                        leds.setMode(LEDMode.WaitingForCoral);
                     },
-                    coralIntakeMotor).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.WaitingForCoral), leds));
+                    coralIntakeMotor,
+                    leds);
 
     private Command setCoralOuttaking =
             Commands.runOnce(
@@ -144,45 +146,50 @@ public class RobotContainer {
 
     private Command genCoralHoldingCommand =
             Commands.runOnce(
-                    () -> coralIntakeMotor.setCoralState(CoralState.HOLDING), coralIntakeMotor).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Off), leds));
+                    () -> coralIntakeMotor.setCoralState(CoralState.HOLDING), coralIntakeMotor);
 
     private Command genCoralOffCommand =
             Commands.runOnce(
                     () -> {
                         coralIntakeMotor.setCoralState(CoralState.OFF);
+                        leds.setMode(LEDMode.Off);
                     },
-                    coralIntakeMotor).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Off), leds));
+                    coralIntakeMotor,
+                    leds);
 
     private Command waitForCoral =
             Commands.waitUntil(() -> coralIntakeMotor.getCoralSensor().get())
-                    .withTimeout(Seconds.of(3.5)).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.CoralDetected), leds));
+                    .withTimeout(Seconds.of(3.5));
 
     /* Elevator Commands */
     private Command elevatorSetBottom =
-            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kZeroed), elevator).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kZeroed), elevator);
     private Command elevatorSetL1 =
-            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL1Height), elevator).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL1Height), elevator);
     private Command elevatorSetL2 =
-            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL2Height), elevator).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL2Height), elevator);
     private Command elevatorSetL3 =
-            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL3Height), elevator).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL3Height), elevator);
     private Command elevatorSetL4 =
-            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL4Height), elevator).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL4Height), elevator);
     private Command elevatorSetCoralStation =
             Commands.runOnce(
-                    () -> elevator.setPosition(ElevatorConstants.kCoralStationHeight), elevator).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
+                    () -> elevator.setPosition(ElevatorConstants.kCoralStationHeight), elevator);
 
     /* Wrist Commands */
     private Command wristSetL1 =
-            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL1), wrist).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL1), wrist);
     private Command wristSetL2 =
-            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL2), wrist).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL2), wrist)
+                    .andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
     private Command wristSetL3 =
-            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL3), wrist).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL3), wrist);
     private Command wristSetL4 =
-            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL4), wrist).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL4), wrist);
     public Command wristSetCoralStation =
-            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist)
+                    .andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
+    ;
 
     private Command wristStop =
             Commands.runOnce(
@@ -190,7 +197,7 @@ public class RobotContainer {
                         wrist.setAngle(wrist.getAngle());
                         wrist.stop();
                     },
-                    wrist).andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Off), leds));;
+                    wrist);
 
     /* Preset Commands */
     private Command elevatorStop =
