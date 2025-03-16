@@ -52,7 +52,7 @@ import us.kilroyrobotics.util.LimelightHelpers.RawFiducial;
 public class RobotContainer {
     private LinearVelocity currentDriveSpeed = DriveConstants.kMediumDriveSpeed;
     private double kMaxAngularRate =
-            RotationsPerSecond.of(0.3).in(RadiansPerSecond); // 1/3 of a rotation per second
+            RotationsPerSecond.of(0.4).in(RadiansPerSecond); // 2/5 of a rotation per second
     // max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
