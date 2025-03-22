@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -53,7 +52,7 @@ import us.kilroyrobotics.util.LimelightHelpers.RawFiducial;
 public class RobotContainer {
     private LinearVelocity currentDriveSpeed = DriveConstants.kMediumDriveSpeed;
     private double kMaxAngularRate =
-            RotationsPerSecond.of(0.3).in(RadiansPerSecond); // 1/3 of a rotation per second
+            RotationsPerSecond.of(0.4).in(RadiansPerSecond); // 2/5 of a rotation per second
     // max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -79,7 +78,6 @@ public class RobotContainer {
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-    @Logged(name = "CoralIntakeMotor")
     private final CoralIntakeMotor coralIntakeMotor = new CoralIntakeMotor();
 
     @Logged(name = "Elevator")
@@ -88,7 +86,7 @@ public class RobotContainer {
     @Logged(name = "Wrist")
     public final Wrist wrist = new Wrist(elevator::getCarriagePose, Robot.isReal());
 
-    private final LEDs leds = new LEDs();
+    public final LEDs leds = new LEDs();
 
     /* Path follower */
     private final SendableChooser<Command> autoChooser;
@@ -97,11 +95,11 @@ public class RobotContainer {
     public RobotContainer() {
         if (Robot.isReal() && CameraConstants.kCameraEnabled) new Camera();
 
-        NamedCommands.registerCommand("CoralIntake", setCoralIntaking());
-        NamedCommands.registerCommand("CoralOuttake", setCoralOuttaking());
-        NamedCommands.registerCommand("CoralHolding", genCoralHoldingCommand());
-        NamedCommands.registerCommand("CoralOff", genCoralOffCommand());
-        NamedCommands.registerCommand("WaitForCoral", waitForCoral);
+        NamedCommands.registerCommand("CoralIntake", setCoralIntaking);
+        NamedCommands.registerCommand("CoralOuttake", setCoralOuttaking);
+        NamedCommands.registerCommand("CoralHolding", genCoralHoldingCommand);
+        NamedCommands.registerCommand("CoralOff", genCoralOffCommand);
+        NamedCommands.registerCommand("WaitForCoral", Commands.waitTime(Seconds.of(3.5)));
 
         NamedCommands.registerCommand("ElevatorBottom", elevatorSetBottom);
         NamedCommands.registerCommand("ElevatorL1", elevatorSetL1);
@@ -131,46 +129,49 @@ public class RobotContainer {
     }
 
     /* Coral Intake Wheel Commands */
-    private Command setCoralIntaking() {
-        return new InstantCommand(
-                () -> coralIntakeMotor.setCoralState(CoralState.INTAKING), coralIntakeMotor);
-    }
+    private Command setCoralIntaking =
+            Commands.runOnce(
+                    () -> {
+                        coralIntakeMotor.setCoralState(CoralState.INTAKING);
+                        leds.setMode(LEDMode.WaitingForCoral);
+                    },
+                    coralIntakeMotor,
+                    leds);
 
-    private Command setCoralOuttaking() {
-        return new InstantCommand(
-                () -> coralIntakeMotor.setCoralState(CoralState.OUTTAKING), coralIntakeMotor);
-    }
+    private Command setCoralOuttaking =
+            Commands.runOnce(
+                            () -> coralIntakeMotor.setCoralState(CoralState.OUTTAKING),
+                            coralIntakeMotor)
+                    .andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Off), leds));
 
-    private Command genCoralHoldingCommand() {
-        return new InstantCommand(
-                () -> coralIntakeMotor.setCoralState(CoralState.HOLDING), coralIntakeMotor);
-    }
+    private Command genCoralHoldingCommand =
+            Commands.runOnce(
+                    () -> coralIntakeMotor.setCoralState(CoralState.HOLDING), coralIntakeMotor);
 
-    private Command genCoralOffCommand() {
-        return new InstantCommand(
-                () -> coralIntakeMotor.setCoralState(CoralState.OFF), coralIntakeMotor);
-    }
+    private Command genCoralOffCommand =
+            Commands.runOnce(
+                    () -> {
+                        coralIntakeMotor.setCoralState(CoralState.OFF);
+                        leds.setMode(LEDMode.Off);
+                    },
+                    coralIntakeMotor,
+                    leds);
 
     private Command waitForCoral =
             Commands.waitUntil(() -> coralIntakeMotor.getCoralSensor().get())
-                    .withTimeout(Seconds.of(2.5));
+                    .withTimeout(Seconds.of(3.5));
 
     /* Elevator Commands */
     private Command elevatorSetBottom =
-            Commands.runOnce(
-                    () -> elevator.setPosition(ElevatorConstants.kZeroed), elevator, wrist);
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kZeroed), elevator);
     private Command elevatorSetL1 =
-            Commands.runOnce(
-                    () -> elevator.setPosition(ElevatorConstants.kL1Height), elevator, wrist);
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL1Height), elevator);
     private Command elevatorSetL2 =
-            Commands.runOnce(
-                    () -> elevator.setPosition(ElevatorConstants.kL2Height), elevator, wrist);
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL2Height), elevator);
     private Command elevatorSetL3 =
-            Commands.runOnce(
-                    () -> elevator.setPosition(ElevatorConstants.kL3Height), elevator, wrist);
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL3Height), elevator);
     private Command elevatorSetL4 =
-            Commands.runOnce(
-                    () -> elevator.setPosition(ElevatorConstants.kL4Height), elevator, wrist);
+            Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL4Height), elevator);
     private Command elevatorSetCoralStation =
             Commands.runOnce(
                     () -> elevator.setPosition(ElevatorConstants.kCoralStationHeight), elevator);
@@ -179,22 +180,23 @@ public class RobotContainer {
     private Command wristSetL1 =
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL1), wrist);
     private Command wristSetL2 =
-            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL2), wrist);
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL2), wrist)
+                    .andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
     private Command wristSetL3 =
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL3), wrist);
     private Command wristSetL4 =
             Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kScoringL4), wrist);
     public Command wristSetCoralStation =
-            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist);
+            Commands.runOnce(() -> wrist.setAngle(CoralMechanismConstants.kIntakingAngle), wrist)
+                    .andThen(Commands.runOnce(() -> leds.setMode(LEDMode.Rainbow), leds));
 
-    private Command wristStop() {
-        return new InstantCommand(
-                () -> {
-                    wrist.setAngle(wrist.getAngle());
-                    wrist.stop();
-                },
-                wrist);
-    }
+    private Command wristStop =
+            Commands.runOnce(
+                    () -> {
+                        wrist.setAngle(wrist.getAngle());
+                        wrist.stop();
+                    },
+                    wrist);
 
     /* Preset Commands */
     private Command elevatorStop =
@@ -266,7 +268,7 @@ public class RobotContainer {
                                     Commands.sequence(
                                             Commands.runOnce(
                                                     () -> {
-                                                        this.leds.setMode(LEDMode.Default);
+                                                        this.leds.setMode(LEDMode.Off);
                                                         SmartDashboard.putBoolean(
                                                                 "TeleopAlignIndicator", false);
                                                     }),
@@ -290,13 +292,19 @@ public class RobotContainer {
                                                                 .schedule(
                                                                         Commands.sequence(
                                                                                 new WaitCommand(
-                                                                                        0.25),
+                                                                                        2.5),
                                                                                 Commands.runOnce(
-                                                                                        () ->
-                                                                                                SmartDashboard
-                                                                                                        .putBoolean(
-                                                                                                                "TeleopAlignIndicator",
-                                                                                                                true))));
+                                                                                        () -> {
+                                                                                            SmartDashboard
+                                                                                                    .putBoolean(
+                                                                                                            "TeleopAlignIndicator",
+                                                                                                            false);
+                                                                                            this
+                                                                                                    .leds
+                                                                                                    .setMode(
+                                                                                                            LEDMode
+                                                                                                                    .Off);
+                                                                                        })));
                                                     })));
                 });
     }
@@ -448,11 +456,14 @@ public class RobotContainer {
                                                     ? DriveConstants.kMediumDriveSpeed
                                                     : DriveConstants.kHighDriveSpeed;
                                     SmartDashboard.putBoolean("DefenseModeOn", !defenseModeOn);
+                                    if (defenseModeOn) {
+                                        leds.setMode(LEDMode.Defense);
+                                    } else leds.setMode(LEDMode.Off);
                                 }));
 
         // Coral Intake Motor Controls
-        leftOperatorJoystick.button(2).onTrue(setCoralIntaking()).onFalse(genCoralHoldingCommand());
-        leftOperatorJoystick.button(3).onTrue(setCoralOuttaking()).onFalse(genCoralOffCommand());
+        leftOperatorJoystick.button(2).onTrue(setCoralIntaking).onFalse(genCoralHoldingCommand);
+        leftOperatorJoystick.button(3).onTrue(setCoralOuttaking).onFalse(genCoralOffCommand);
 
         // Wrist Control
         leftOperatorJoystick.button(10).onTrue(wristSetL1);
@@ -470,9 +481,10 @@ public class RobotContainer {
                                                         * CoralMechanismConstants
                                                                 .kOverrideSpeedMultiplier),
                                 wrist))
-                .onFalse(wristStop());
+                .onFalse(wristStop);
 
         // Elevator Controls
+        rightOperatorJoystick.button(9).onTrue(elevatorSetBottom);
         rightOperatorJoystick.button(10).onTrue(elevatorSetL1);
         rightOperatorJoystick.button(7).onTrue(elevatorSetL2);
         rightOperatorJoystick.button(11).onTrue(elevatorSetL3);
@@ -497,17 +509,19 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        new Trigger(this.coralIntakeMotor.getCoralSensor()::get)
+        new Trigger(this.coralIntakeMotor::isCoralDetected)
                 .onTrue(
                         Commands.runOnce(
                                 () -> {
-                                    this.leds.setMode(LEDMode.CoralGrabbed);
+                                    this.leds.setMode(LEDMode.CoralDetected);
+                                    SmartDashboard.putBoolean("CoralDetected", true);
                                 },
                                 leds))
                 .onFalse(
                         Commands.runOnce(
                                 () -> {
-                                    this.leds.setMode(LEDMode.Default);
+                                    this.leds.setMode(LEDMode.Off);
+                                    SmartDashboard.putBoolean("CoralDetected", false);
                                 },
                                 leds));
     }

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.16025,
-        "y": 0.9927499999999998
+        "x": 1.43325,
+        "y": 0.8075
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1602499999999996,
-        "y": 0.9927499999999998
+        "x": 2.4332499999999992,
+        "y": 0.8075
       },
       "isLocked": true,
       "linkedName": "Near Side Source"
@@ -17,14 +17,14 @@
     {
       "anchor": {
         "x": 5.09,
-        "y": 2.64
+        "y": 2.6502499999999998
       },
       "prevControl": {
         "x": 5.1881102892583835,
-        "y": 2.22956319470394
+        "y": 2.2398131947039395
       },
       "nextControl": null,
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": "Reef E"
     }
   ],

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.613,
-        "y": 7.33
+        "x": 1.6672500000000001,
+        "y": 7.369249999999999
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7961246517463032,
-        "y": 7.500192132376309
+        "x": 1.8503746517463033,
+        "y": 7.539442132376308
       },
       "isLocked": true,
       "linkedName": "Far Side Source"

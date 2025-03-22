@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.Constants.VisionConstants;
+import us.kilroyrobotics.subsystems.LEDs.LEDMode;
 import us.kilroyrobotics.util.LimelightHelpers;
 
 @Logged
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
         SmartDashboard.putNumber("AutoDelay", 0.0);
         SmartDashboard.putBoolean("DefenseModeOn", false);
         SmartDashboard.putBoolean("TeleopAlignIndicator", false);
+        SmartDashboard.putBoolean("CoralDetected", false);
     }
 
     @Override
@@ -75,13 +77,17 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        this.m_robotContainer.leds.setMode(LEDMode.Rainbow);
+    }
 
     @Override
     public void disabledPeriodic() {}
 
     @Override
-    public void disabledExit() {}
+    public void disabledExit() {
+        this.m_robotContainer.leds.setMode(LEDMode.Off);
+    }
 
     @Override
     public void autonomousInit() {

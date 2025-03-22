@@ -31,7 +31,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.25
+            "waitTime": 0.5
           }
         },
         {
@@ -49,32 +49,25 @@
         {
           "type": "named",
           "data": {
+            "name": "CoralOff"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "WristCS"
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Reef F to Near Side Source"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ElevatorBottom"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "CoralOff"
-                }
-              }
-            ]
+            "name": "ElevatorBottom"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef F to Near Side Source"
           }
         },
         {
@@ -147,7 +140,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.25
+            "waitTime": 0.5
           }
         },
         {

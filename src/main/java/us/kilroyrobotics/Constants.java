@@ -24,7 +24,7 @@ public final class Constants {
     public static final class DriveConstants {
         public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
         public static final LinearVelocity kMediumDriveSpeed = MetersPerSecond.of(2.0);
-        public static final LinearVelocity kHighDriveSpeed = MetersPerSecond.of(3.0);
+        public static final LinearVelocity kHighDriveSpeed = MetersPerSecond.of(3.5);
     }
 
     /** Constants used for interfacing with limelight vision */
@@ -36,7 +36,7 @@ public final class Constants {
         public static final PIDController rotationalPID = new PIDController(2.0, 0.5, 0.02);
 
         public static final Pose2d kReefAPose =
-                new Pose2d(Meters.of(2.99), Meters.of(4.20), new Rotation2d(Degrees.of(0)));
+                new Pose2d(Meters.of(2.99), Meters.of(4.19), new Rotation2d(Degrees.of(0)));
         public static final Pose2d kReefBPose =
                 new Pose2d(Meters.of(2.99), Meters.of(3.87), new Rotation2d(Degrees.of(0)));
         public static final Pose2d kReefCPose =
@@ -44,19 +44,19 @@ public final class Constants {
         public static final Pose2d kReefDPose =
                 new Pose2d(Meters.of(3.84), Meters.of(2.63), new Rotation2d(Degrees.of(60)));
         public static final Pose2d kReefEPose =
-                new Pose2d(Meters.of(5.08), Meters.of(2.64), new Rotation2d(Degrees.of(120)));
+                new Pose2d(Meters.of(5.08), Meters.of(2.65), new Rotation2d(Degrees.of(120)));
         public static final Pose2d kReefFPose =
                 new Pose2d(Meters.of(5.34), Meters.of(2.78), new Rotation2d(Degrees.of(120)));
         public static final Pose2d kReefGPose =
-                new Pose2d(Meters.of(5.96), Meters.of(3.83), new Rotation2d(Degrees.of(180)));
+                new Pose2d(Meters.of(5.96), Meters.of(3.85), new Rotation2d(Degrees.of(180)));
         public static final Pose2d kReefHPose =
                 new Pose2d(Meters.of(5.98), Meters.of(4.17), new Rotation2d(Degrees.of(180)));
         public static final Pose2d kReefIPose =
-                new Pose2d(Meters.of(5.41), Meters.of(5.17), new Rotation2d(Degrees.of(240)));
+                new Pose2d(Meters.of(5.37), Meters.of(5.22), new Rotation2d(Degrees.of(240)));
         public static final Pose2d kReefJPose =
                 new Pose2d(Meters.of(5.14), Meters.of(5.39), new Rotation2d(Degrees.of(240)));
         public static final Pose2d kReefKPose =
-                new Pose2d(Meters.of(3.92), Meters.of(5.42), new Rotation2d(Degrees.of(300)));
+                new Pose2d(Meters.of(3.92), Meters.of(5.40), new Rotation2d(Degrees.of(300)));
         public static final Pose2d kReefLPose =
                 new Pose2d(Meters.of(3.61), Meters.of(5.29), new Rotation2d(Degrees.of(300)));
 
@@ -168,7 +168,7 @@ public final class Constants {
 
         /** Height necessary for the coral intake to reach Level 2 of Reef in Meters */
         // 47.5
-        public static final Distance kL2Height = Meters.of(Inches.of(39).in(Meters));
+        public static final Distance kL2Height = Meters.of(Inches.of(39.5).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 3 of Reef in Meters */
         public static final Distance kL3Height = Meters.of(Inches.of(55).in(Meters));
@@ -177,7 +177,7 @@ public final class Constants {
         public static final Distance kL4Height = Meters.of(Inches.of(68).in(Meters));
 
         /** Height necessary for the coral intake to reach the Coral Station */
-        public static final Distance kCoralStationHeight = Meters.of(Inches.of(32).in(Meters));
+        public static final Distance kCoralStationHeight = Meters.of(Inches.of(32.25).in(Meters));
 
         /* PIDF constants */
         public static final double kP = 1.0;
@@ -292,7 +292,7 @@ public final class Constants {
         public static final double kWheelSpeedOuttaking = 0.2;
 
         /** Speed of the motor while the robot is in motion to keep the coral piece in place */
-        public static final double kWheelSpeedHolding = -0.20;
+        public static final double kWheelSpeedHolding = -0.2;
 
         public static final double kOverrideSpeedMultiplier = 0.25;
     }
