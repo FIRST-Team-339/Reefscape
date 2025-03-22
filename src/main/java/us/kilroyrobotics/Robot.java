@@ -5,21 +5,41 @@
 package us.kilroyrobotics;
 
 import com.ctre.phoenix6.Utils;
+import edu.wpi.first.epilogue.Epilogue;
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import us.kilroyrobotics.Constants.CoralMechanismConstants;
+import us.kilroyrobotics.Constants.ElevatorConstants;
+import us.kilroyrobotics.Constants.VisionConstants;
+import us.kilroyrobotics.subsystems.LEDs.LEDMode;
 import us.kilroyrobotics.util.LimelightHelpers;
 
+@Logged
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
+    @Logged(name = "RobotContainer")
     private final RobotContainer m_robotContainer;
-
-    private final boolean kUseLimelight = false;
 
     public Robot() {
         m_robotContainer = new RobotContainer();
+
+        // Reset Elevator Encoder to Starting Position
+        m_robotContainer.elevator.resetEncoder();
+
+        Epilogue.bind(this);
+
+        SmartDashboard.putNumber("AutoDelay", 0.0);
+        SmartDashboard.putBoolean("DefenseModeOn", false);
+        SmartDashboard.putBoolean("TeleopAlignIndicator", false);
+        SmartDashboard.putBoolean("CoralDetected", false);
     }
 
     @Override
@@ -38,13 +58,16 @@ public class Robot extends TimedRobot {
          * of how to use vision should be tuned per-robot and to the team's
          * specification.
          */
-        if (kUseLimelight) {
+        if (VisionConstants.kUseLimelight) {
             var driveState = m_robotContainer.drivetrain.getState();
             double headingDeg = driveState.Pose.getRotation().getDegrees();
             double omegaRps = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
 
-            LimelightHelpers.SetRobotOrientation("limelight", headingDeg, 0, 0, 0, 0, 0);
-            var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+            LimelightHelpers.SetRobotOrientation("limelight-right", headingDeg, 0, 0, 0, 0, 0);
+            LimelightHelpers.SetRobotOrientation("limelight-left", headingDeg, 0, 0, 0, 0, 0);
+            var llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-right");
+            if (llMeasurement == null)
+                llMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-left");
             if (llMeasurement != null && llMeasurement.tagCount > 0 && omegaRps < 2.0) {
                 m_robotContainer.drivetrain.addVisionMeasurement(
                         llMeasurement.pose,
@@ -54,19 +77,30 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        this.m_robotContainer.leds.setMode(LEDMode.Rainbow);
+    }
 
     @Override
     public void disabledPeriodic() {}
 
     @Override
-    public void disabledExit() {}
+    public void disabledExit() {
+        this.m_robotContainer.leds.setMode(LEDMode.Off);
+    }
 
     @Override
     public void autonomousInit() {
-        m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+        Shuffleboard.startRecording();
+        Shuffleboard.selectTab("Autonomous");
+
+        Command autoDelayCommand = new WaitCommand(SmartDashboard.getNumber("AutoDelay", 0.0));
+
+        m_autonomousCommand =
+                Commands.sequence(autoDelayCommand, m_robotContainer.getAutonomousCommand());
 
         if (m_autonomousCommand != null) {
+            m_robotContainer.wristSetCoralStation.schedule();
             m_autonomousCommand.schedule();
         }
     }
@@ -79,6 +113,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        Shuffleboard.selectTab("Teleop");
+        m_robotContainer.wristSetCoralStation.schedule();
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
@@ -88,7 +124,9 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {}
 
     @Override
-    public void teleopExit() {}
+    public void teleopExit() {
+        Shuffleboard.stopRecording();
+    }
 
     @Override
     public void testInit() {
@@ -96,11 +134,17 @@ public class Robot extends TimedRobot {
     }
 
     @Override
-    public void testPeriodic() {}
+    public void testPeriodic() {
+        m_robotContainer.elevator.setPosition(ElevatorConstants.kCoralStationHeight);
+        m_robotContainer.wrist.setAngle(CoralMechanismConstants.kIntakingAngle);
+    }
 
     @Override
     public void testExit() {}
 
     @Override
-    public void simulationPeriodic() {}
+    public void simulationPeriodic() {
+        m_robotContainer.elevator.simulationPeriodic();
+        m_robotContainer.wrist.simulationPeriodic();
+    }
 }

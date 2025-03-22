@@ -12,13 +12,17 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -122,7 +126,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                             this));
 
     /* The SysId routine to test */
-    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineTranslation;
+    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineSteer;
 
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -203,7 +207,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             var config = RobotConfig.fromGUISettings();
             AutoBuilder.configure(
                     () -> getState().Pose, // Supplier of current robot pose
-                    this::resetPose, // Consumer for seeding pose against auto
+                    (Pose2d pose) -> {
+                        if (pose != null) this.resetPose(pose);
+                    }, // Consumer for seeding pose against auto
                     () -> getState().Speeds, // Supplier of current robot speeds
                     // Consumer of ChassisSpeeds and feedforwards to drive the robot
                     (speeds, feedforwards) ->
@@ -305,5 +311,52 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                             updateSimState(deltaTime, RobotController.getBatteryVoltage());
                         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
+    }
+
+    /**
+     * Checks if the robot is at the target pose within specified tolerances.
+     *
+     * @param current The robots current pose
+     * @param target The desired target pose
+     * @return true if the robot is within is within 0.02m (2cm) of translation and 2 degrees of
+     *     rotation
+     */
+    public boolean isAtPose(Pose2d target) {
+        return isAtPose(target, Meters.of(0.02), Meters.of(0.02), Degrees.of(2));
+    }
+
+    /**
+     * Checks if the robot is at the target pose within specified tolerances.
+     *
+     * @param current The robots current pose
+     * @param target The desired target pose
+     * @param xErrorTolerance The maximum allowable error in the x direction
+     * @param yErrorTolerance The maximum allowable error in the y direction
+     * @param rotationErrorTolerance The maximum allowable error in the rotation
+     * @return true if the robot is within the specified tolerances, false otherwise
+     */
+    public boolean isAtPose(
+            Pose2d target,
+            Distance xErrorTolerance,
+            Distance yErrorTolerance,
+            Angle rotationErrorTolerance) {
+        Pose2d current = this.getState().Pose;
+
+        // Calculate translation and rotation error
+        Distance xError = Meters.of(Math.abs(target.getX() - current.getX()));
+        Distance yError = Meters.of(Math.abs(target.getY() - current.getY()));
+        Angle rotationError =
+                Degrees.of(
+                        Math.abs(target.getRotation().minus(current.getRotation()).getDegrees()));
+
+        // Log errors to SmartDashboard
+        SmartDashboard.putNumber("PoseCheck/XError", xError.in(Meters));
+        SmartDashboard.putNumber("PoseCheck/YError", yError.in(Meters));
+        SmartDashboard.putNumber("PoseCheck/RotationError", rotationError.in(Degrees));
+
+        // Check if within tolerance
+        return xError.lt(xErrorTolerance)
+                && yError.lt(yErrorTolerance)
+                && rotationError.lt(rotationErrorTolerance);
     }
 }
