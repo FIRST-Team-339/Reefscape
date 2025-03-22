@@ -160,7 +160,7 @@ public final class Constants {
         public static final int kRightMotorId = 42;
 
         /** The zeroed motor encoder position in inches */
-        public static final Distance kZeroed = Meters.of(Inches.of(13.1875).in(Meters));
+        public static final Distance kZeroed = Meters.of(Inches.of(28.9375).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 1 of Reef in Meters */
         // 36.5
