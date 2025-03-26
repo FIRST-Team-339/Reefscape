@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -216,7 +215,13 @@ public class RobotContainer {
                 () -> {
                     Pose2d targetPose;
 
-                    List<RawFiducial> aprilTags = Arrays.asList(LimelightHelpers.getRawFiducials("limelight-right"), LimelightHelpers.getRawFiducials("limelight-left")).stream().flatMap(Arrays::stream).toList();
+                    List<RawFiducial> aprilTags =
+                            Arrays.asList(
+                                            LimelightHelpers.getRawFiducials("limelight-right"),
+                                            LimelightHelpers.getRawFiducials("limelight-left"))
+                                    .stream()
+                                    .flatMap(Arrays::stream)
+                                    .toList();
 
                     if (aprilTags.size() < 1) {
                         if (currentAprilTag == 0) return;
@@ -227,8 +232,9 @@ public class RobotContainer {
                                         leftSide,
                                         DriverStation.getAlliance().orElse(Alliance.Blue));
                     } else {
-                        Collections.sort(aprilTags, (a, b) -> Double.compare(b.distToRobot, a.distToRobot));
-                        
+                        Collections.sort(
+                                aprilTags, (a, b) -> Double.compare(b.distToRobot, a.distToRobot));
+
                         RawFiducial aprilTag = aprilTags.get(0);
                         currentAprilTag = aprilTag.id;
                         System.out.println(
