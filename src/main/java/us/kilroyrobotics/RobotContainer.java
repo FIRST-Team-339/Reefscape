@@ -29,6 +29,8 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import us.kilroyrobotics.Constants.CameraConstants;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
@@ -213,11 +215,15 @@ public class RobotContainer {
                 () -> {
                     Pose2d targetPose;
 
-                    RawFiducial[] aprilTags = LimelightHelpers.getRawFiducials("limelight-right");
-                    if (aprilTags.length < 1)
-                        aprilTags = LimelightHelpers.getRawFiducials("limelight-left");
+                    List<RawFiducial> aprilTags =
+                            Arrays.asList(
+                                            LimelightHelpers.getRawFiducials("limelight-right"),
+                                            LimelightHelpers.getRawFiducials("limelight-left"))
+                                    .stream()
+                                    .flatMap(Arrays::stream)
+                                    .toList();
 
-                    if (aprilTags.length < 1) {
+                    if (aprilTags.size() < 1) {
                         if (currentAprilTag == 0) return;
 
                         targetPose =
@@ -226,7 +232,10 @@ public class RobotContainer {
                                         leftSide,
                                         DriverStation.getAlliance().orElse(Alliance.Blue));
                     } else {
-                        RawFiducial aprilTag = aprilTags[0];
+                        Collections.sort(
+                                aprilTags, (a, b) -> Double.compare(b.distToRobot, a.distToRobot));
+
+                        RawFiducial aprilTag = aprilTags.get(0);
                         currentAprilTag = aprilTag.id;
                         System.out.println(
                                 "[TELEOP-ASSIST] "
