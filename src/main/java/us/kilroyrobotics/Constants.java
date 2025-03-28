@@ -164,7 +164,7 @@ public final class Constants {
 
         /** Height necessary for the coral intake to reach Level 1 of Reef in Meters */
         // 36.5
-        public static final Distance kL1Height = Meters.of(Inches.of(25.6875).in(Meters));
+        public static final Distance kL1Height = Meters.of(Inches.of(28.8125).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 2 of Reef in Meters */
         // 47.5
@@ -174,7 +174,7 @@ public final class Constants {
         public static final Distance kL3Height = Meters.of(Inches.of(55).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 4 of Reef in Meters */
-        public static final Distance kL4Height = Meters.of(Inches.of(68).in(Meters));
+        public static final Distance kL4Height = Meters.of(Inches.of(83).in(Meters));
 
         /** Height necessary for the coral intake to reach the Coral Station */
         public static final Distance kCoralStationHeight = Meters.of(Inches.of(32.25).in(Meters));
@@ -212,7 +212,7 @@ public final class Constants {
 
         public static final double kOverrideSpeedMultiplier = 0.25;
 
-        public static final Distance kHeightLimit = Inches.of(50);
+        public static final Distance kHeightLimit = Inches.of(67);
     }
 
     /** Constants used during Simulation */
@@ -267,7 +267,7 @@ public final class Constants {
         public static final Angle kIntakingAngle = Degrees.of(37.5);
 
         /** The angle that the wrist will be when scoring at L4 */
-        public static final Angle kScoringL4 = Degrees.of(120);
+        public static final Angle kScoringL4 = Degrees.of(110);
 
         /** The angle that the wrist will be when scoring at L3 */
         public static final Angle kScoringL3 = Degrees.of(110);
