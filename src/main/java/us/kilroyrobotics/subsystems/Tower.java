@@ -4,7 +4,13 @@
 
 package us.kilroyrobotics.subsystems;
 
+import static edu.wpi.first.units.Units.FeetPerSecond;
+
+import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.ElevatorConstants;
@@ -19,20 +25,41 @@ public class Tower extends SubsystemBase {
 
     private final Timer stateTimer = new Timer();
 
+    private final CommandSwerveDrivetrain drivetrain;
+    private final SwerveRequest.RobotCentric forwardStraight;
+    private final SwerveRequest.PointWheelsAt point;
     private final Elevator elevator;
     private final Wrist wrist;
     private final CoralIntakeMotor coralIntakeMotor;
     private final LEDs leds;
 
+    private final Timer movementTimer = new Timer();
+    private final Command backupCommand;
+
     private double safetyFactor = 1;
     private int currentLevel = 0;
 
     /** Creates a new Tower. */
-    public Tower(Elevator elevator, Wrist wrist, CoralIntakeMotor coralIntakeMotor, LEDs leds) {
+    public Tower(
+            CommandSwerveDrivetrain drivetrain,
+            SwerveRequest.RobotCentric forwardStraight,
+            SwerveRequest.PointWheelsAt point,
+            Elevator elevator,
+            Wrist wrist,
+            CoralIntakeMotor coralIntakeMotor,
+            LEDs leds) {
+        this.drivetrain = drivetrain;
+        this.forwardStraight = forwardStraight;
+        this.point = point;
         this.elevator = elevator;
         this.wrist = wrist;
         this.coralIntakeMotor = coralIntakeMotor;
         this.leds = leds;
+
+        backupCommand =
+                drivetrain
+                        .applyRequest(() -> forwardStraight.withVelocityX(FeetPerSecond.of(-1)))
+                        .until(() -> this.movementTimer.hasElapsed((0.25)));
 
         stateTimer.start();
     }
@@ -122,7 +149,7 @@ public class Tower extends SubsystemBase {
                     coralIntakeMotor.setSpeed(0);
 
                     currentLevel = 4;
-                    setState(TowerState.RAISING_TO_L4);
+                    setState(TowerState.BACKUP_BEFORE_SCORE);
                 }
                 break;
             case RAISING_TO_L1:
@@ -166,7 +193,7 @@ public class Tower extends SubsystemBase {
                     wrist.setAngle(CoralMechanismConstants.kScoringL4);
 
                     currentLevel = 4;
-                    setState(TowerState.RAISING_TO_L4);
+                    setState(TowerState.BACKUP_BEFORE_SCORE);
                 } else if ((isTriggered(TowerEvent.GOTO_L3)) && (currentLevel != 3)) {
                     elevator.setPosition(ElevatorConstants.kL3Height);
                     wrist.setAngle(CoralMechanismConstants.kScoringL3);
@@ -186,6 +213,24 @@ public class Tower extends SubsystemBase {
                     currentLevel = 1;
                     setState(TowerState.RAISING_TO_L1);
                 }
+                break;
+            case RESTART_BACKUP_TIMER:
+                movementTimer.restart();
+                setState(TowerState.POINT_WHEELS_BACK);
+                break;
+            case POINT_WHEELS_BACK:
+                CommandScheduler.getInstance()
+                        .schedule(
+                                drivetrain.applyRequest(
+                                        () -> point.withModuleDirection(Rotation2d.kZero)));
+                setState(TowerState.BACKUP_BEFORE_SCORE);
+                break;
+            case BACKUP_BEFORE_SCORE:
+                CommandScheduler.getInstance().schedule(backupCommand);
+                setState(TowerState.WAIT_FOR_BACKUP);
+                break;
+            case WAIT_FOR_BACKUP:
+                if (backupCommand.isFinished()) setState(TowerState.RAISING_TO_L4);
                 break;
             case SCORING:
                 if (!coralIntakeMotor.isCoralDetected() || stateTimer.hasElapsed(0.3)) {
