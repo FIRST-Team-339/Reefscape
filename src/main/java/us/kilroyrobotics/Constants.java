@@ -160,7 +160,7 @@ public final class Constants {
         public static final int kRightMotorId = 42;
 
         /** The % tolerance for determining when the elevator is in position */
-        public static final double kPositionTolerance = 0.05;
+        public static final double kPositionTolerance = 0.075;
 
         /** The zeroed motor encoder position in inches */
         public static final Distance kZeroed = Meters.of(Inches.of(28.8125).in(Meters));
@@ -171,7 +171,7 @@ public final class Constants {
 
         /** Height necessary for the coral intake to reach Level 2 of Reef in Meters */
         // 47.5
-        public static final Distance kL2Height = Meters.of(Inches.of(39.5).in(Meters));
+        public static final Distance kL2Height = Meters.of(Inches.of(40.0).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 3 of Reef in Meters */
         public static final Distance kL3Height = Meters.of(Inches.of(55).in(Meters));
@@ -263,7 +263,7 @@ public final class Constants {
         public static final int kWheelMotorId = 44;
 
         /** The % tolerance for determining when the wrist is in position */
-        public static final double kAngleTolerance = 0.05;
+        public static final double kAngleTolerance = 10.0;
 
         /* Wrist Configurations */
         /** The angle that the wrist will be at the start of the match */
