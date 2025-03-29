@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import us.kilroyrobotics.Constants.CameraConstants;
@@ -214,13 +215,18 @@ public class RobotContainer {
                 () -> {
                     Pose2d targetPose;
 
-                    List<RawFiducial> aprilTags =
-                            Arrays.asList(
-                                            LimelightHelpers.getRawFiducials("limelight-right"),
-                                            LimelightHelpers.getRawFiducials("limelight-left"))
-                                    .stream()
-                                    .flatMap(Arrays::stream)
-                                    .toList();
+                    ArrayList<RawFiducial> aprilTags =
+                            new ArrayList<>(
+                                    Arrays.asList(
+                                                    LimelightHelpers.getRawFiducials(
+                                                            "limelight-right"),
+                                                    LimelightHelpers.getRawFiducials(
+                                                            "limelight-left"))
+                                            .stream()
+                                            .flatMap(Arrays::stream)
+                                            .toList());
+
+                    System.out.println(aprilTags);
 
                     if (aprilTags.size() < 1) {
                         if (currentAprilTag == 0) return;
