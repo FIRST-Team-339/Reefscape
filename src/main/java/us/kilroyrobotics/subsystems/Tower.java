@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.ElevatorConstants;
@@ -26,13 +27,13 @@ public class Tower extends SubsystemBase {
     private final Timer stateTimer = new Timer();
 
     private final CommandSwerveDrivetrain drivetrain;
+    private final SwerveRequest.RobotCentric forwardStraight;
     private final SwerveRequest.PointWheelsAt point;
     private final Elevator elevator;
     private final Wrist wrist;
     private final CoralIntakeMotor coralIntakeMotor;
     private final LEDs leds;
 
-    private final Timer movementTimer = new Timer();
     private final Command backupCommand;
 
     private double safetyFactor = 1;
@@ -48,6 +49,7 @@ public class Tower extends SubsystemBase {
             CoralIntakeMotor coralIntakeMotor,
             LEDs leds) {
         this.drivetrain = drivetrain;
+        this.forwardStraight = forwardStraight;
         this.point = point;
         this.elevator = elevator;
         this.wrist = wrist;
@@ -55,9 +57,13 @@ public class Tower extends SubsystemBase {
         this.leds = leds;
 
         backupCommand =
-                drivetrain
-                        .applyRequest(() -> forwardStraight.withVelocityX(FeetPerSecond.of(-1)))
-                        .until(() -> this.movementTimer.hasElapsed((0.25)));
+                Commands.runEnd(
+                                () ->
+                                        drivetrain.setControl(
+                                                forwardStraight.withVelocityX(
+                                                        FeetPerSecond.of(-1))),
+                                () -> drivetrain.setControl(forwardStraight.withVelocityX(0)))
+                        .withTimeout(0.25);
 
         stateTimer.start();
     }
@@ -156,7 +162,7 @@ public class Tower extends SubsystemBase {
                     coralIntakeMotor.setSpeed(CoralMechanismConstants.kWheelSpeedHolding);
 
                     currentLevel = 4;
-                    setState(TowerState.RESTART_BACKUP_TIMER);
+                    setState(TowerState.POINT_WHEELS_BACK);
                 }
                 break;
             case RAISING_TO_L1:
@@ -221,15 +227,14 @@ public class Tower extends SubsystemBase {
                     setState(TowerState.RAISING_TO_L1);
                 }
                 break;
-            case RESTART_BACKUP_TIMER:
-                movementTimer.restart();
-                setState(TowerState.POINT_WHEELS_BACK);
-                break;
             case POINT_WHEELS_BACK:
                 CommandScheduler.getInstance()
                         .schedule(
-                                drivetrain.applyRequest(
-                                        () -> point.withModuleDirection(Rotation2d.kZero)));
+                                Commands.runOnce(
+                                        () ->
+                                                drivetrain.setControl(
+                                                        point.withModuleDirection(
+                                                                Rotation2d.kZero))));
                 setState(TowerState.BACKUP_BEFORE_SCORE);
                 break;
             case BACKUP_BEFORE_SCORE:

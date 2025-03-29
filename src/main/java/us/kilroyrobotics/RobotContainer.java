@@ -274,12 +274,20 @@ public class RobotContainer {
     public RobotContainer() {
         if (Robot.isReal() && CameraConstants.kCameraEnabled) new Camera();
 
-        NamedCommands.registerCommand("Intake Coral", towerIntakeCoral);
+        NamedCommands.registerCommand(
+                "Intake Coral",
+                towerIntakeCoral
+                        .andThen(Commands.waitTime(Seconds.of(3)))
+                        .until(() -> coralIntakeMotor.isCoralDetected()));
         NamedCommands.registerCommand("Score Coral", towerScoreCoral);
-        NamedCommands.registerCommand("GoTo L1", towerToL1);
-        NamedCommands.registerCommand("GoTo L2", towerToL2);
-        NamedCommands.registerCommand("GoTo L3", towerToL3);
-        NamedCommands.registerCommand("GoTo L4", towerToL4);
+        NamedCommands.registerCommand(
+                "GoTo L1", towerToL1.andThen(Commands.waitTime(Seconds.of(2))));
+        NamedCommands.registerCommand(
+                "GoTo L2", towerToL2.andThen(Commands.waitTime(Seconds.of(2))));
+        NamedCommands.registerCommand(
+                "GoTo L3", towerToL3.andThen(Commands.waitTime(Seconds.of(2))));
+        NamedCommands.registerCommand(
+                "GoTo L4", towerToL4.andThen(Commands.waitTime(Seconds.of(2))));
 
         NamedCommands.registerCommand("Leave", autoLeave);
 
@@ -441,6 +449,8 @@ public class RobotContainer {
         // Reef Alignment
         driverController.leftBumper().onTrue(alignReef(true));
         driverController.rightBumper().onTrue(alignReef(false));
+
+        drivetrain.registerTelemetry(logger::telemeterize);
     }
 
     public Command getAutonomousCommand() {
