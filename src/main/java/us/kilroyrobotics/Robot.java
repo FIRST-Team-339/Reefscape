@@ -104,7 +104,7 @@ public class Robot extends TimedRobot {
                 Commands.sequence(autoDelayCommand, m_robotContainer.getAutonomousCommand());
 
         if (m_autonomousCommand != null) {
-            m_robotContainer.tower.intakeCoral.schedule();
+            m_robotContainer.wrist.setAngle(CoralMechanismConstants.kIntakingAngle);
             m_autonomousCommand.schedule();
         }
 
@@ -120,7 +120,8 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         Shuffleboard.selectTab("Teleop");
-        m_robotContainer.tower.intakeCoral.schedule();
+        m_robotContainer.wrist.setAngle(CoralMechanismConstants.kIntakingAngle);
+        m_robotContainer.coralIntakeMotor.setSpeed(CoralMechanismConstants.kWheelSpeedHolding);
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }
