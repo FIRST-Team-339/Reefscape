@@ -29,6 +29,7 @@ import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.Supplier;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
@@ -42,6 +43,8 @@ public class Wrist extends SubsystemBase {
     private RelativeEncoder m_relativeEncoder;
     private SparkClosedLoopController m_pidController;
 
+    private Angle goalAngle;
+
     /* Sim Specific */
     private DCMotor m_simWristGearbox;
     private SparkMaxSim m_simWristMotor;
@@ -49,14 +52,13 @@ public class Wrist extends SubsystemBase {
 
     /** Creates a new Wrist. */
     public Wrist(Supplier<Pose3d> carriagePoseGetter, boolean useAbsoluteEncoder) {
-        this.m_wristMotor =
-                new SparkMax(CoralMechanismConstants.kWristMotorId, MotorType.kBrushless);
-        this.m_pidController = this.m_wristMotor.getClosedLoopController();
-        this.m_useAbsoluteEncoder = useAbsoluteEncoder;
+        m_wristMotor = new SparkMax(CoralMechanismConstants.kWristMotorId, MotorType.kBrushless);
+        m_pidController = m_wristMotor.getClosedLoopController();
+        m_useAbsoluteEncoder = useAbsoluteEncoder;
         if (useAbsoluteEncoder) {
-            this.m_absoluteEncoder = this.m_wristMotor.getAbsoluteEncoder();
+            m_absoluteEncoder = m_wristMotor.getAbsoluteEncoder();
         } else {
-            this.m_relativeEncoder = this.m_wristMotor.getEncoder();
+            m_relativeEncoder = m_wristMotor.getEncoder();
         }
 
         // Configure
@@ -81,15 +83,15 @@ public class Wrist extends SubsystemBase {
         wristMotorConfig.closedLoop.positionWrappingEnabled(true);
         wristMotorConfig.closedLoop.positionWrappingInputRange(0.0, 1.0);
 
-        this.m_wristMotor.configure(
+        m_wristMotor.configure(
                 wristMotorConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-        this.getCarriagePose = carriagePoseGetter;
+        getCarriagePose = carriagePoseGetter;
 
         // Sim
-        this.m_simWristGearbox = DCMotor.getNEO(1);
-        this.m_simWristMotor = new SparkMaxSim(this.m_wristMotor, m_simWristGearbox);
-        this.m_simWrist =
+        m_simWristGearbox = DCMotor.getNEO(1);
+        m_simWristMotor = new SparkMaxSim(m_wristMotor, m_simWristGearbox);
+        m_simWrist =
                 new SingleJointedArmSim(
                         m_simWristGearbox,
                         SimulationConstants.kWristGearing,
@@ -104,27 +106,36 @@ public class Wrist extends SubsystemBase {
     }
 
     public double getVelocity() {
-        return this.m_wristMotor.getAppliedOutput();
+        return m_wristMotor.getAppliedOutput();
     }
 
     public Angle getAngle() {
         return Radians.of(
-                this.m_useAbsoluteEncoder
-                        ? this.m_absoluteEncoder.getPosition()
-                        : this.m_relativeEncoder.getPosition());
+                m_useAbsoluteEncoder
+                        ? m_absoluteEncoder.getPosition()
+                        : m_relativeEncoder.getPosition());
+    }
+
+    public boolean inPosition() {
+        return goalAngle.isNear(getAngle(), CoralMechanismConstants.kAngleTolerance);
     }
 
     public void setAngle(Angle angle) {
         // If using throughbore absolute encoder, don't multiply by 64 (gearbox ratio)
-        this.m_pidController.setReference(angle.in(Rotations), ControlType.kPosition);
+        goalAngle = angle;
+        m_pidController.setReference(angle.in(Rotations), ControlType.kPosition);
     }
 
     public void setSpeed(double speed) {
-        this.m_wristMotor.set(speed);
+        m_wristMotor.set(speed);
+    }
+
+    public void resetClosedLoopControl() {
+        setAngle(getAngle());
     }
 
     public void stop() {
-        this.m_wristMotor.setVoltage(0.0);
+        m_wristMotor.setVoltage(0.0);
     }
 
     @Logged(name = "WristPose")
@@ -132,31 +143,37 @@ public class Wrist extends SubsystemBase {
         return new Pose3d(
                 0.300609,
                 0.0254,
-                this.getCarriagePose.get().getZ() + 0.2899918,
+                getCarriagePose.get().getZ() + 0.2899918,
                 new Rotation3d(
                         Degrees.of(0),
                         Radians.of(
-                                (this.m_useAbsoluteEncoder
-                                        ? this.m_absoluteEncoder.getPosition()
-                                        : this.m_relativeEncoder.getPosition())),
+                                (m_useAbsoluteEncoder
+                                        ? m_absoluteEncoder.getPosition()
+                                        : m_relativeEncoder.getPosition())),
                         Degrees.of(0)));
     }
 
     @Override
     public void simulationPeriodic() {
-        this.m_simWrist.setInput(m_simWristMotor.getAppliedOutput() * RoboRioSim.getVInVoltage());
-        this.m_simWrist.update(0.02);
+        m_simWrist.setInput(m_simWristMotor.getAppliedOutput() * RoboRioSim.getVInVoltage());
+        m_simWrist.update(0.02);
 
-        this.m_simWristMotor.iterate(
+        m_simWristMotor.iterate(
                 Units.radiansPerSecondToRotationsPerMinute( // motor velocity, in RPM
-                        (this.m_useAbsoluteEncoder
+                        (m_useAbsoluteEncoder
                                 ? m_simWrist.getVelocityRadPerSec()
                                 : m_simWrist.getVelocityRadPerSec() * 64.0)),
                 RoboRioSim.getVInVoltage(),
                 0.02);
 
         RoboRioSim.setVInVoltage(
-                BatterySim.calculateDefaultBatteryLoadedVoltage(
-                        this.m_simWrist.getCurrentDrawAmps()));
+                BatterySim.calculateDefaultBatteryLoadedVoltage(m_simWrist.getCurrentDrawAmps()));
     }
+
+    public final Command wristStop =
+            runOnce(
+                    () -> {
+                        stop();
+                        resetClosedLoopControl();
+                    });
 }

@@ -18,21 +18,19 @@ public class AlgaeIntake extends SubsystemBase {
 
     /** Creates a new AlgaeIntake. */
     public AlgaeIntake() {
-        this.algaeMotorLeader =
-                new SparkMax(AlgaeConstants.kAlgaeMotorLeaderId, MotorType.kBrushed);
-        this.algaeMotorFollower =
-                new SparkMax(AlgaeConstants.kAlgaeMotorFollowerId, MotorType.kBrushed);
+        algaeMotorLeader = new SparkMax(AlgaeConstants.kAlgaeMotorLeaderId, MotorType.kBrushed);
+        algaeMotorFollower = new SparkMax(AlgaeConstants.kAlgaeMotorFollowerId, MotorType.kBrushed);
 
         SparkMaxConfig leaderConfig = new SparkMaxConfig();
         leaderConfig.smartCurrentLimit(40);
-        this.algaeMotorLeader.configure(
+        algaeMotorLeader.configure(
                 leaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         SparkMaxConfig followerConfig = new SparkMaxConfig();
         followerConfig.smartCurrentLimit(40);
-        followerConfig.follow(this.algaeMotorLeader, true);
+        followerConfig.follow(algaeMotorLeader, true);
 
-        this.algaeMotorFollower.configure(
+        algaeMotorFollower.configure(
                 followerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
@@ -45,7 +43,7 @@ public class AlgaeIntake extends SubsystemBase {
     }
 
     public void setAlgaeState(AlgaeState newState) {
-        this.algaeState = newState;
+        algaeState = newState;
     }
 
     @Override
@@ -53,13 +51,13 @@ public class AlgaeIntake extends SubsystemBase {
         // This method will be called once per scheduler run
         switch (algaeState) {
             case INTAKING:
-                this.algaeMotorLeader.set(AlgaeConstants.kAlgaeSpeedIntaking);
+                algaeMotorLeader.set(AlgaeConstants.kAlgaeSpeedIntaking);
                 break;
             case OUTTAKING:
-                this.algaeMotorLeader.set(AlgaeConstants.kAlgaeSpeedOuttaking);
+                algaeMotorLeader.set(AlgaeConstants.kAlgaeSpeedOuttaking);
                 break;
             default:
-                this.algaeMotorLeader.set(0);
+                algaeMotorLeader.set(0);
                 break;
         }
     }

@@ -11,45 +11,15 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.25
+            "name": "GoTo L2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ElevatorL2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "WristL2"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralOuttake"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralOff"
+            "name": "Score Coral"
           }
         }
       ]
