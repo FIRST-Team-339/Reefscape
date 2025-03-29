@@ -17,12 +17,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Score Coral"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Reef F to Near Side Source"
@@ -44,42 +38,6 @@
           "type": "named",
           "data": {
             "name": "GoTo L2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score Coral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Reef B to Near Side Source"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Coral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Near Side Source to Reef A"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "GoTo L2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score Coral"
           }
         }
       ]

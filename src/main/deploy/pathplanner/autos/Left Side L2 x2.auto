@@ -17,12 +17,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Score Coral"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Reef I to Far Side Source"
@@ -44,42 +38,6 @@
           "type": "named",
           "data": {
             "name": "GoTo L2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score Coral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Reef A to Far Side Source"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Intake Coral"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Far Side Source to Reef B"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "GoTo L2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score Coral"
           }
         }
       ]

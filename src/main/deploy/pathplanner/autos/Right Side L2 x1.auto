@@ -7,19 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Far Side Start to Reef I"
+            "pathName": "Near Side Start to Reef F"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "GoTo L2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Score Coral"
           }
         }
       ]
