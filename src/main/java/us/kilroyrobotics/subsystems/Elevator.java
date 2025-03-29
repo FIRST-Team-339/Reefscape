@@ -59,6 +59,7 @@ public class Elevator extends SubsystemBase {
                         ElevatorConstants.kD,
                         ElevatorConstants.kF)
                 .outputRange(-1, 1);
+        leadMotorConfig.closedLoop.outputRange(-0.4, 0.8);
         leadMotorConfig.idleMode(IdleMode.kBrake);
         leadMotorConfig.smartCurrentLimit(40);
         leadMotorConfig.softLimit.forwardSoftLimitEnabled(true);
