@@ -174,6 +174,29 @@ public class RobotContainer {
             Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL3Height), elevator);
     private Command elevatorSetL4 =
             Commands.runOnce(() -> elevator.setPosition(ElevatorConstants.kL4Height), elevator);
+    private Timer backupTimer = new Timer();
+    private Command elevatorSetL4AndBackup =
+            Commands.parallel(
+                    elevatorSetL4,
+                    Commands.runOnce(
+                            () -> {
+                                this.backupTimer.restart();
+
+                                CommandScheduler.getInstance()
+                                        .schedule(
+                                                drivetrain
+                                                        .applyRequest(
+                                                                () ->
+                                                                        forwardStraight
+                                                                                .withVelocityX(
+                                                                                        FeetPerSecond
+                                                                                                .of(
+                                                                                                        -1)))
+                                                        .until(
+                                                                () ->
+                                                                        this.backupTimer.hasElapsed(
+                                                                                (0.25))));
+                            }));
     private Command elevatorSetCoralStation =
             Commands.runOnce(
                     () -> elevator.setPosition(ElevatorConstants.kCoralStationHeight), elevator);
@@ -225,8 +248,6 @@ public class RobotContainer {
                                             .stream()
                                             .flatMap(Arrays::stream)
                                             .toList());
-
-                    System.out.println(aprilTags);
 
                     if (aprilTags.size() < 1) {
                         if (currentAprilTag == 0) return;
@@ -501,7 +522,7 @@ public class RobotContainer {
         rightOperatorJoystick.button(10).onTrue(elevatorSetL1);
         rightOperatorJoystick.button(7).onTrue(elevatorSetL2);
         rightOperatorJoystick.button(11).onTrue(elevatorSetL3);
-        rightOperatorJoystick.button(6).onTrue(elevatorSetL4);
+        rightOperatorJoystick.button(6).onTrue(elevatorSetL4AndBackup);
         rightOperatorJoystick.button(8).onTrue(elevatorSetCoralStation);
         rightOperatorJoystick
                 .button(1)
