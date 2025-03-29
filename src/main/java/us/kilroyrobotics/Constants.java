@@ -285,7 +285,7 @@ public final class Constants {
         public static final Angle kScoringL1 = Degrees.of(120);
 
         /* PIDF constants */
-        public static final double kP = 1.5;
+        public static final double kP = 2.0;
         public static final double kI = 0.0;
         public static final double kD = 0.05;
         public static final double kF = 0.0;
