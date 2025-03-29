@@ -31,6 +31,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import us.kilroyrobotics.Constants.CameraConstants;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.DriveConstants;
@@ -48,6 +50,7 @@ import us.kilroyrobotics.subsystems.LEDs.LEDMode;
 import us.kilroyrobotics.subsystems.Tower;
 import us.kilroyrobotics.subsystems.Wrist;
 import us.kilroyrobotics.util.LimelightHelpers;
+import us.kilroyrobotics.util.TowerEvent;
 import us.kilroyrobotics.util.LimelightHelpers.RawFiducial;
 
 public class RobotContainer {
@@ -73,8 +76,7 @@ public class RobotContainer {
 
     /* Controllers */
     private final CommandXboxController driverController = new CommandXboxController(0);
-    private final CommandJoystick leftOperatorJoystick = new CommandJoystick(1);
-    private final CommandJoystick rightOperatorJoystick = new CommandJoystick(2);
+    private final CommandJoystick operatorJoystick = new CommandJoystick(1);
 
     /* Subsystems */
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -105,18 +107,27 @@ public class RobotContainer {
 
     private int currentAprilTag = 0;
 
+    /* Tower Commands */
+    private final Command towerIntakeCoral = tower.runOnce(() -> tower.triggerEvent(TowerEvent.INTAKE_CORAL));
+    private final Command towerScoreCoral = tower.runOnce(() -> tower.triggerEvent(TowerEvent.SCORE));
+    private final Command towerToHome = tower.runOnce(() -> tower.triggerEvent(TowerEvent.HOME_TOWER));
+    private final Command towerToL1 = tower.runOnce(() -> tower.triggerEvent(TowerEvent.GOTO_L1));
+    private final Command towerToL2 = tower.runOnce(() -> tower.triggerEvent(TowerEvent.GOTO_L2));
+    private final Command towerToL3 = tower.runOnce(() -> tower.triggerEvent(TowerEvent.GOTO_L3));
+    private final Command towerToL4 = tower.runOnce(() -> tower.triggerEvent(TowerEvent.GOTO_L4));
+
     public final Command controlElevator =
             elevator.run(
                     () ->
                             elevator.setSpeed(
-                                    rightOperatorJoystick.getY()
+                                    operatorJoystick.getY()
                                             * ElevatorConstants.kOverrideSpeedMultiplier));
 
     public final Command controlWrist =
             wrist.run(
                     () ->
                             wrist.setSpeed(
-                                    -leftOperatorJoystick.getY()
+                                    -operatorJoystick.getY()
                                             * CoralMechanismConstants.kOverrideSpeedMultiplier));
 
     /* Reef Alignment */
@@ -397,8 +408,16 @@ public class RobotContainer {
         driverController.start().onTrue(defenseMode);
 
         /* Automatic Control */
+        operatorJoystick.button(9).onTrue(towerToHome);
+        operatorJoystick.button(8).onTrue(towerIntakeCoral);
+        operatorJoystick.button(10).onTrue(towerToL1);
+        operatorJoystick.button(7).onTrue(towerToL2);
+        operatorJoystick.button(11).onTrue(towerToL3);
+        operatorJoystick.button(6).onTrue(towerToL4);
 
         /* Manual Control */
+        // operatorJoystick.trigger().whileTrue(controlElevator);
+        // operatorJoystick.button(4).whileTrue(controlWrist);
 
         // Reef Alignment
         driverController.leftBumper().onTrue(alignReef(true));
