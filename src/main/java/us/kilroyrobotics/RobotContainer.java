@@ -173,7 +173,7 @@ public class RobotContainer {
                                         leftSide,
                                         DriverStation.getAlliance().orElse(Alliance.Blue));
                     } else {
-                        // aprilTags.sort((a, b) -> Double.compare(b.distToRobot, a.distToRobot));
+                        aprilTags.sort((a, b) -> Double.compare(b.distToRobot, a.distToRobot));
 
                         RawFiducial aprilTag = aprilTags.get(0);
                         currentAprilTag = aprilTag.id;
