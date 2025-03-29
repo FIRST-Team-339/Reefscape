@@ -109,8 +109,10 @@ public class RobotContainer {
     /* Tower Commands */
     private final Command towerIntakeCoral =
             tower.runOnce(() -> tower.triggerEvent(TowerEvent.INTAKE_CORAL));
+    private final Command towerIntakeBypass =
+            tower.runOnce(() -> tower.triggerEvent(TowerEvent.INTAKE_BYPASS));
     private final Command towerScoreCoral =
-            tower.runOnce(() -> tower.triggerEvent(TowerEvent.SCORE));
+            tower.runOnce(() -> tower.triggerEvent(TowerEvent.SCORE_BYPASS));
     private final Command towerToHome =
             tower.runOnce(() -> tower.triggerEvent(TowerEvent.HOME_TOWER));
     private final Command towerToL1 = tower.runOnce(() -> tower.triggerEvent(TowerEvent.GOTO_L1));
@@ -429,6 +431,8 @@ public class RobotContainer {
         operatorJoystick.button(7).onTrue(towerToL2);
         operatorJoystick.button(11).onTrue(towerToL3);
         operatorJoystick.button(6).onTrue(towerToL4);
+        operatorJoystick.button(2).onTrue(towerIntakeBypass);
+        operatorJoystick.button(3).onTrue(towerScoreCoral);
 
         /* Manual Control */
         operatorJoystick.trigger().whileTrue(controlElevator).onFalse(elevatorStop);
