@@ -15,9 +15,9 @@ public class Camera extends SubsystemBase {
     /* Constructor */
     public Camera() {
         if (CameraConstants.kCameraEnabled) {
-            this.camera = CameraServer.startAutomaticCapture("Camera", 0);
-            this.server = CameraServer.getServer("serve_Camera");
-            this.setCameraValues(camera, server);
+            camera = CameraServer.startAutomaticCapture("Camera", 0);
+            server = CameraServer.getServer("serve_Camera");
+            setCameraValues(camera, server);
         }
     }
 
@@ -42,14 +42,14 @@ public class Camera extends SubsystemBase {
         server.getProperty("compression").set(CameraConstants.kCompression);
         usbCamera.setBrightness(CameraConstants.kBrightness);
 
-        this.source = server.getSource();
+        source = server.getSource();
     }
 
     public UsbCamera getCamera() {
-        return this.camera;
+        return camera;
     }
 
     public VideoSource getVideoSource() {
-        return this.source;
+        return source;
     }
 }

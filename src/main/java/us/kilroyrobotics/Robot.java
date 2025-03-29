@@ -78,7 +78,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledInit() {
-        this.m_robotContainer.leds.setMode(LEDMode.Rainbow);
+        m_robotContainer.leds.setMode(LEDMode.Rainbow);
+
+        m_robotContainer.tower.initialize();
     }
 
     @Override
@@ -86,7 +88,9 @@ public class Robot extends TimedRobot {
 
     @Override
     public void disabledExit() {
-        this.m_robotContainer.leds.setMode(LEDMode.Off);
+        m_robotContainer.leds.setMode(LEDMode.Off);
+
+        m_robotContainer.tower.initialize();
     }
 
     @Override
@@ -100,9 +104,11 @@ public class Robot extends TimedRobot {
                 Commands.sequence(autoDelayCommand, m_robotContainer.getAutonomousCommand());
 
         if (m_autonomousCommand != null) {
-            m_robotContainer.wristSetCoralStation.schedule();
+            m_robotContainer.tower.intakeCoral.schedule();
             m_autonomousCommand.schedule();
         }
+
+        m_robotContainer.tower.initialize();
     }
 
     @Override
@@ -114,7 +120,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         Shuffleboard.selectTab("Teleop");
-        m_robotContainer.wristSetCoralStation.schedule();
+        m_robotContainer.tower.intakeCoral.schedule();
         if (m_autonomousCommand != null) {
             m_autonomousCommand.cancel();
         }

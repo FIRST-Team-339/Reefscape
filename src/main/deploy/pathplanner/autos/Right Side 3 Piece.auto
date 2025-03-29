@@ -11,271 +11,75 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 0.25
+            "name": "GoTo L2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ElevatorL2"
+            "name": "Score Coral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef F to Near Side Source"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "WristL2"
+            "name": "Intake Coral"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralOuttake"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Reef F to Near Side Source"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ElevatorBottom"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "CoralOff"
-                }
-              }
-            ]
+            "pathName": "Near Side Source to Reef B"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ElevatorCS"
+            "name": "GoTo L2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "WristCS"
+            "name": "Score Coral"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralIntake"
+            "pathName": "Reef B to Near Side Source"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "WaitForCoral"
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Near Side Source to Reef A"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "CoralHolding"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Near Side Source to Reef B"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ElevatorBottom"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
+            "name": "GoTo L2"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "ElevatorL2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "WristL2"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralOuttake"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Reef B to Near Side Source"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ElevatorBottom"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "CoralOff"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ElevatorCS"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "WristCS"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralIntake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "WaitForCoral"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralHolding"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Near Side Source to Reef A"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ElevatorBottom"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ElevatorL2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "WristL2"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralOuttake"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.25
+            "name": "Score Coral"
           }
         }
       ]

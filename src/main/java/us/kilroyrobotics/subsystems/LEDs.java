@@ -49,30 +49,30 @@ public class LEDs extends SubsystemBase {
 
     /** Creates a new LEDs. */
     public LEDs() {
-        this.led.setColorOrder(ColorOrder.kBRG);
-        this.led.setLength(this.ledBuffer.getLength());
-        this.led.setData(this.ledBuffer);
-        this.led.start();
+        led.setColorOrder(ColorOrder.kBRG);
+        led.setLength(ledBuffer.getLength());
+        led.setData(ledBuffer);
+        led.start();
     }
 
     public void setMode(LEDMode newMode) {
-        this.mode = newMode;
+        mode = newMode;
     }
 
     @Override
     public void periodic() {
         switch (mode) {
             case Rainbow:
-                this.rainbow.applyTo(ledBuffer);
+                rainbow.applyTo(ledBuffer);
                 break;
             case TeleopAligned:
-                this.teleopAligned.applyTo(ledBuffer);
+                teleopAligned.applyTo(ledBuffer);
                 break;
             case WaitingForCoral:
-                this.waitingForCoral.applyTo(ledBuffer);
+                waitingForCoral.applyTo(ledBuffer);
                 break;
             case CoralDetected:
-                this.coralGrabbed.applyTo(ledBuffer);
+                coralGrabbed.applyTo(ledBuffer);
                 break;
             case Defense:
                 this.defense.applyTo(ledBuffer);
@@ -81,6 +81,6 @@ public class LEDs extends SubsystemBase {
                 LEDPattern.kOff.applyTo(ledBuffer);
                 break;
         }
-        this.led.setData(ledBuffer);
+        led.setData(ledBuffer);
     }
 }
