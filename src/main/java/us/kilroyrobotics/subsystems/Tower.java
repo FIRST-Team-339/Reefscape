@@ -206,7 +206,7 @@ public class Tower extends SubsystemBase {
                     wrist.setAngle(CoralMechanismConstants.kScoringL4);
 
                     currentLevel = 4;
-                    setState(TowerState.RESTART_BACKUP_TIMER);
+                    setState(TowerState.POINT_WHEELS_BACK);
                 } else if ((isTriggered(TowerEvent.GOTO_L3)) && (currentLevel != 3)) {
                     elevator.setPosition(ElevatorConstants.kL3Height);
                     wrist.setAngle(CoralMechanismConstants.kScoringL3);
