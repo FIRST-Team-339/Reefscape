@@ -141,7 +141,7 @@ public class Elevator extends SubsystemBase {
                 this.m_simLeadMotor.getAppliedOutput() * RoboRioSim.getVInVoltage());
         this.m_simElevator.update(0.02);
 
-        // Conver the elevator's Velocity in M/s to RPM. Divide by conversion ratio to get to
+        // Convert the elevator's Velocity in M/s to RPM. Divide by conversion ratio to get to
         // Rotations per Second, multiple by 60 to get Rotations per Minute
         double elevatorVelocityRPM =
                 m_simElevator.getVelocityMetersPerSecond()
