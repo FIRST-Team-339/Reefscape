@@ -63,7 +63,7 @@ public class Elevator extends SubsystemBase {
                         ElevatorConstants.kD,
                         ElevatorConstants.kF)
                 .outputRange(-1, 1);
-        leadMotorConfig.closedLoop.outputRange(-0.4, 0.8);
+        leadMotorConfig.closedLoop.outputRange(-0.4, 1.0);
         leadMotorConfig.idleMode(IdleMode.kBrake);
         leadMotorConfig.smartCurrentLimit(40);
         leadMotorConfig.softLimit.forwardSoftLimitEnabled(true);
@@ -140,13 +140,22 @@ public class Elevator extends SubsystemBase {
         return new Pose3d(
                 0,
                 0,
-                (m_encoder.getPosition() / ElevatorConstants.kSecondStagePositionConversionFactor),
+                Math.min(
+                        ((m_encoder.getPosition() - ElevatorConstants.kZeroed.in(Meters))
+                                / ElevatorConstants.kSecondStagePositionConversionFactor),
+                        ElevatorConstants.kZeroed.in(Meters)),
                 new Rotation3d());
     }
 
     @Logged(name = "CarriagePose")
     public Pose3d getCarriagePose() {
-        return new Pose3d(0, 0, m_encoder.getPosition(), new Rotation3d());
+        return new Pose3d(
+                0,
+                0,
+                Math.min(
+                        m_encoder.getPosition() - ElevatorConstants.kZeroed.in(Meters),
+                        ElevatorConstants.kZeroed.in(Meters)),
+                new Rotation3d());
     }
 
     @Override

@@ -183,7 +183,7 @@ public final class Constants {
         public static final Distance kCoralStationHeight = Meters.of(Inches.of(32.25).in(Meters));
 
         /* PIDF constants */
-        public static final double kP = 1.0;
+        public static final double kP = 1.25;
         public static final double kI = 0.0;
         public static final double kD = 0.2;
         public static final double kF = 0.0;
