@@ -39,6 +39,30 @@
           "data": {
             "name": "GoTo L4"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef L to Left Side Source"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left Side Source to Reef K"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GoTo L4"
+          }
         }
       ]
     }

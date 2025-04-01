@@ -8,27 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.33550235477036,
-        "y": 5.791911184210526
+        "x": 5.319024127570573,
+        "y": 5.716569893706858
       },
-      "isLocked": false,
+      "isLocked": true,
       "linkedName": "Reef I"
     },
     {
       "anchor": {
-        "x": 2.262,
-        "y": 6.7452499999999995
+        "x": 2.0085633116883117,
+        "y": 7.080580357142857
       },
       "prevControl": {
-        "x": 2.495959409036182,
-        "y": 6.457683324020865
+        "x": 2.2080160484985654,
+        "y": 6.929853432610776
       },
       "nextControl": {
-        "x": 2.092355864639576,
-        "y": 6.9537648030845265
+        "x": 1.7717456869382018,
+        "y": 7.259544019534386
       },
-      "isLocked": false,
-      "linkedName": null
+      "isLocked": true,
+      "linkedName": "Left Side Source Adjustment"
     },
     {
       "anchor": {
@@ -36,8 +36,8 @@
         "y": 7.369249999999999
       },
       "prevControl": {
-        "x": 1.8021997345739167,
-        "y": 6.991570126701639
+        "x": 1.7784014561765693,
+        "y": 7.14531841716759
       },
       "nextControl": null,
       "isLocked": true,
@@ -47,15 +47,15 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 1,
-      "rotationDegrees": -51.07245640720765
+      "rotationDegrees": 0.9605057363624712
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.5,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

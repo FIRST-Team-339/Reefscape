@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Side Start to Reef I"
+            "pathName": "Right Side Start to Reef F"
           }
         },
         {
@@ -19,7 +19,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Reef I to Left Side Source"
+            "pathName": "Reef F to Right Side Source"
           }
         },
         {
@@ -31,7 +31,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Side Source to Reef L"
+            "pathName": "Right Side Source to Reef C"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GoTo L4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef C to Right Side Source"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Side Source to Reef D"
           }
         },
         {
