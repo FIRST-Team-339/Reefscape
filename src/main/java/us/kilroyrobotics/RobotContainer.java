@@ -38,8 +38,6 @@ import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.Constants.VisionConstants;
 import us.kilroyrobotics.generated.TunerConstants;
 import us.kilroyrobotics.subsystems.Camera;
-// import us.kilroyrobotics.subsystems.AlgaeIntake;
-// import us.kilroyrobotics.subsystems.AlgaeIntake.AlgaeState;
 import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor;
 import us.kilroyrobotics.subsystems.Elevator;
