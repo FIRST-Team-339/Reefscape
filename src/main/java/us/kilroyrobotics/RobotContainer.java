@@ -125,14 +125,14 @@ public class RobotContainer {
 
     private Command wristStop = wrist.runOnce(() -> wrist.setAngle(wrist.getAngle()));
 
-    public final Command controlElevator =
+    public final Command controlElevatorManual =
             elevator.run(
                     () ->
                             elevator.setSpeed(
                                     operatorJoystick.getY()
                                             * ElevatorConstants.kOverrideSpeedMultiplier));
 
-    public final Command controlWrist =
+    public final Command controlWristManual =
             wrist.run(
                     () ->
                             wrist.setSpeed(
@@ -435,8 +435,8 @@ public class RobotContainer {
         operatorJoystick.button(3).onTrue(towerScoreCoral);
 
         /* Manual Control */
-        operatorJoystick.trigger().whileTrue(controlElevator).onFalse(elevatorStop);
-        operatorJoystick.button(4).whileTrue(controlWrist).onFalse(wristStop);
+        operatorJoystick.trigger().whileTrue(controlElevatorManual).onFalse(elevatorStop);
+        operatorJoystick.button(4).whileTrue(controlWristManual).onFalse(wristStop);
 
         // Reef Alignment
         driverController.leftBumper().onTrue(alignReef(true));
