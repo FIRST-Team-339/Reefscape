@@ -2,25 +2,34 @@ package us.kilroyrobotics;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.FlippingUtil;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StringPublisher;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.networktables.StructPublisher;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Telemetry {
     private final double MaxSpeed;
+
+    /* Robot pose for field positioning */
+    private final Field2d field;
 
     /**
      * Construct a telemetry object, with the specified max speed of the robot
@@ -29,7 +38,39 @@ public class Telemetry {
      */
     public Telemetry(double maxSpeed) {
         MaxSpeed = maxSpeed;
+        field = new Field2d();
+        SmartDashboard.putData("Field", field);
         SignalLogger.start();
+
+        // Logging callback for target robot pose
+        PathPlannerLogging.setLogTargetPoseCallback(
+                (pose) -> field.getObject("targetPose").setPose(pose));
+
+        // Logging callback for the active path, this is sent as a list of poses
+        PathPlannerLogging.setLogActivePathCallback(
+                (poses) -> field.getObject("path").setPoses(poses));
+    }
+
+    public void displayFullAutoPath(List<PathPlannerPath> autoPaths) {
+        if (autoPaths == null) {
+            field.getObject("path").setPoses();
+            return;
+        }
+
+        ArrayList<Pose2d> poses = new ArrayList<>();
+
+        for (PathPlannerPath path : autoPaths) {
+            poses.addAll(path.getPathPoses());
+        }
+
+        System.out.println(DriverStation.getAlliance().orElse(Alliance.Blue));
+        if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
+            for (int i = 0; i < poses.size(); i++) {
+                poses.set(i, FlippingUtil.flipFieldPose(poses.get(i)));
+            }
+        }
+
+        field.getObject("path").setPoses(poses);
     }
 
     /* What to publish over networktables for telemetry */
@@ -55,11 +96,6 @@ public class Telemetry {
             driveStateTable.getDoubleTopic("Timestamp").publish();
     private final DoublePublisher driveOdometryFrequency =
             driveStateTable.getDoubleTopic("OdometryFrequency").publish();
-
-    /* Robot pose for field positioning */
-    private final NetworkTable table = inst.getTable("Pose");
-    private final DoubleArrayPublisher fieldPub = table.getDoubleArrayTopic("Robot").publish();
-    private final StringPublisher fieldTypePub = table.getStringTopic(".type").publish();
 
     /* Mechanisms to represent the swerve module states */
     private final Mechanism2d[] m_moduleMechanisms =
@@ -142,8 +178,7 @@ public class Telemetry {
         SignalLogger.writeDouble("DriveState/OdometryPeriod", state.OdometryPeriod, "seconds");
 
         /* Telemeterize the pose to a Field2d */
-        fieldTypePub.set("Field2d");
-        fieldPub.set(m_poseArray);
+        field.setRobotPose(state.Pose);
 
         /* Telemeterize the module states to a Mechanism2d */
         for (int i = 0; i < 4; ++i) {
