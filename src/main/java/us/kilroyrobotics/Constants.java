@@ -159,7 +159,7 @@ public final class Constants {
         /** The motor ID of the Spark Max associated with the right motor for the elevator */
         public static final int kRightMotorId = 42;
 
-        /** The % tolerance for determining when the elevator is in position */
+        /** The amount tolerance in meters for determining when the elevator is in position */
         public static final double kPositionTolerance = 0.075;
 
         /** The zeroed motor encoder position in inches */
@@ -262,7 +262,7 @@ public final class Constants {
         /** The motor ID of the Spark Max associated with the motor for the coral intake */
         public static final int kWheelMotorId = 44;
 
-        /** The % tolerance for determining when the wrist is in position */
+        /** The amount tolerance in degrees for determining when the wrist is in position */
         public static final double kAngleTolerance = 10.0;
 
         /* Wrist Configurations */
