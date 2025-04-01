@@ -10,6 +10,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -29,9 +30,11 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.json.simple.parser.ParseException;
 import us.kilroyrobotics.Constants.CameraConstants;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.DriveConstants;
@@ -68,7 +71,7 @@ public class RobotContainer {
     private final SwerveRequest.RobotCentric forwardStraight =
             new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    private final Telemetry logger = new Telemetry(this.currentDriveSpeed.in(MetersPerSecond));
+    private final Telemetry telemetry = new Telemetry(this.currentDriveSpeed.in(MetersPerSecond));
 
     /* Controllers */
     private final CommandXboxController driverController = new CommandXboxController(0);
@@ -121,8 +124,16 @@ public class RobotContainer {
 
         autoChooser.onChange(
                 (Command command) -> {
-                    if (command != null)
+                    if (command != null) {
                         System.out.println("[AUTO] Selected Route " + command.getName());
+                        if (command.getName().equals("InstantCommand"))
+                            telemetry.displayFullAutoPath(null);
+                        try {
+                            telemetry.displayFullAutoPath(
+                                    PathPlannerAuto.getPathGroupFromAutoFile(command.getName()));
+                        } catch (IOException | ParseException e) {
+                        }
+                    }
                 });
 
         configureBindings();
@@ -539,7 +550,7 @@ public class RobotContainer {
         driverController.leftBumper().onTrue(alignReef(true));
         driverController.rightBumper().onTrue(alignReef(false));
 
-        drivetrain.registerTelemetry(logger::telemeterize);
+        drivetrain.registerTelemetry(telemetry::telemeterize);
 
         new Trigger(this.coralIntakeMotor::isCoralDetected)
                 .onTrue(
