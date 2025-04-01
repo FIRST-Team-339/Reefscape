@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.FeetPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -27,7 +28,6 @@ public class Tower extends SubsystemBase {
     private final Timer stateTimer = new Timer();
 
     private final CommandSwerveDrivetrain drivetrain;
-    private final SwerveRequest.RobotCentric forwardStraight;
     private final SwerveRequest.PointWheelsAt point;
     private final Elevator elevator;
     private final Wrist wrist;
@@ -36,7 +36,6 @@ public class Tower extends SubsystemBase {
 
     private final Command backupCommand;
 
-    private double safetyFactor = 1;
     private int currentLevel = 0;
 
     /** Creates a new Tower. */
@@ -49,7 +48,6 @@ public class Tower extends SubsystemBase {
             CoralIntakeMotor coralIntakeMotor,
             LEDs leds) {
         this.drivetrain = drivetrain;
-        this.forwardStraight = forwardStraight;
         this.point = point;
         this.elevator = elevator;
         this.wrist = wrist;
@@ -197,7 +195,7 @@ public class Tower extends SubsystemBase {
                 if (wrist.inPosition()) setState(TowerState.READY_TO_SCORE);
                 break;
             case READY_TO_SCORE:
-                if (isTriggered(TowerEvent.SCORE_BYPASS) || stateTimer.hasElapsed(1.0)) {
+                if (isTriggered(TowerEvent.SCORE_BYPASS) || stateTimer.hasElapsed(0.75)) {
                     coralIntakeMotor.setSpeed(CoralMechanismConstants.kWheelSpeedOuttaking);
 
                     setState(TowerState.SCORING);
@@ -247,14 +245,21 @@ public class Tower extends SubsystemBase {
             case SCORING:
                 if (!coralIntakeMotor.isCoralDetected() || stateTimer.hasElapsed(0.3)) {
                     leds.setMode(LEDMode.Off);
-                    setState(TowerState.INIT);
+                    if (DriverStation.isAutonomousEnabled()) {
+                        setState(TowerState.TILTING_TO_INTAKE);
+                    } else {
+                        setState(TowerState.INIT);
+                    }
                 }
                 break;
         }
     }
 
-    public void triggerEvent(TowerEvent event) {
-        pendingEvent = event;
+    public Command triggerEvent(TowerEvent event) {
+        return runOnce(
+                () -> {
+                    pendingEvent = event;
+                });
     }
 
     public TowerEvent getPendingEvent() {

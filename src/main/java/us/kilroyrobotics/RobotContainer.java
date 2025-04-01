@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -109,18 +108,14 @@ public class RobotContainer {
     private int currentAprilTag = 0;
 
     /* Tower Commands */
-    private final Command towerIntakeCoral =
-            tower.runOnce(() -> tower.triggerEvent(TowerEvent.INTAKE_CORAL));
-    private final Command towerIntakeBypass =
-            tower.runOnce(() -> tower.triggerEvent(TowerEvent.INTAKE_BYPASS));
-    private final Command towerScoreCoral =
-            tower.runOnce(() -> tower.triggerEvent(TowerEvent.SCORE_BYPASS));
-    private final Command towerToHome =
-            tower.runOnce(() -> tower.triggerEvent(TowerEvent.HOME_TOWER));
-    private final Command towerToL1 = tower.runOnce(() -> tower.triggerEvent(TowerEvent.GOTO_L1));
-    private final Command towerToL2 = tower.runOnce(() -> tower.triggerEvent(TowerEvent.GOTO_L2));
-    private final Command towerToL3 = tower.runOnce(() -> tower.triggerEvent(TowerEvent.GOTO_L3));
-    private final Command towerToL4 = tower.runOnce(() -> tower.triggerEvent(TowerEvent.GOTO_L4));
+    private final Command towerIntakeCoral = tower.triggerEvent(TowerEvent.INTAKE_CORAL);
+    private final Command towerIntakeBypass = tower.triggerEvent(TowerEvent.INTAKE_BYPASS);
+    private final Command towerScoreCoral = tower.triggerEvent(TowerEvent.SCORE_BYPASS);
+    private final Command towerToHome = tower.triggerEvent(TowerEvent.HOME_TOWER);
+    private final Command towerToL1 = tower.triggerEvent(TowerEvent.GOTO_L1);
+    private final Command towerToL2 = tower.triggerEvent(TowerEvent.GOTO_L2);
+    private final Command towerToL3 = tower.triggerEvent(TowerEvent.GOTO_L3);
+    private final Command towerToL4 = tower.triggerEvent(TowerEvent.GOTO_L4);
 
     private Command elevatorStop =
             elevator.runOnce(() -> elevator.setPosition(elevator.getPosition()));
@@ -270,18 +265,22 @@ public class RobotContainer {
 
         NamedCommands.registerCommand(
                 "Intake Coral",
-                towerIntakeCoral
+                tower.triggerEvent(TowerEvent.INTAKE_CORAL)
                         .andThen(Commands.waitTime(Seconds.of(3)))
                         .until(() -> coralIntakeMotor.isCoralDetected()));
         NamedCommands.registerCommand("Score Coral", towerScoreCoral);
         NamedCommands.registerCommand(
-                "GoTo L1", towerToL1.andThen(Commands.waitTime(Seconds.of(2))));
+                "GoTo L1",
+                tower.triggerEvent(TowerEvent.GOTO_L1).andThen(Commands.waitTime(Seconds.of(1.5))));
         NamedCommands.registerCommand(
-                "GoTo L2", towerToL2.andThen(Commands.waitTime(Seconds.of(2))));
+                "GoTo L2",
+                tower.triggerEvent(TowerEvent.GOTO_L2).andThen(Commands.waitTime(Seconds.of(1.5))));
         NamedCommands.registerCommand(
-                "GoTo L3", towerToL3.andThen(Commands.waitTime(Seconds.of(2))));
+                "GoTo L3",
+                tower.triggerEvent(TowerEvent.GOTO_L3).andThen(Commands.waitTime(Seconds.of(1.5))));
         NamedCommands.registerCommand(
-                "GoTo L4", towerToL4.andThen(Commands.waitTime(Seconds.of(2))));
+                "GoTo L4",
+                tower.triggerEvent(TowerEvent.GOTO_L4).andThen(Commands.waitTime(Seconds.of(1.5))));
 
         NamedCommands.registerCommand("Leave", autoLeave);
 
@@ -290,7 +289,7 @@ public class RobotContainer {
 
         autoChooser.onChange(
                 (Command command) -> {
-                   if (command != null) {
+                    if (command != null) {
                         System.out.println("[AUTO] Selected Route " + command.getName());
                         if (command.getName().equals("InstantCommand"))
                             telemetry.displayFullAutoPath(null);
