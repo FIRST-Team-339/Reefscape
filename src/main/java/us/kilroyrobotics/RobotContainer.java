@@ -121,17 +121,9 @@ public class RobotContainer {
     private final Command towerToL4 = tower.runOnce(() -> tower.triggerEvent(TowerEvent.GOTO_L4));
 
     private Command elevatorStop =
-            elevator.runOnce(
-                    () -> {
-                        elevator.setPosition(elevator.getPosition());
-                    });
+            elevator.runOnce(() -> elevator.setPosition(elevator.getPosition()));
 
-    private Command wristStop =
-            wrist.runOnce(
-                    () -> {
-                        wrist.setAngle(wrist.getAngle());
-                        wrist.stop();
-                    });
+    private Command wristStop = wrist.runOnce(() -> wrist.setAngle(wrist.getAngle()));
 
     public final Command controlElevator =
             elevator.run(
