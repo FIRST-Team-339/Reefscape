@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.Constants.SimulationConstants;
+import us.kilroyrobotics.Robot;
 
 public class Elevator extends SubsystemBase {
     private SparkMax m_leadMotor;
@@ -85,18 +86,20 @@ public class Elevator extends SubsystemBase {
                 PersistMode.kPersistParameters);
 
         // Sim
-        m_simElevatorGearbox = DCMotor.getNEO(2);
-        m_simLeadMotor = new SparkMaxSim(m_leadMotor, m_simElevatorGearbox);
-        m_simElevator =
-                new ElevatorSim(
-                        m_simElevatorGearbox,
-                        SimulationConstants.kElevatorGearing,
-                        SimulationConstants.kElevatorCarriageMass.magnitude(),
-                        SimulationConstants.kElevatorDrumRadius.magnitude(),
-                        SimulationConstants.kElevatorMinHeight.magnitude(),
-                        SimulationConstants.kElevatorMaxHeight.magnitude(),
-                        true,
-                        SimulationConstants.kElevatorStartingHeight.magnitude());
+        if (Robot.isSimulation()) {
+            m_simElevatorGearbox = DCMotor.getNEO(2);
+            m_simLeadMotor = new SparkMaxSim(m_leadMotor, m_simElevatorGearbox);
+            m_simElevator =
+                    new ElevatorSim(
+                            m_simElevatorGearbox,
+                            SimulationConstants.kElevatorGearing,
+                            SimulationConstants.kElevatorCarriageMass.magnitude(),
+                            SimulationConstants.kElevatorDrumRadius.magnitude(),
+                            SimulationConstants.kElevatorMinHeight.magnitude(),
+                            SimulationConstants.kElevatorMaxHeight.magnitude(),
+                            true,
+                            SimulationConstants.kElevatorStartingHeight.magnitude());
+        }
     }
 
     public double getVelocity() {

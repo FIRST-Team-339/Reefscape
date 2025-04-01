@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import java.util.function.Supplier;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.SimulationConstants;
+import us.kilroyrobotics.Robot;
 
 public class Wrist extends SubsystemBase {
     private SparkMax m_wristMotor;
@@ -89,20 +90,22 @@ public class Wrist extends SubsystemBase {
         getCarriagePose = carriagePoseGetter;
 
         // Sim
-        m_simWristGearbox = DCMotor.getNEO(1);
-        m_simWristMotor = new SparkMaxSim(m_wristMotor, m_simWristGearbox);
-        m_simWrist =
-                new SingleJointedArmSim(
-                        m_simWristGearbox,
-                        SimulationConstants.kWristGearing,
-                        SingleJointedArmSim.estimateMOI(
-                                SimulationConstants.kArmLength.magnitude(),
-                                SimulationConstants.kWristMass.magnitude()),
-                        SimulationConstants.kArmLength.magnitude(),
-                        SimulationConstants.kMinAngle.in(Radians),
-                        SimulationConstants.kMaxAngle.in(Radians),
-                        true,
-                        CoralMechanismConstants.kStartingAngle.in(Radians));
+        if (Robot.isSimulation()) {
+            m_simWristGearbox = DCMotor.getNEO(1);
+            m_simWristMotor = new SparkMaxSim(m_wristMotor, m_simWristGearbox);
+            m_simWrist =
+                    new SingleJointedArmSim(
+                            m_simWristGearbox,
+                            SimulationConstants.kWristGearing,
+                            SingleJointedArmSim.estimateMOI(
+                                    SimulationConstants.kArmLength.magnitude(),
+                                    SimulationConstants.kWristMass.magnitude()),
+                            SimulationConstants.kArmLength.magnitude(),
+                            SimulationConstants.kMinAngle.in(Radians),
+                            SimulationConstants.kMaxAngle.in(Radians),
+                            true,
+                            CoralMechanismConstants.kStartingAngle.in(Radians));
+        }
     }
 
     public double getVelocity() {
