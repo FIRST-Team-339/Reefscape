@@ -102,7 +102,7 @@ public class Elevator extends SubsystemBase {
         }
     }
 
-    public double getVelocity() {
+    public double getAppliedOutput() {
         return m_leadMotor.getAppliedOutput();
     }
 

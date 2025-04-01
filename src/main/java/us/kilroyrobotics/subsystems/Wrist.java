@@ -108,7 +108,7 @@ public class Wrist extends SubsystemBase {
         }
     }
 
-    public double getVelocity() {
+    public double getAppliedOutput() {
         return m_wristMotor.getAppliedOutput();
     }
 
