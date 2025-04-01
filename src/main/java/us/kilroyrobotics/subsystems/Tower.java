@@ -7,16 +7,31 @@ package us.kilroyrobotics.subsystems;
 import static edu.wpi.first.units.Units.FeetPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.Waypoint;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.ElevatorConstants;
+import us.kilroyrobotics.Constants.VisionConstants;
 import us.kilroyrobotics.subsystems.LEDs.LEDMode;
+import us.kilroyrobotics.util.LimelightHelpers;
+import us.kilroyrobotics.util.LimelightHelpers.RawFiducial;
 import us.kilroyrobotics.util.TowerEvent;
 import us.kilroyrobotics.util.TowerState;
 
@@ -79,6 +94,102 @@ public class Tower extends SubsystemBase {
         setState(TowerState.INIT);
     }
 
+    /* Reef Alignment */
+    private int currentAprilTag = 0;
+    private Command alignmentCommand;
+
+    private Command alignReef(boolean leftSide) {
+        Pose2d targetPose;
+
+        ArrayList<RawFiducial> aprilTags =
+                new ArrayList<>(
+                        Arrays.asList(
+                                        LimelightHelpers.getRawFiducials("limelight-right"),
+                                        LimelightHelpers.getRawFiducials("limelight-left"))
+                                .stream()
+                                .flatMap(Arrays::stream)
+                                .toList());
+
+        if (aprilTags.size() < 1) {
+            if (currentAprilTag == 0) return null;
+
+            targetPose =
+                    VisionConstants.getAlignmentPose(
+                            currentAprilTag,
+                            leftSide,
+                            DriverStation.getAlliance().orElse(Alliance.Blue));
+        } else {
+            aprilTags.sort((a, b) -> Double.compare(b.distToRobot, a.distToRobot));
+
+            RawFiducial aprilTag = aprilTags.get(0);
+            currentAprilTag = aprilTag.id;
+            System.out.println(
+                    "[TELEOP-ASSIST] "
+                            + " Selected tag "
+                            + this.currentAprilTag
+                            + " for alignment");
+
+            targetPose =
+                    VisionConstants.getAlignmentPose(
+                            aprilTag.id,
+                            leftSide,
+                            DriverStation.getAlliance().orElse(Alliance.Blue));
+        }
+
+        if (targetPose == null) return null;
+
+        System.out.println(
+                "[TELEOP-ASSIST] "
+                        + (leftSide ? "[LEFT]" : "[RIGHT]")
+                        + " Going to pose "
+                        + targetPose);
+
+        List<Waypoint> waypoints =
+                PathPlannerPath.waypointsFromPoses(this.drivetrain.getState().Pose, targetPose);
+
+        PathConstraints constraints = new PathConstraints(1.5, 1.0, 0.75, 0.5);
+
+        PathPlannerPath path =
+                new PathPlannerPath(
+                        waypoints,
+                        constraints,
+                        null,
+                        new GoalEndState(0.0, targetPose.getRotation()));
+        path.preventFlipping = true;
+
+        return Commands.sequence(
+                Commands.runOnce(
+                        () -> {
+                            this.leds.setMode(LEDMode.Off);
+                            SmartDashboard.putBoolean("TeleopAlignIndicator", false);
+                        }),
+                AutoBuilder.followPath(path),
+                Commands.runOnce(
+                        () -> {
+                            System.out.println(
+                                    "[TELEOP-ASSIST] "
+                                            + (leftSide ? "[LEFT]" : "[RIGHT]")
+                                            + " Arrived at Pose for tag "
+                                            + this.currentAprilTag);
+                            this.currentAprilTag = 0;
+
+                            SmartDashboard.putBoolean("TeleopAlignIndicator", true);
+                            this.leds.setMode(LEDMode.TeleopAligned);
+
+                            CommandScheduler.getInstance()
+                                    .schedule(
+                                            Commands.sequence(
+                                                    new WaitCommand(2.5),
+                                                    Commands.runOnce(
+                                                            () -> {
+                                                                SmartDashboard.putBoolean(
+                                                                        "TeleopAlignIndicator",
+                                                                        false);
+                                                                this.leds.setMode(LEDMode.Off);
+                                                            })));
+                        }));
+    }
+
     public void runStateMachine() {
         if (isTriggered(TowerEvent.HOME_TOWER)) setState(TowerState.INIT);
         if (isTriggered(TowerEvent.SCORE_BYPASS)) {
@@ -136,6 +247,28 @@ public class Tower extends SubsystemBase {
                 }
                 break;
             case GOT_CORAL:
+                if (isTriggered(TowerEvent.ALIGN_LEFT)) {
+                    alignmentCommand = alignReef(true);
+
+                    if (alignmentCommand != null) {
+                        CommandScheduler.getInstance().schedule(alignmentCommand);
+
+                        setState(TowerState.ALIGNING);
+                    }
+                } else if (isTriggered(TowerEvent.ALIGN_RIGHT)) {
+                    alignmentCommand = alignReef(false);
+
+                    if (alignmentCommand != null) {
+                        CommandScheduler.getInstance().schedule(alignmentCommand);
+
+                        setState(TowerState.ALIGNING);
+                    }
+                }
+                break;
+            case ALIGNING:
+                if (alignmentCommand.isFinished()) setState(TowerState.ALIGNED);
+                break;
+            case ALIGNED:
                 if (isTriggered(TowerEvent.GOTO_L1)) {
                     elevator.setPosition(ElevatorConstants.kL1Height);
                     coralIntakeMotor.setSpeed(CoralMechanismConstants.kWheelSpeedHolding);

@@ -13,6 +13,8 @@ public enum TowerState {
     TILTING_TO_INTAKE,
     INTAKING,
     GOT_CORAL,
+    ALIGNING,
+    ALIGNED,
     RAISING_TO_L1,
     RAISING_TO_L2,
     RAISING_TO_L3,

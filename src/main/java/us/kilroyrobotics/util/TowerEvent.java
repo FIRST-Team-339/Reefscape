@@ -13,5 +13,7 @@ public enum TowerEvent {
     GOTO_L4,
     INTAKE_CORAL,
     INTAKE_BYPASS,
-    SCORE_BYPASS
+    SCORE_BYPASS,
+    ALIGN_LEFT,
+    ALIGN_RIGHT,
 }
