@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 5.98,
-        "y": 4.16
+        "y": 4.18
       },
       "prevControl": null,
       "nextControl": {
         "x": 7.140256578947368,
-        "y": 6.727565789473683
+        "y": 6.747565789473683
       },
       "isLocked": true,
       "linkedName": "Reef H"
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 2.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
