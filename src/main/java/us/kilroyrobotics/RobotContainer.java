@@ -104,7 +104,12 @@ public class RobotContainer {
     private Command elevatorStop =
             elevator.runOnce(() -> elevator.setPosition(elevator.getPosition()));
 
-    private Command wristStop = wrist.runOnce(() -> wrist.setAngle(wrist.getAngle()));
+    private Command wristStop =
+            wrist.runOnce(
+                    () -> {
+                        wrist.setAngle(wrist.getAngle());
+                        wrist.stop();
+                    });
 
     public final Command controlElevatorManual =
             elevator.run(
@@ -150,10 +155,11 @@ public class RobotContainer {
                 tower.triggerEvent(TowerEvent.GOTO_L2).andThen(Commands.waitTime(Seconds.of(1.5))));
         NamedCommands.registerCommand(
                 "GoTo L3",
-                tower.triggerEvent(TowerEvent.GOTO_L3).andThen(Commands.waitTime(Seconds.of(1.5))));
+                tower.triggerEvent(TowerEvent.GOTO_L3)
+                        .andThen(Commands.waitTime(Seconds.of(1.75))));
         NamedCommands.registerCommand(
                 "GoTo L4",
-                tower.triggerEvent(TowerEvent.GOTO_L4).andThen(Commands.waitTime(Seconds.of(1.5))));
+                tower.triggerEvent(TowerEvent.GOTO_L4).andThen(Commands.waitTime(Seconds.of(2))));
 
         NamedCommands.registerCommand("Leave", autoLeave);
 

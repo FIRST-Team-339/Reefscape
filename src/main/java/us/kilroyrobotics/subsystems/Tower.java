@@ -172,6 +172,7 @@ public class Tower extends SubsystemBase {
                                             + " Arrived at Pose for tag "
                                             + this.currentAprilTag);
                             this.currentAprilTag = 0;
+                            setState(TowerState.ALIGNED);
 
                             SmartDashboard.putBoolean("TeleopAlignIndicator", true);
                             this.leds.setMode(LEDMode.TeleopAligned);
@@ -247,6 +248,10 @@ public class Tower extends SubsystemBase {
                 }
                 break;
             case GOT_CORAL:
+                if (DriverStation.isAutonomousEnabled()) {
+                    setState(TowerState.ALIGNED);
+                    break;
+                }
                 if (isTriggered(TowerEvent.ALIGN_LEFT)) {
                     alignmentCommand = alignReef(true);
 
@@ -266,9 +271,14 @@ public class Tower extends SubsystemBase {
                 }
                 break;
             case ALIGNING:
-                if (alignmentCommand.isFinished()) setState(TowerState.ALIGNED);
                 break;
             case ALIGNED:
+                TowerEvent pendingAlignmentEvent = pendingEvent;
+                if (isTriggered(TowerEvent.ALIGN_LEFT) || isTriggered(TowerEvent.ALIGN_RIGHT)) {
+                    pendingEvent = pendingAlignmentEvent;
+                    setState(TowerState.GOT_CORAL);
+                    break;
+                }
                 if (isTriggered(TowerEvent.GOTO_L1)) {
                     elevator.setPosition(ElevatorConstants.kL1Height);
                     coralIntakeMotor.setSpeed(CoralMechanismConstants.kWheelSpeedHolding);
@@ -325,10 +335,16 @@ public class Tower extends SubsystemBase {
                 }
                 break;
             case TILTING_TO_SCORE:
-                if (wrist.inPosition()) setState(TowerState.READY_TO_SCORE);
+                if (wrist.inPosition()) {
+                    if (DriverStation.isTeleopEnabled()) setState(TowerState.TELEOP_WAIT);
+                    else setState(TowerState.READY_TO_SCORE);
+                }
+                break;
+            case TELEOP_WAIT:
+                if (stateTimer.hasElapsed(0.25)) setState(TowerState.READY_TO_SCORE);
                 break;
             case READY_TO_SCORE:
-                if (isTriggered(TowerEvent.SCORE_BYPASS) || stateTimer.hasElapsed(0.75)) {
+                if (isTriggered(TowerEvent.SCORE_BYPASS) || stateTimer.hasElapsed(0.85)) {
                     coralIntakeMotor.setSpeed(CoralMechanismConstants.kWheelSpeedOuttaking);
 
                     setState(TowerState.SCORING);
@@ -378,11 +394,9 @@ public class Tower extends SubsystemBase {
             case SCORING:
                 if (!coralIntakeMotor.isCoralDetected() || stateTimer.hasElapsed(0.3)) {
                     leds.setMode(LEDMode.Off);
-                    if (DriverStation.isAutonomousEnabled()) {
-                        setState(TowerState.TILTING_TO_INTAKE);
-                    } else {
-                        setState(TowerState.INIT);
-                    }
+                    if (DriverStation.isAutonomousEnabled()) pendingEvent = TowerEvent.INTAKE_CORAL;
+
+                    setState(TowerState.INIT);
                 }
                 break;
         }
@@ -391,6 +405,7 @@ public class Tower extends SubsystemBase {
     public Command triggerEvent(TowerEvent event) {
         return runOnce(
                 () -> {
+                    System.out.println("P: " + pendingEvent + " S: " + currentState);
                     pendingEvent = event;
                 });
     }

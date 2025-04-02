@@ -23,6 +23,7 @@ public enum TowerState {
     BACKUP_BEFORE_SCORE,
     WAIT_FOR_BACKUP,
     TILTING_TO_SCORE,
+    TELEOP_WAIT,
     READY_TO_SCORE,
     SCORING
 }
