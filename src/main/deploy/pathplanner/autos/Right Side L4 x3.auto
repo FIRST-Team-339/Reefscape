@@ -1,0 +1,73 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Side Start to Reef F"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GoTo L4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef F to Right Side Source"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Side Source to Reef C"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GoTo L4"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Reef C to Right Side Source"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Coral"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Side Source to Reef D"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GoTo L4"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

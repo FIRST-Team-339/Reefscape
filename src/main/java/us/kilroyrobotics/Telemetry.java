@@ -63,7 +63,6 @@ public class Telemetry {
             poses.addAll(path.getPathPoses());
         }
 
-        System.out.println(DriverStation.getAlliance().orElse(Alliance.Blue));
         if (DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Red) {
             for (int i = 0; i < poses.size(); i++) {
                 poses.set(i, FlippingUtil.flipFieldPose(poses.get(i)));

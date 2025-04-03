@@ -1,0 +1,75 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.33,
+        "y": 2.78
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.659383379897771,
+        "y": 2.0959579938546233
+      },
+      "isLocked": true,
+      "linkedName": "Reef F"
+    },
+    {
+      "anchor": {
+        "x": 1.8162540584415583,
+        "y": 1.1617288961038958
+      },
+      "prevControl": {
+        "x": 2.1933294193368793,
+        "y": 1.7196701982466691
+      },
+      "nextControl": {
+        "x": 1.5538667671837534,
+        "y": 0.7734863267604808
+      },
+      "isLocked": true,
+      "linkedName": "Right Side Source Adjustment"
+    },
+    {
+      "anchor": {
+        "x": 1.43325,
+        "y": 0.8075
+      },
+      "prevControl": {
+        "x": 1.5080087844921142,
+        "y": 1.0460605251110535
+      },
+      "nextControl": null,
+      "isLocked": true,
+      "linkedName": "Right Side Source"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": -14.52551329917768
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -126.0
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 119.99999999999999
+  },
+  "useDefaultConstraints": true
+}

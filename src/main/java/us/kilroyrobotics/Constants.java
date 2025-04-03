@@ -48,9 +48,9 @@ public final class Constants {
         public static final Pose2d kReefFPose =
                 new Pose2d(Meters.of(5.34), Meters.of(2.78), new Rotation2d(Degrees.of(120)));
         public static final Pose2d kReefGPose =
-                new Pose2d(Meters.of(5.96), Meters.of(3.85), new Rotation2d(Degrees.of(180)));
+                new Pose2d(Meters.of(5.96), Meters.of(3.88), new Rotation2d(Degrees.of(180)));
         public static final Pose2d kReefHPose =
-                new Pose2d(Meters.of(5.98), Meters.of(4.17), new Rotation2d(Degrees.of(180)));
+                new Pose2d(Meters.of(5.98), Meters.of(4.18), new Rotation2d(Degrees.of(180)));
         public static final Pose2d kReefIPose =
                 new Pose2d(Meters.of(5.37), Meters.of(5.22), new Rotation2d(Degrees.of(240)));
         public static final Pose2d kReefJPose =
@@ -159,6 +159,9 @@ public final class Constants {
         /** The motor ID of the Spark Max associated with the right motor for the elevator */
         public static final int kRightMotorId = 42;
 
+        /** The amount tolerance in meters for determining when the elevator is in position */
+        public static final double kPositionTolerance = 0.075;
+
         /** The zeroed motor encoder position in inches */
         public static final Distance kZeroed = Meters.of(Inches.of(28.8125).in(Meters));
 
@@ -168,7 +171,7 @@ public final class Constants {
 
         /** Height necessary for the coral intake to reach Level 2 of Reef in Meters */
         // 47.5
-        public static final Distance kL2Height = Meters.of(Inches.of(39.5).in(Meters));
+        public static final Distance kL2Height = Meters.of(Inches.of(40.0).in(Meters));
 
         /** Height necessary for the coral intake to reach Level 3 of Reef in Meters */
         public static final Distance kL3Height = Meters.of(Inches.of(55).in(Meters));
@@ -180,7 +183,7 @@ public final class Constants {
         public static final Distance kCoralStationHeight = Meters.of(Inches.of(32.25).in(Meters));
 
         /* PIDF constants */
-        public static final double kP = 1.0;
+        public static final double kP = 1.25;
         public static final double kI = 0.0;
         public static final double kD = 0.2;
         public static final double kF = 0.0;
@@ -258,6 +261,9 @@ public final class Constants {
 
         /** The motor ID of the Spark Max associated with the motor for the coral intake */
         public static final int kWheelMotorId = 44;
+
+        /** The amount tolerance in degrees for determining when the wrist is in position */
+        public static final double kAngleTolerance = 10.0;
 
         /* Wrist Configurations */
         /** The angle that the wrist will be at the start of the match */
