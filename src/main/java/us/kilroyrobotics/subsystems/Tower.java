@@ -234,6 +234,7 @@ public class Tower extends SubsystemBase {
                 if (elevator.inPosition()) {
                     coralIntakeMotor.setSpeed(CoralMechanismConstants.kWheelSpeedIntaking);
                     leds.setMode(LEDMode.WaitingForCoral);
+                    SmartDashboard.putBoolean("CoralDetected", false);
 
                     setState(TowerState.INTAKING);
                 }
@@ -243,6 +244,7 @@ public class Tower extends SubsystemBase {
                     // elevator.setPosition(ElevatorConstants.kZeroed);
                     coralIntakeMotor.setSpeed(CoralMechanismConstants.kWheelSpeedHolding);
                     leds.setMode(LEDMode.CoralDetected);
+                    SmartDashboard.putBoolean("CoralDetected", true);
 
                     setState(TowerState.GOT_CORAL);
                 }
@@ -397,6 +399,7 @@ public class Tower extends SubsystemBase {
                     if (DriverStation.isAutonomousEnabled()) pendingEvent = TowerEvent.INTAKE_CORAL;
 
                     setState(TowerState.INIT);
+                    SmartDashboard.putBoolean("CoralDetected", false);
                 }
                 break;
         }
