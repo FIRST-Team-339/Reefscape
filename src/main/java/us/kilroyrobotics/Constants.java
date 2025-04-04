@@ -38,7 +38,7 @@ public final class Constants {
         public static final Pose2d kReefAPose =
                 new Pose2d(Meters.of(2.99), Meters.of(4.19), new Rotation2d(Degrees.of(0)));
         public static final Pose2d kReefBPose =
-                new Pose2d(Meters.of(2.99), Meters.of(3.87), new Rotation2d(Degrees.of(0)));
+                new Pose2d(Meters.of(2.99), Meters.of(3.85), new Rotation2d(Degrees.of(0)));
         public static final Pose2d kReefCPose =
                 new Pose2d(Meters.of(3.58), Meters.of(2.82), new Rotation2d(Degrees.of(60)));
         public static final Pose2d kReefDPose =

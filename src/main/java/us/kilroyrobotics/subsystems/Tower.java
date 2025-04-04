@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -74,7 +73,7 @@ public class Tower extends SubsystemBase {
                                 () ->
                                         drivetrain.setControl(
                                                 forwardStraight.withVelocityX(
-                                                        FeetPerSecond.of(-1))),
+                                                        FeetPerSecond.of(-1.5))),
                                 () -> drivetrain.setControl(forwardStraight.withVelocityX(0)))
                         .withTimeout(0.25);
 
@@ -178,18 +177,6 @@ public class Tower extends SubsystemBase {
 
                             SmartDashboard.putBoolean("TeleopAlignIndicator", true);
                             this.leds.setMode(LEDMode.TeleopAligned);
-
-                            CommandScheduler.getInstance()
-                                    .schedule(
-                                            Commands.sequence(
-                                                    new WaitCommand(2.5),
-                                                    Commands.runOnce(
-                                                            () -> {
-                                                                SmartDashboard.putBoolean(
-                                                                        "TeleopAlignIndicator",
-                                                                        false);
-                                                                this.leds.setMode(LEDMode.Off);
-                                                            })));
                         }));
     }
 
@@ -385,7 +372,7 @@ public class Tower extends SubsystemBase {
                                         () ->
                                                 drivetrain.setControl(
                                                         point.withModuleDirection(
-                                                                Rotation2d.kZero))));
+                                                                Rotation2d.k180deg))));
                 setState(TowerState.BACKUP_BEFORE_SCORE);
                 break;
             case BACKUP_BEFORE_SCORE:
@@ -402,6 +389,8 @@ public class Tower extends SubsystemBase {
 
                     setState(TowerState.INIT);
                     SmartDashboard.putBoolean("CoralDetected", false);
+                    leds.setMode(LEDMode.Off);
+                    SmartDashboard.putBoolean("TeleopAlignIndicator", false);
                 }
                 break;
         }
@@ -436,6 +425,8 @@ public class Tower extends SubsystemBase {
         currentState = newState;
         stateTimer.reset();
         System.out.println("P: " + pendingEvent + " S: " + currentState);
+        SmartDashboard.putString("TowerState", currentState.toString());
+        SmartDashboard.putString("TowerPendingEvent", pendingEvent.toString());
     }
 
     @Override
