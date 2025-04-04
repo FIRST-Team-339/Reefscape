@@ -19,6 +19,7 @@ import us.kilroyrobotics.Constants.CoralMechanismConstants;
 import us.kilroyrobotics.Constants.ElevatorConstants;
 import us.kilroyrobotics.Constants.VisionConstants;
 import us.kilroyrobotics.subsystems.LEDs.LEDMode;
+import us.kilroyrobotics.util.Elastic;
 import us.kilroyrobotics.util.LimelightHelpers;
 
 @Logged
@@ -95,8 +96,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousInit() {
-        Shuffleboard.startRecording();
-        Shuffleboard.selectTab("Autonomous");
+        // Shuffleboard.startRecording();
+        Elastic.selectTab("Autonomous");
 
         Command autoDelayCommand = new WaitCommand(SmartDashboard.getNumber("AutoDelay", 0.0));
 
@@ -116,7 +117,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        Shuffleboard.selectTab("Teleop");
+        Elastic.selectTab("Teleoperated");
 
         if (m_autonomousCommand != null) m_autonomousCommand.cancel();
     }
@@ -126,7 +127,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopExit() {
-        Shuffleboard.stopRecording();
+        // Shuffleboard.stopRecording();
     }
 
     @Override
