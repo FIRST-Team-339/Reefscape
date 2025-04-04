@@ -96,6 +96,7 @@ public class RobotContainer {
     private final Command towerToHome = tower.triggerEvent(TowerEvent.HOME_TOWER);
     private final Command alignLeft = tower.triggerEvent(TowerEvent.ALIGN_LEFT);
     private final Command alignRight = tower.triggerEvent(TowerEvent.ALIGN_RIGHT);
+    private final Command cancelAlignment = tower.triggerEvent(TowerEvent.CANCEL_ALIGNMENT);
     private final Command towerToL1 = tower.triggerEvent(TowerEvent.GOTO_L1);
     private final Command towerToL2 = tower.triggerEvent(TowerEvent.GOTO_L2);
     private final Command towerToL3 = tower.triggerEvent(TowerEvent.GOTO_L3);
@@ -211,7 +212,9 @@ public class RobotContainer {
                         ));
 
         // Brake
-        driverController.b().whileTrue(drivetrain.applyRequest(() -> brake));
+        driverController
+                .b()
+                .whileTrue(drivetrain.applyRequest(() -> brake).alongWith(cancelAlignment));
 
         driverController
                 .pov(0)

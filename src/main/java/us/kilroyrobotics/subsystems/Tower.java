@@ -5,6 +5,7 @@
 package us.kilroyrobotics.subsystems;
 
 import static edu.wpi.first.units.Units.FeetPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -159,25 +160,26 @@ public class Tower extends SubsystemBase {
         path.preventFlipping = true;
 
         return Commands.sequence(
-                Commands.runOnce(
-                        () -> {
-                            this.leds.setMode(LEDMode.Off);
-                            SmartDashboard.putBoolean("TeleopAlignIndicator", false);
-                        }),
-                AutoBuilder.followPath(path),
-                Commands.runOnce(
-                        () -> {
-                            System.out.println(
-                                    "[TELEOP-ASSIST] "
-                                            + (leftSide ? "[LEFT]" : "[RIGHT]")
-                                            + " Arrived at Pose for tag "
-                                            + this.currentAprilTag);
-                            this.currentAprilTag = 0;
-                            setState(TowerState.ALIGNED);
+                        Commands.runOnce(
+                                () -> {
+                                    this.leds.setMode(LEDMode.Off);
+                                    SmartDashboard.putBoolean("TeleopAlignIndicator", false);
+                                }),
+                        AutoBuilder.followPath(path),
+                        Commands.runOnce(
+                                () -> {
+                                    System.out.println(
+                                            "[TELEOP-ASSIST] "
+                                                    + (leftSide ? "[LEFT]" : "[RIGHT]")
+                                                    + " Arrived at Pose for tag "
+                                                    + this.currentAprilTag);
+                                    this.currentAprilTag = 0;
+                                    setState(TowerState.ALIGNED);
 
-                            SmartDashboard.putBoolean("TeleopAlignIndicator", true);
-                            this.leds.setMode(LEDMode.TeleopAligned);
-                        }));
+                                    SmartDashboard.putBoolean("TeleopAlignIndicator", true);
+                                    this.leds.setMode(LEDMode.TeleopAligned);
+                                }))
+                .withTimeout(Seconds.of(10));
     }
 
     public void runStateMachine() {
@@ -262,6 +264,10 @@ public class Tower extends SubsystemBase {
                 }
                 break;
             case ALIGNING:
+                if (isTriggered(TowerEvent.CANCEL_ALIGNMENT)) {
+                    alignmentCommand.cancel();
+                    setState(TowerState.GOT_CORAL);
+                }
                 break;
             case ALIGNED:
                 TowerEvent pendingAlignmentEvent = pendingEvent;

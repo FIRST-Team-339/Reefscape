@@ -16,4 +16,5 @@ public enum TowerEvent {
     SCORE_BYPASS,
     ALIGN_LEFT,
     ALIGN_RIGHT,
+    CANCEL_ALIGNMENT,
 }
