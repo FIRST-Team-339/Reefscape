@@ -263,7 +263,7 @@ public final class Constants {
         public static final int kWheelMotorId = 44;
 
         /** The amount tolerance in degrees for determining when the wrist is in position */
-        public static final double kAngleTolerance = 10.0;
+        public static final double kAngleTolerance = 15.0;
 
         /* Wrist Configurations */
         /** The angle that the wrist will be at the start of the match */

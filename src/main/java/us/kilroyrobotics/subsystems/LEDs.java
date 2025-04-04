@@ -24,7 +24,7 @@ public class LEDs extends SubsystemBase {
     private LEDPattern rainbow =
             LEDPattern.rainbow(255, 128).scrollAtAbsoluteSpeed(MetersPerSecond.of(0.5), ledSpacing);
     private LEDPattern teleopAligned =
-            LEDPattern.gradient(GradientType.kDiscontinuous, Color.kOrange, Color.kRed)
+            LEDPattern.gradient(GradientType.kDiscontinuous, Color.kWhite, Color.kLimeGreen)
                     .scrollAtAbsoluteSpeed(MetersPerSecond.of(0.5), ledSpacing);
     private LEDPattern waitingForCoral =
             LEDPattern.gradient(GradientType.kContinuous, Color.kGreen, Color.kForestGreen)
