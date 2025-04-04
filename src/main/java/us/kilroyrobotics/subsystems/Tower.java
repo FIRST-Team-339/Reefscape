@@ -82,7 +82,9 @@ public class Tower extends SubsystemBase {
     }
 
     public void initialize() {
-        coralIntakeMotor.setSpeed(0);
+        if (DriverStation.isAutonomousEnabled())
+            coralIntakeMotor.setSpeed(CoralMechanismConstants.kWheelSpeedHolding);
+        else coralIntakeMotor.setSpeed(0);
 
         elevator.stop();
         elevator.resetClosedLoopControl();
