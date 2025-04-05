@@ -5,6 +5,8 @@
 package us.kilroyrobotics.subsystems;
 
 import com.ctre.phoenix6.Orchestra;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Music extends SubsystemBase {
@@ -22,6 +24,22 @@ public class Music extends SubsystemBase {
         orchestra.addInstrument(drivetrain.getModule(3).getSteerMotor());
 
         orchestra.loadMusic("MrRoboto.chrp");
+
+        SmartDashboard.putBoolean("PlayMusic", false);
+    }
+
+    @Override
+    public void periodic() {
+        if (DriverStation.isEnabled()) {
+            stop();
+            return;
+        }
+
+        if (SmartDashboard.getBoolean("PlayMusic", false)) {
+            play();
+        } else {
+            stop();
+        }
     }
 
     public void play() {
