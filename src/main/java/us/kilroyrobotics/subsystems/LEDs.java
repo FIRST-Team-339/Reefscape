@@ -55,6 +55,10 @@ public class LEDs extends SubsystemBase {
         led.start();
     }
 
+    public LEDMode getMode() {
+        return mode;
+    }
+
     public void setMode(LEDMode newMode) {
         mode = newMode;
     }

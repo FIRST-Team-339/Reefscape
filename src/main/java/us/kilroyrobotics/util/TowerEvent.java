@@ -17,4 +17,5 @@ public enum TowerEvent {
     ALIGN_LEFT,
     ALIGN_RIGHT,
     CANCEL_ALIGNMENT,
+    ALIGN_BYPASS
 }

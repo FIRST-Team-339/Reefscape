@@ -32,6 +32,7 @@ import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor;
 import us.kilroyrobotics.subsystems.Elevator;
 import us.kilroyrobotics.subsystems.LEDs;
+import us.kilroyrobotics.subsystems.LEDs.LEDMode;
 import us.kilroyrobotics.subsystems.Music;
 import us.kilroyrobotics.subsystems.Tower;
 import us.kilroyrobotics.subsystems.Wrist;
@@ -90,7 +91,9 @@ public class RobotContainer {
                                         ? DriveConstants.kMediumDriveSpeed
                                         : DriveConstants.kHighDriveSpeed;
                         SmartDashboard.putBoolean("DefenseModeOn", !defenseModeOn);
-                    });
+                        leds.setMode(!defenseModeOn ? LEDMode.Defense : leds.getMode());
+                    },
+                    leds);
 
     /* Tower Commands */
     private final Command towerIntakeCoral = tower.triggerEvent(TowerEvent.INTAKE_CORAL);
@@ -99,6 +102,7 @@ public class RobotContainer {
     private final Command towerToHome = tower.triggerEvent(TowerEvent.HOME_TOWER);
     private final Command alignLeft = tower.triggerEvent(TowerEvent.ALIGN_LEFT);
     private final Command alignRight = tower.triggerEvent(TowerEvent.ALIGN_RIGHT);
+    private final Command alignBypass = tower.triggerEvent(TowerEvent.ALIGN_BYPASS);
     private final Command cancelAlignment = tower.triggerEvent(TowerEvent.CANCEL_ALIGNMENT);
     private final Command towerToL1 = tower.triggerEvent(TowerEvent.GOTO_L1);
     private final Command towerToL2 = tower.triggerEvent(TowerEvent.GOTO_L2);
@@ -337,6 +341,7 @@ public class RobotContainer {
         // Reef Alignment
         driverController.leftBumper().onTrue(alignLeft);
         driverController.rightBumper().onTrue(alignRight);
+        driverController.back().onTrue(alignBypass);
 
         drivetrain.registerTelemetry(telemetry::telemeterize);
     }

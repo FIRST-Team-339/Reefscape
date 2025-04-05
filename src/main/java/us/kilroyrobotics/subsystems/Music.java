@@ -5,25 +5,28 @@
 package us.kilroyrobotics.subsystems;
 
 import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.StatusCode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Music extends SubsystemBase {
-    Orchestra orchestra = new Orchestra();
+    private Orchestra orchestra = new Orchestra();
+    private StatusCode status;
 
     /** Creates a new Orchestra. */
     public Music(CommandSwerveDrivetrain drivetrain) {
-        orchestra.addInstrument(drivetrain.getModule(0).getDriveMotor());
-        orchestra.addInstrument(drivetrain.getModule(0).getSteerMotor());
-        orchestra.addInstrument(drivetrain.getModule(1).getDriveMotor());
-        orchestra.addInstrument(drivetrain.getModule(1).getSteerMotor());
-        orchestra.addInstrument(drivetrain.getModule(2).getDriveMotor());
-        orchestra.addInstrument(drivetrain.getModule(2).getSteerMotor());
-        orchestra.addInstrument(drivetrain.getModule(3).getDriveMotor());
-        orchestra.addInstrument(drivetrain.getModule(3).getSteerMotor());
+        orchestra.addInstrument(drivetrain.getModule(0).getDriveMotor(), 0);
+        orchestra.addInstrument(drivetrain.getModule(0).getSteerMotor(), 0);
+        orchestra.addInstrument(drivetrain.getModule(1).getDriveMotor(), 0);
+        orchestra.addInstrument(drivetrain.getModule(1).getSteerMotor(), 0);
+        orchestra.addInstrument(drivetrain.getModule(2).getDriveMotor(), 0);
+        orchestra.addInstrument(drivetrain.getModule(2).getSteerMotor(), 0);
+        orchestra.addInstrument(drivetrain.getModule(3).getDriveMotor(), 0);
+        orchestra.addInstrument(drivetrain.getModule(3).getSteerMotor(), 0);
 
-        orchestra.loadMusic("MrRoboto.chrp");
+        status = orchestra.loadMusic("music/mii_channel.chrp");
+        System.out.println("Loading Music - " + status);
 
         SmartDashboard.putBoolean("PlayMusic", false);
     }
@@ -43,10 +46,13 @@ public class Music extends SubsystemBase {
     }
 
     public void play() {
-        orchestra.play();
+        if (!orchestra.isPlaying()) {
+            System.out.println("Playing Music - " + status);
+            status = orchestra.play();
+        }
     }
 
     public void stop() {
-        orchestra.stop();
+        if (orchestra.isPlaying()) status = orchestra.stop();
     }
 }

@@ -73,10 +73,11 @@ public class Tower extends SubsystemBase {
                 Commands.runEnd(
                                 () ->
                                         drivetrain.setControl(
-                                                forwardStraight.withVelocityX(
-                                                        FeetPerSecond.of(-1.5))),
+                                                forwardStraight
+                                                        .withVelocityX(FeetPerSecond.of(-1.5))
+                                                        .withVelocityY(0)),
                                 () -> drivetrain.setControl(forwardStraight.withVelocityX(0)))
-                        .withTimeout(0.25);
+                        .withTimeout(0.3);
 
         stateTimer.start();
     }
@@ -245,7 +246,19 @@ public class Tower extends SubsystemBase {
                     setState(TowerState.ALIGNED);
                     break;
                 }
-                if (isTriggered(TowerEvent.ALIGN_LEFT)) {
+                if (isTriggered(TowerEvent.ALIGN_BYPASS)) {
+                    if (alignmentCommand != null) {
+                        alignmentCommand.end(true);
+
+                        System.out.println("[TELEOP-ASSIST] Alignment BYPASSED");
+                        this.currentAprilTag = 0;
+                        setState(TowerState.ALIGNED);
+
+                        SmartDashboard.putBoolean("TeleopAlignIndicator", true);
+                        this.leds.setMode(LEDMode.TeleopAligned);
+                    }
+                    setState(TowerState.ALIGNED);
+                } else if (isTriggered(TowerEvent.ALIGN_LEFT)) {
                     alignmentCommand = alignReef(true);
 
                     if (alignmentCommand != null) {
@@ -267,6 +280,9 @@ public class Tower extends SubsystemBase {
                 if (isTriggered(TowerEvent.CANCEL_ALIGNMENT)) {
                     alignmentCommand.cancel();
                     setState(TowerState.GOT_CORAL);
+                } else if (isTriggered(TowerEvent.ALIGN_BYPASS)) {
+                    alignmentCommand.end(true);
+                    setState(TowerState.ALIGNED);
                 }
                 break;
             case ALIGNED:
@@ -338,7 +354,7 @@ public class Tower extends SubsystemBase {
                 }
                 break;
             case TELEOP_WAIT:
-                if (stateTimer.hasElapsed(0.25)) setState(TowerState.READY_TO_SCORE);
+                if (stateTimer.hasElapsed(30)) setState(TowerState.READY_TO_SCORE);
                 break;
             case READY_TO_SCORE:
                 if (isTriggered(TowerEvent.SCORE_BYPASS) || stateTimer.hasElapsed(0.85)) {
@@ -374,12 +390,19 @@ public class Tower extends SubsystemBase {
             case POINT_WHEELS_BACK:
                 CommandScheduler.getInstance()
                         .schedule(
-                                Commands.runOnce(
-                                        () ->
-                                                drivetrain.setControl(
-                                                        point.withModuleDirection(
-                                                                Rotation2d.k180deg))));
-                setState(TowerState.BACKUP_BEFORE_SCORE);
+                                Commands.runEnd(
+                                                () ->
+                                                        drivetrain.setControl(
+                                                                point.withModuleDirection(
+                                                                        Rotation2d.kZero)),
+                                                () -> setState(TowerState.BACKUP_BEFORE_SCORE))
+                                        .until(
+                                                () ->
+                                                        drivetrain.getState()
+                                                                        .ModulePositions[0]
+                                                                        .angle
+                                                                == Rotation2d.kZero)
+                                        .withTimeout(Seconds.of(0.25)));
                 break;
             case BACKUP_BEFORE_SCORE:
                 CommandScheduler.getInstance().schedule(backupCommand);
