@@ -32,6 +32,7 @@ import us.kilroyrobotics.subsystems.CommandSwerveDrivetrain;
 import us.kilroyrobotics.subsystems.CoralIntakeMotor;
 import us.kilroyrobotics.subsystems.Elevator;
 import us.kilroyrobotics.subsystems.LEDs;
+import us.kilroyrobotics.subsystems.Music;
 import us.kilroyrobotics.subsystems.Tower;
 import us.kilroyrobotics.subsystems.Wrist;
 import us.kilroyrobotics.util.TowerEvent;
@@ -76,6 +77,8 @@ public class RobotContainer {
 
     public final Tower tower =
             new Tower(drivetrain, forwardStraight, point, elevator, wrist, coralIntakeMotor, leds);
+
+    public final Music music;
 
     /* Drivetrain Control Commands */
     private final Command defenseMode =
@@ -141,6 +144,8 @@ public class RobotContainer {
     @SuppressWarnings("unused")
     public RobotContainer() {
         if (Robot.isReal() && CameraConstants.kCameraEnabled) new Camera();
+        if (Robot.isReal()) music = new Music(drivetrain);
+        else music = null;
 
         NamedCommands.registerCommand(
                 "Intake Coral",

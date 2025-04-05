@@ -81,6 +81,9 @@ public class Robot extends TimedRobot {
         m_robotContainer.leds.setMode(LEDMode.Rainbow);
 
         m_robotContainer.tower.initialize();
+
+        if (SmartDashboard.getBoolean("MusicOn", false) && Robot.isReal())
+            m_robotContainer.music.stop();
     }
 
     @Override
@@ -91,6 +94,8 @@ public class Robot extends TimedRobot {
         m_robotContainer.leds.setMode(LEDMode.Off);
 
         m_robotContainer.tower.initialize();
+
+        if (Robot.isReal()) m_robotContainer.music.stop();
     }
 
     @Override
