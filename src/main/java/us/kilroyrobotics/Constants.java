@@ -24,7 +24,7 @@ public final class Constants {
     public static final class DriveConstants {
         public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
         public static final LinearVelocity kMediumDriveSpeed = MetersPerSecond.of(2.0);
-        public static final LinearVelocity kHighDriveSpeed = MetersPerSecond.of(3.5);
+        public static final LinearVelocity kHighDriveSpeed = MetersPerSecond.of(4.25);
     }
 
     /** Constants used for interfacing with limelight vision */
@@ -56,9 +56,9 @@ public final class Constants {
         public static final Pose2d kReefJPose =
                 new Pose2d(Meters.of(5.14), Meters.of(5.39), new Rotation2d(Degrees.of(240)));
         public static final Pose2d kReefKPose =
-                new Pose2d(Meters.of(3.91), Meters.of(5.40), new Rotation2d(Degrees.of(300)));
+                new Pose2d(Meters.of(3.93), Meters.of(5.40), new Rotation2d(Degrees.of(300)));
         public static final Pose2d kReefLPose =
-                new Pose2d(Meters.of(3.61), Meters.of(5.29), new Rotation2d(Degrees.of(300)));
+                new Pose2d(Meters.of(3.60), Meters.of(5.25), new Rotation2d(Degrees.of(300)));
 
         /**
          * Get the alignment pose for the given april tag and left/right side of said april tag
@@ -298,7 +298,7 @@ public final class Constants {
         public static final double kWheelSpeedOuttaking = 0.2;
 
         /** Speed of the motor while the robot is in motion to keep the coral piece in place */
-        public static final double kWheelSpeedHolding = -0.2;
+        public static final double kWheelSpeedHolding = -0.3;
 
         public static final double kOverrideSpeedMultiplier = 0.25;
     }

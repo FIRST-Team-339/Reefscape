@@ -193,7 +193,7 @@ public class Tower extends SubsystemBase {
         switch (currentState) {
             case INIT:
                 wrist.setAngle(CoralMechanismConstants.kIntakingAngle);
-                coralIntakeMotor.setSpeed(0.0);
+                coralIntakeMotor.setSpeed(CoralMechanismConstants.kWheelSpeedHolding);
 
                 setState(TowerState.HOMING_WRIST);
                 break;

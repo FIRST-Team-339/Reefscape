@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.61,
-        "y": 5.29
+        "x": 3.6,
+        "y": 5.26
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.6568436434823517,
-        "y": 5.658645659774773
+        "x": 3.646843643482352,
+        "y": 5.628645659774773
       },
       "isLocked": true,
       "linkedName": "Reef L"
