@@ -23,8 +23,8 @@ public final class Constants {
      */
     public static final class DriveConstants {
         public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
-        public static final LinearVelocity kMediumDriveSpeed = MetersPerSecond.of(2.0);
-        public static final LinearVelocity kHighDriveSpeed = MetersPerSecond.of(4.25);
+        public static final LinearVelocity kMediumDriveSpeed = MetersPerSecond.of(2.25);
+        public static final LinearVelocity kHighDriveSpeed = MetersPerSecond.of(5.0);
     }
 
     /** Constants used for interfacing with limelight vision */
@@ -292,13 +292,13 @@ public final class Constants {
 
         /* Wheel Speeds */
         /** Speed of the motor when intaking a coral piece */
-        public static final double kWheelSpeedIntaking = -0.45;
+        public static final double kWheelSpeedIntaking = -0.5;
 
         /** Speed of the motor when scoring a coral piece */
-        public static final double kWheelSpeedOuttaking = 0.2;
+        public static final double kWheelSpeedOuttaking = 0.5;
 
         /** Speed of the motor while the robot is in motion to keep the coral piece in place */
-        public static final double kWheelSpeedHolding = -0.3;
+        public static final double kWheelSpeedHolding = -0.5;
 
         public static final double kOverrideSpeedMultiplier = 0.25;
     }
