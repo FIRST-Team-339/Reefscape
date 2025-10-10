@@ -5,12 +5,14 @@ import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Kilograms;
 import static edu.wpi.first.units.Units.Meters;
 import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.pathplanner.lib.util.FlippingUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.units.measure.Mass;
@@ -23,8 +25,9 @@ public final class Constants {
      */
     public static final class DriveConstants {
         public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
-        public static final LinearVelocity kMediumDriveSpeed = MetersPerSecond.of(2.0);
-        public static final LinearVelocity kHighDriveSpeed = MetersPerSecond.of(3.5);
+        public static final LinearVelocity kMediumDriveSpeed = MetersPerSecond.of(1.0);
+        public static final LinearVelocity kHighDriveSpeed = MetersPerSecond.of(2.0);
+        public static final AngularVelocity kMaxAngularRate = RotationsPerSecond.of(0.5);
     }
 
     /** Constants used for interfacing with limelight vision */

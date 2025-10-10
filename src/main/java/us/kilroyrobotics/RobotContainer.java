@@ -4,7 +4,9 @@
 
 package us.kilroyrobotics;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -38,15 +40,15 @@ import us.kilroyrobotics.util.TowerEvent;
 
 public class RobotContainer {
     private LinearVelocity currentDriveSpeed = DriveConstants.kMediumDriveSpeed;
-    private double kMaxAngularRate =
-            RotationsPerSecond.of(0.5).in(RadiansPerSecond); // 1/2 of a rotation per second
     // max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive =
             new SwerveRequest.FieldCentric()
                     .withDeadband(currentDriveSpeed.in(MetersPerSecond) * 0.1)
-                    .withRotationalDeadband(kMaxAngularRate * 0.1) // Add a 10% deadband
+                    .withRotationalDeadband(
+                            DriveConstants.kMaxAngularRate.in(RadiansPerSecond)
+                                    * 0.1) // Add a 10% deadband
                     .withDriveRequestType(
                             DriveRequestType
                                     .OpenLoopVoltage); // Use open-loop control for drive motors
@@ -205,7 +207,9 @@ public class RobotContainer {
                                         // (left)
                                         .withRotationalRate(
                                                 -driverController.getRightX()
-                                                        * kMaxAngularRate) // Drive counterclockwise
+                                                        * DriveConstants.kMaxAngularRate.in(
+                                                                RadiansPerSecond)) // Drive
+                        // counterclockwise
                         // with
                         // negative X (left)
                         ));
