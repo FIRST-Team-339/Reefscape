@@ -25,8 +25,8 @@ public final class Constants {
      */
     public static final class DriveConstants {
         public static final LinearVelocity kLowDriveSpeed = MetersPerSecond.of(0.5);
-        public static final LinearVelocity kMediumDriveSpeed = MetersPerSecond.of(1.0);
-        public static final LinearVelocity kHighDriveSpeed = MetersPerSecond.of(2.0);
+        public static final LinearVelocity kMediumDriveSpeed = MetersPerSecond.of(1.75);
+        public static final LinearVelocity kHighDriveSpeed = MetersPerSecond.of(2.5);
         public static final AngularVelocity kMaxAngularRate = RotationsPerSecond.of(0.5);
     }
 
@@ -183,7 +183,7 @@ public final class Constants {
         public static final Distance kL4Height = Meters.of(Inches.of(83).in(Meters));
 
         /** Height necessary for the coral intake to reach the Coral Station */
-        public static final Distance kCoralStationHeight = Meters.of(Inches.of(32.25).in(Meters));
+        public static final Distance kCoralStationHeight = Meters.of(Inches.of(31.75).in(Meters));
 
         /* PIDF constants */
         public static final double kP = 1.25;

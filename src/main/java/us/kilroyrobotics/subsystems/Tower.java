@@ -341,7 +341,7 @@ public class Tower extends SubsystemBase {
                 }
                 break;
             case TELEOP_WAIT:
-                if (stateTimer.hasElapsed(0.25)) setState(TowerState.READY_TO_SCORE);
+                if (stateTimer.hasElapsed(2)) setState(TowerState.READY_TO_SCORE);
                 break;
             case READY_TO_SCORE:
                 if (isTriggered(TowerEvent.SCORE_BYPASS) || stateTimer.hasElapsed(0.85)) {
